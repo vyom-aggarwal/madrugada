@@ -16,11 +16,12 @@ from app.exposure import exposure, hhmm_to_slot, plan_cost, slot_to_hhmm
 from app.forecast import forecast
 from app.models import DayRecord
 from app.optimizer import optimize, pareto
+from app.robust import robust_plan
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXTURES = ROOT / "data" / "fixtures"
 CACHE = ROOT / "data" / "cache"
-PLAN_NAMES = ("optimizer", "B1", "B2", "b3_early", "b3_late")
+PLAN_NAMES = ("optimizer", "robust", "B1", "B2", "b3_early", "b3_late")
 
 
 class UnknownDay(KeyError):
@@ -101,7 +102,8 @@ def plan_for(day_id: str, paid_hours: float, earliest: str, latest: str, oracle:
     ot, oa_res = np.asarray(target.temp_f, dtype=float), pm25_to_aqi(target.pm25_ugm3)
     fa, oa = fa_res.aqi, oa_res.aqi
     kw = {"paid_hours_target": paid_hours, "earliest_start": earliest, "latest_end": latest}
-    plans = {"optimizer": optimize(ft, fa, **kw), "B1": b1(ft, fa), "B2": b2(ft, fa),
+    rob = robust_plan(target, list(load_days()), **kw)  # always proxy + residual scenarios, even in ORACLE mode
+    plans = {"optimizer": optimize(ft, fa, **kw), "robust": rob.plan, "B1": b1(ft, fa), "B2": b2(ft, fa),
              "b3_early": b3_early(ft, fa, **kw), "b3_late": b3_late(ft, fa, **kw)}
     plans_out, metrics = {}, {}
     for name, p in plans.items():
@@ -110,6 +112,10 @@ def plan_for(day_id: str, paid_hours: float, earliest: str, latest: str, oracle:
                            "planned_cost": round(p.cost, 6), "observed_cost": round(plan_cost(p.blocks, ot, oa), 6)}
         metrics[name] = {"planned": exposure(ft, fa, p.blocks, paid_hours, cfg).model_dump(),
                          "observed": obs.model_dump()}
+    plans_out["robust"].update(uncertainty=rob.uncertainty, flags=rob.flags, residual_dates=rob.residual_dates)
+    warnings = _warnings(target, fc.day, fa_res, oa_res, oracle, earliest, latest, cfg) + rob.flags
+    if oracle:
+        warnings.append("robust plan uses the proxy forecast plus residual scenarios, not the day's actual data.")
     pts = [{"paid_fraction": q.paid_fraction, "heat_smoke_ratio": q.heat_smoke_ratio, "heat_hours": q.heat_hours,
             "smoke_hours": q.smoke_hours, "paid_hours": q.paid_hours, "blocks": blocks_json(q.plan.blocks)}
            for q in pareto(ft, fa, paid_hours_target=paid_hours, earliest_start=earliest, latest_end=latest)]
@@ -123,5 +129,5 @@ def plan_for(day_id: str, paid_hours: float, earliest: str, latest: str, oracle:
         "metrics": metrics,
         "pareto": pts,
         "thresholds": thresholds(cfg),
-        "warnings": _warnings(target, fc.day, fa_res, oa_res, oracle, earliest, latest, cfg),
+        "warnings": warnings,
     }

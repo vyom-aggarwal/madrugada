@@ -80,3 +80,14 @@ madrugada/
   weight-sensitivity analysis: vary the heat/smoke/dual weights over a grid and report how often the
   optimizer beats B1, B2 and B3, and by how much.
 - No chart library: charts are inline SVG drawn by vanilla JS in static/index.html (see Hard rule 3).
+- No synthetic day shows the optimizer (planned on the forecast proxy) with fewer AQI>=101 hours than both
+  B3 variants. On early_pm25_peak and co_occurring_offset the optimizer has higher observed cost than B1
+  and B2. Hypothesis, to be tested in Phase 4 and not assumed: forecast-proxy error, because these days
+  differ from their history.
+
+## Evaluation rules
+- Evaluate ALL days in the available range, never a hand-picked subset.
+- Strata are assigned by a rule on observed data, defined in config.yaml `eval.strata`: heat_only (max temp
+  >= 95F and max AQI < 101), smoke_only (max temp < 95F and max AQI >= 101), co_occurring (both), mild (neither).
+- Results from synthetic days are always labeled "SYNTHETIC, NOT EVIDENCE" and never pooled with real days.
+- Real-data conclusions require at least 20 real days; otherwise print "insufficient real days".

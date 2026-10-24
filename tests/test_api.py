@@ -38,7 +38,7 @@ def test_plan_happy_path():
     assert j["day"]["provenance"] == "synthetic" and j["mode"] == "proxy"
     assert len(j["forecast"]["temp_f"]) == len(j["forecast"]["aqi"]) == 96
     assert j["plan"]["paid_hours"] >= 7.3
-    assert set(j["plans"]) == set(j["metrics"]) == {"optimizer", "B1", "B2", "b3_early", "b3_late"}
+    assert set(j["plans"]) == set(j["metrics"]) == {"optimizer", "robust", "B1", "B2", "b3_early", "b3_late"}
     assert all(set(m) == {"planned", "observed"} for m in j["metrics"].values())
     assert j["pareto"] and all("blocks" in p for p in j["pareto"])
     assert any("SYNTHETIC" in w for w in j["warnings"])

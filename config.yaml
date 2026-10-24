@@ -99,3 +99,27 @@ real_data:
     # HourObserved are local to the zone named in LocalTimeZone, using these offsets.
     time_convention: utc_or_local_fields
     local_tz_offsets: {PST: -8, PDT: -7}
+
+# Scenario-averaged ("robust") planner, app/robust.py.
+robust:
+  min_residual_days: 7       # fewer -> non-robust plan + flag robust_fallback_insufficient_history
+  max_residual_days: 14      # residual window: days D-1 .. D-14 (each needs its own leakage-safe forecast)
+  uncertainty_percentile: 90
+
+# Evaluation harness, eval/. See CLAUDE.md "Evaluation rules".
+eval:
+  strata:                    # assigned on OBSERVED data over the whole day
+    heat_temp_f: 95          # "heat" if max temp >= this
+    smoke_aqi: 101           # "smoke" if max AQI >= this
+  tie_hours: 0.125           # tie: every physical metric differs by < tie_hours ...
+  tie_cost: 1.0e-6           # ... and observed cost by < tie_cost
+  bootstrap: {resamples: 10000, seed: 20250801, min_n: 10}
+  min_real_days: 20
+  sensitivity:
+    w_heat: [0.5, 1, 2]
+    w_smoke: [0.5, 1, 2]
+    w_dual: [0, 1, 2]
+    cost_levels: [[0, 1, 3], [0, 1, 2], [0, 1, 5]]   # applied to both heat and smoke levels
+  forecast_proxies:          # default_blend is the `forecast` section above (unchanged)
+    prev_day_only: {weight_prev_day: 1.0, weight_prior_mean: 0.0}
+    mean_7day_only: {weight_prev_day: 0.0, weight_prior_mean: 1.0}

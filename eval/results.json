@@ -1,0 +1,3348 @@
+{
+ "provenance_statement": "SYNTHETIC DAYS INCLUDED: NOT EVIDENCE FOR THE DUAL-HAZARD CLAIM | insufficient real days (0 real_cached, 20 required)",
+ "n_days": {
+  "synthetic": 13,
+  "real_cached": 0
+ },
+ "real_days_sufficient": false,
+ "group_labels": {
+  "synthetic": "SYNTHETIC, NOT EVIDENCE",
+  "real_cached": "insufficient real days"
+ },
+ "definitions": {
+  "difference": "challenger minus baseline; negative = fewer modeled exposure-hours or lower cost",
+  "tie": "every physical metric within 0.125 h and observed cost within 1e-06",
+  "win_loss": "by observed weighted cost; 'mixed' = equal cost but different physical metrics",
+  "strata": {
+   "heat_temp_f": 95,
+   "smoke_aqi": 101
+  },
+  "weight_sensitivity": "stratum totals of (optimizer - B2) hours >=95F and AQI>=101 hours per setting"
+ },
+ "groups": {
+  "synthetic": {
+   "overall": {
+    "n": 13,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 13,
+      "win": 10,
+      "tie": 1,
+      "loss": 2,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.8654,
+       "hours_aqi_ge_101": -0.2308,
+       "observed_cost": -23.8462
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        -1.4808,
+        -0.3077
+       ],
+       "hours_aqi_ge_101": [
+        -1.1154,
+        0.75
+       ],
+       "observed_cost": [
+        -38.0019,
+        -10.0769
+       ]
+      },
+      "ci_note": null
+     },
+     "optimizer_vs_B2": {
+      "n": 13,
+      "win": 9,
+      "tie": 1,
+      "loss": 2,
+      "mixed": 1,
+      "mean_diff": {
+       "hours_ge_95f": -0.1731,
+       "hours_aqi_ge_101": -0.1538,
+       "observed_cost": -9.3846
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        -0.5,
+        0.1154
+       ],
+       "hours_aqi_ge_101": [
+        -0.6154,
+        0.3462
+       ],
+       "observed_cost": [
+        -16.3077,
+        -2.3077
+       ]
+      },
+      "ci_note": null
+     },
+     "optimizer_vs_b3_early": {
+      "n": 13,
+      "win": 0,
+      "tie": 11,
+      "loss": 2,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.3077,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 2.4615
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        0.0,
+        0.75
+       ],
+       "hours_aqi_ge_101": [
+        0.0,
+        0.0
+       ],
+       "observed_cost": [
+        0.0,
+        6.0
+       ]
+      },
+      "ci_note": null
+     },
+     "optimizer_vs_b3_late": {
+      "n": 13,
+      "win": 0,
+      "tie": 11,
+      "loss": 2,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.3077,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 2.4615
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        0.0,
+        0.75
+       ],
+       "hours_aqi_ge_101": [
+        0.0,
+        0.0
+       ],
+       "observed_cost": [
+        0.0,
+        6.0
+       ]
+      },
+      "ci_note": null
+     },
+     "robust_vs_B1": {
+      "n": 13,
+      "win": 10,
+      "tie": 1,
+      "loss": 2,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.9808,
+       "hours_aqi_ge_101": -0.2308,
+       "observed_cost": -24.7692
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        -1.6154,
+        -0.3846
+       ],
+       "hours_aqi_ge_101": [
+        -1.1154,
+        0.75
+       ],
+       "observed_cost": [
+        -38.9231,
+        -10.7692
+       ]
+      },
+      "ci_note": null
+     },
+     "robust_vs_B2": {
+      "n": 13,
+      "win": 10,
+      "tie": 1,
+      "loss": 2,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.2885,
+       "hours_aqi_ge_101": -0.1538,
+       "observed_cost": -10.3077
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        -0.5962,
+        -0.0385
+       ],
+       "hours_aqi_ge_101": [
+        -0.6154,
+        0.3462
+       ],
+       "observed_cost": [
+        -17.0769,
+        -3.2308
+       ]
+      },
+      "ci_note": null
+     },
+     "robust_vs_b3_early": {
+      "n": 13,
+      "win": 0,
+      "tie": 11,
+      "loss": 2,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.1923,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 1.5385
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        0.0,
+        0.5
+       ],
+       "hours_aqi_ge_101": [
+        0.0,
+        0.0
+       ],
+       "observed_cost": [
+        0.0,
+        4.0
+       ]
+      },
+      "ci_note": null
+     },
+     "robust_vs_b3_late": {
+      "n": 13,
+      "win": 0,
+      "tie": 11,
+      "loss": 2,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.1923,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 1.5385
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        0.0,
+        0.5
+       ],
+       "hours_aqi_ge_101": [
+        0.0,
+        0.0
+       ],
+       "observed_cost": [
+        0.0,
+        4.0
+       ]
+      },
+      "ci_note": null
+     },
+     "oracle_vs_B1": {
+      "n": 13,
+      "win": 10,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 2,
+      "mean_diff": {
+       "hours_ge_95f": -1.1731,
+       "hours_aqi_ge_101": -0.75,
+       "observed_cost": -30.9231
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        -1.9231,
+        -0.4615
+       ],
+       "hours_aqi_ge_101": [
+        -1.8269,
+        0.1154
+       ],
+       "observed_cost": [
+        -46.7692,
+        -16.3077
+       ]
+      },
+      "ci_note": null
+     },
+     "oracle_vs_B2": {
+      "n": 13,
+      "win": 11,
+      "tie": 2,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.4808,
+       "hours_aqi_ge_101": -0.6731,
+       "observed_cost": -16.4615
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        -0.8462,
+        -0.1731
+       ],
+       "hours_aqi_ge_101": [
+        -1.4231,
+        -0.1154
+       ],
+       "observed_cost": [
+        -25.5385,
+        -8.6135
+       ]
+      },
+      "ci_note": null
+     },
+     "oracle_vs_b3_early": {
+      "n": 13,
+      "win": 4,
+      "tie": 9,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5192,
+       "observed_cost": -4.6154
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        0.0,
+        0.0
+       ],
+       "hours_aqi_ge_101": [
+        -1.0962,
+        0.0
+       ],
+       "observed_cost": [
+        -9.8462,
+        -0.1538
+       ]
+      },
+      "ci_note": null
+     },
+     "oracle_vs_b3_late": {
+      "n": 13,
+      "win": 4,
+      "tie": 9,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5192,
+       "observed_cost": -4.6154
+      },
+      "ci95": {
+       "hours_ge_95f": [
+        0.0,
+        0.0
+       ],
+       "hours_aqi_ge_101": [
+        -1.0962,
+        0.0
+       ],
+       "observed_cost": [
+        -9.8462,
+        -0.1538
+       ]
+      },
+      "ci_note": null
+     }
+    }
+   },
+   "heat_only": {
+    "n": 4,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 4,
+      "win": 4,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -1.5625,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -24.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_B2": {
+      "n": 4,
+      "win": 3,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 1,
+      "mean_diff": {
+       "hours_ge_95f": -0.4375,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -9.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_early": {
+      "n": 4,
+      "win": 0,
+      "tie": 3,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.5625,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 4.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_late": {
+      "n": 4,
+      "win": 0,
+      "tie": 3,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.5625,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 4.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B1": {
+      "n": 4,
+      "win": 4,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -1.9375,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -27.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B2": {
+      "n": 4,
+      "win": 4,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.8125,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -12.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_early": {
+      "n": 4,
+      "win": 0,
+      "tie": 3,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.1875,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 1.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_late": {
+      "n": 4,
+      "win": 0,
+      "tie": 3,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.1875,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 1.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B1": {
+      "n": 4,
+      "win": 4,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -2.125,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -29.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B2": {
+      "n": 4,
+      "win": 4,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -1.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -14.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_early": {
+      "n": 4,
+      "win": 0,
+      "tie": 4,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_late": {
+      "n": 4,
+      "win": 0,
+      "tie": 4,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     }
+    }
+   },
+   "smoke_only": {
+    "n": 3,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5833,
+       "observed_cost": -22.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5,
+       "observed_cost": -10.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_early": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_late": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5833,
+       "observed_cost": -22.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5,
+       "observed_cost": -10.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_early": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_late": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 1,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -2.3333,
+       "observed_cost": -38.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B2": {
+      "n": 3,
+      "win": 3,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -2.25,
+       "observed_cost": -26.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_early": {
+      "n": 3,
+      "win": 3,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -1.75,
+       "observed_cost": -16.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_late": {
+      "n": 3,
+      "win": 3,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -1.75,
+       "observed_cost": -16.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     }
+    }
+   },
+   "co_occurring": {
+    "n": 3,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -1.6667,
+       "hours_aqi_ge_101": -0.4167,
+       "observed_cost": -40.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.1667,
+       "hours_aqi_ge_101": -0.1667,
+       "observed_cost": -13.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_early": {
+      "n": 3,
+      "win": 0,
+      "tie": 2,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.5833,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 4.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_late": {
+      "n": 3,
+      "win": 0,
+      "tie": 2,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.5833,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 4.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -1.6667,
+       "hours_aqi_ge_101": -0.4167,
+       "observed_cost": -40.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.1667,
+       "hours_aqi_ge_101": -0.1667,
+       "observed_cost": -13.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_early": {
+      "n": 3,
+      "win": 0,
+      "tie": 2,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.5833,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 4.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_late": {
+      "n": 3,
+      "win": 0,
+      "tie": 2,
+      "loss": 1,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.5833,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 4.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 1,
+      "mean_diff": {
+       "hours_ge_95f": -2.25,
+       "hours_aqi_ge_101": -0.9167,
+       "observed_cost": -49.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": -0.75,
+       "hours_aqi_ge_101": -0.6667,
+       "observed_cost": -22.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_early": {
+      "n": 3,
+      "win": 1,
+      "tie": 2,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5,
+       "observed_cost": -4.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_late": {
+      "n": 3,
+      "win": 1,
+      "tie": 2,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": -0.5,
+       "observed_cost": -4.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     }
+    }
+   },
+   "mild": {
+    "n": 3,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -8.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -4.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_early": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "optimizer_vs_b3_late": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -8.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -4.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_early": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "robust_vs_b3_late": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B1": {
+      "n": 3,
+      "win": 2,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -8.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_B2": {
+      "n": 3,
+      "win": 2,
+      "tie": 1,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -4.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_early": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     },
+     "oracle_vs_b3_late": {
+      "n": 3,
+      "win": 0,
+      "tie": 3,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs"
+     }
+    }
+   }
+  },
+  "real_cached": {
+   "overall": {
+    "n": 0,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     }
+    }
+   },
+   "heat_only": {
+    "n": 0,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     }
+    }
+   },
+   "smoke_only": {
+    "n": 0,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     }
+    }
+   },
+   "co_occurring": {
+    "n": 0,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     }
+    }
+   },
+   "mild": {
+    "n": 0,
+    "comparisons": {
+     "optimizer_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "optimizer_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "robust_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B1": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_B2": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_early": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     },
+     "oracle_vs_b3_late": {
+      "n": 0,
+      "win": 0,
+      "tie": 0,
+      "loss": 0,
+      "mixed": 0,
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null
+     }
+    }
+   }
+  }
+ },
+ "oracle_diagnosis": {
+  "synthetic": {
+   "sentence": "2 of 2 losses disappear under the oracle.",
+   "days": [
+    {
+     "id": "syn-2025-08-04-early_pm25_peak",
+     "optimizer_cost": 39.0,
+     "B2_cost": 27.0,
+     "oracle_cost": 21.0,
+     "oracle_vs_B2": "win",
+     "oracle_beats_B2": true
+    },
+    {
+     "id": "syn-2025-08-06-co_occurring_offset",
+     "optimizer_cost": 64.0,
+     "B2_cost": 52.0,
+     "oracle_cost": 52.0,
+     "oracle_vs_B2": "tie",
+     "oracle_beats_B2": false
+    }
+   ]
+  },
+  "real_cached": {
+   "sentence": "0 of 0 losses disappear under the oracle.",
+   "days": []
+  }
+ },
+ "weight_sensitivity": {
+  "synthetic": {
+   "overall": {
+    "n_days": 13,
+    "n_settings": 81,
+    "weakly_dominates_fraction": 1.0,
+    "strictly_improves_fraction": 1.0,
+    "per_day_weakly_dominates_fraction": 0.7208,
+    "range_total_diff_hours_ge_95f": [
+     -5.5,
+     -2.25
+    ],
+    "range_total_diff_hours_aqi_ge_101": [
+     -2.0,
+     -2.0
+    ]
+   },
+   "heat_only": {
+    "n_days": 4,
+    "n_settings": 81,
+    "weakly_dominates_fraction": 1.0,
+    "strictly_improves_fraction": 1.0,
+    "per_day_weakly_dominates_fraction": 0.8333,
+    "range_total_diff_hours_ge_95f": [
+     -3.25,
+     -1.75
+    ],
+    "range_total_diff_hours_aqi_ge_101": [
+     0.0,
+     0.0
+    ]
+   },
+   "smoke_only": {
+    "n_days": 3,
+    "n_settings": 81,
+    "weakly_dominates_fraction": 1.0,
+    "strictly_improves_fraction": 1.0,
+    "per_day_weakly_dominates_fraction": 0.6667,
+    "range_total_diff_hours_ge_95f": [
+     0.0,
+     0.0
+    ],
+    "range_total_diff_hours_aqi_ge_101": [
+     -1.5,
+     -1.5
+    ]
+   },
+   "co_occurring": {
+    "n_days": 3,
+    "n_settings": 81,
+    "weakly_dominates_fraction": 1.0,
+    "strictly_improves_fraction": 1.0,
+    "per_day_weakly_dominates_fraction": 0.3457,
+    "range_total_diff_hours_ge_95f": [
+     -2.25,
+     -0.5
+    ],
+    "range_total_diff_hours_aqi_ge_101": [
+     -0.5,
+     -0.5
+    ]
+   },
+   "mild": {
+    "n_days": 3,
+    "n_settings": 81,
+    "weakly_dominates_fraction": 1.0,
+    "strictly_improves_fraction": 0.0,
+    "per_day_weakly_dominates_fraction": 1.0,
+    "range_total_diff_hours_ge_95f": [
+     0.0,
+     0.0
+    ],
+    "range_total_diff_hours_aqi_ge_101": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "real_cached": {
+   "overall": {
+    "n_days": 0,
+    "n_settings": 0
+   },
+   "heat_only": {
+    "n_days": 0,
+    "n_settings": 0
+   },
+   "smoke_only": {
+    "n_days": 0,
+    "n_settings": 0
+   },
+   "co_occurring": {
+    "n_days": 0,
+    "n_settings": 0
+   },
+   "mild": {
+    "n_days": 0,
+    "n_settings": 0
+   }
+  }
+ },
+ "forecast_sensitivity": {
+  "synthetic": {
+   "prev_day_only": {
+    "overall": {
+     "n": 13,
+     "win": 10,
+     "tie": 1,
+     "loss": 2,
+     "mixed": 0
+    },
+    "heat_only": {
+     "n": 4,
+     "win": 4,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "smoke_only": {
+     "n": 3,
+     "win": 2,
+     "tie": 0,
+     "loss": 1,
+     "mixed": 0
+    },
+    "co_occurring": {
+     "n": 3,
+     "win": 2,
+     "tie": 0,
+     "loss": 1,
+     "mixed": 0
+    },
+    "mild": {
+     "n": 3,
+     "win": 2,
+     "tie": 1,
+     "loss": 0,
+     "mixed": 0
+    }
+   },
+   "mean_7day_only": {
+    "overall": {
+     "n": 13,
+     "win": 10,
+     "tie": 1,
+     "loss": 2,
+     "mixed": 0
+    },
+    "heat_only": {
+     "n": 4,
+     "win": 4,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "smoke_only": {
+     "n": 3,
+     "win": 2,
+     "tie": 0,
+     "loss": 1,
+     "mixed": 0
+    },
+    "co_occurring": {
+     "n": 3,
+     "win": 2,
+     "tie": 0,
+     "loss": 1,
+     "mixed": 0
+    },
+    "mild": {
+     "n": 3,
+     "win": 2,
+     "tie": 1,
+     "loss": 0,
+     "mixed": 0
+    }
+   },
+   "default_blend": {
+    "overall": {
+     "n": 13,
+     "win": 9,
+     "tie": 1,
+     "loss": 2,
+     "mixed": 1
+    },
+    "heat_only": {
+     "n": 4,
+     "win": 3,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 1
+    },
+    "smoke_only": {
+     "n": 3,
+     "win": 2,
+     "tie": 0,
+     "loss": 1,
+     "mixed": 0
+    },
+    "co_occurring": {
+     "n": 3,
+     "win": 2,
+     "tie": 0,
+     "loss": 1,
+     "mixed": 0
+    },
+    "mild": {
+     "n": 3,
+     "win": 2,
+     "tie": 1,
+     "loss": 0,
+     "mixed": 0
+    }
+   }
+  },
+  "real_cached": {
+   "prev_day_only": {
+    "overall": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "heat_only": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "smoke_only": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "co_occurring": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "mild": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    }
+   },
+   "mean_7day_only": {
+    "overall": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "heat_only": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "smoke_only": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "co_occurring": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "mild": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    }
+   },
+   "default_blend": {
+    "overall": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "heat_only": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "smoke_only": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "co_occurring": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    },
+    "mild": {
+     "n": 0,
+     "win": 0,
+     "tie": 0,
+     "loss": 0,
+     "mixed": 0
+    }
+   }
+  }
+ },
+ "days": [
+  {
+   "id": "syn-2025-07-25-history",
+   "date": "2025-07-25",
+   "label": "SYNTHETIC: history day",
+   "provenance": "synthetic",
+   "stratum": "mild",
+   "robust_flags": [
+    "robust_fallback_insufficient_history"
+   ],
+   "robust_uncertainty": null,
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 6.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 24.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 18.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-07-26-history",
+   "date": "2025-07-26",
+   "label": "SYNTHETIC: history day",
+   "provenance": "synthetic",
+   "stratum": "mild",
+   "robust_flags": [
+    "robust_fallback_insufficient_history"
+   ],
+   "robust_uncertainty": null,
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 8.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 8.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 8.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 5.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 20.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 3.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 14.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 8.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 8.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-07-27-history",
+   "date": "2025-07-27",
+   "label": "SYNTHETIC: history day",
+   "provenance": "synthetic",
+   "stratum": "heat_only",
+   "robust_flags": [
+    "robust_fallback_insufficient_history"
+   ],
+   "robust_uncertainty": null,
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 3.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 13.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 3.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 13.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 3.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 13.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 6.25,
+     "hours_ge_95f": 2.5,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 45.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 4.75,
+     "hours_ge_95f": 1.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 27.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 3.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 13.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 3.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 13.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-07-28-history",
+   "date": "2025-07-28",
+   "label": "SYNTHETIC: history day",
+   "provenance": "synthetic",
+   "stratum": "heat_only",
+   "robust_flags": [
+    "robust_fallback_insufficient_history"
+   ],
+   "robust_uncertainty": null,
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 10.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 10.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 10.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 5.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 22.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 4.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 16.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 10.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 10.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-07-29-history",
+   "date": "2025-07-29",
+   "label": "SYNTHETIC: history day",
+   "provenance": "synthetic",
+   "stratum": "heat_only",
+   "robust_flags": [
+    "robust_fallback_insufficient_history"
+   ],
+   "robust_uncertainty": null,
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 18.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 18.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 18.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 7.5,
+     "hours_ge_95f": 3.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 54.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 6.0,
+     "hours_ge_95f": 1.5,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 36.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 18.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 18.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-07-30-history",
+   "date": "2025-07-30",
+   "label": "SYNTHETIC: history day",
+   "provenance": "synthetic",
+   "stratum": "co_occurring",
+   "robust_flags": [
+    "robust_fallback_insufficient_history"
+   ],
+   "robust_uncertainty": null,
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 6.0,
+     "hours_ge_95f": 2.25,
+     "hours_aqi_ge_101": 2.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 2.0,
+     "paid_hours": 8.5,
+     "observed_cost": 66.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.75,
+     "hours_aqi_ge_101": 0.5,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.5,
+     "paid_hours": 8.5,
+     "observed_cost": 30.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 12.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-07-31-history",
+   "date": "2025-07-31",
+   "label": "SYNTHETIC: history day",
+   "provenance": "synthetic",
+   "stratum": "smoke_only",
+   "robust_flags": [
+    "robust_fallback_insufficient_history"
+   ],
+   "robust_uncertainty": null,
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 1.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 4.75,
+     "hours_aqi_ge_151": 3.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 48.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 1.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 4.75,
+     "hours_aqi_ge_151": 3.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 48.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 3.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 1.75,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 19.0,
+     "blocks": [
+      "04:00-09:30",
+      "16:00-19:00"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 4.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 7.75,
+     "hours_aqi_ge_151": 4.5,
+     "dual_hazard_hours": 1.25,
+     "paid_hours": 8.5,
+     "observed_cost": 94.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 2.75,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 6.25,
+     "hours_aqi_ge_151": 4.5,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 72.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 1.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 4.75,
+     "hours_aqi_ge_151": 3.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 48.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 1.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 4.75,
+     "hours_aqi_ge_151": 3.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 48.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-08-01-heat_only",
+   "date": "2025-08-01",
+   "label": "SYNTHETIC: hot afternoon, clean air",
+   "provenance": "synthetic",
+   "stratum": "heat_only",
+   "robust_flags": [],
+   "robust_uncertainty": {
+    "n_scenarios": 7,
+    "hours_ge_95f": {
+     "mean": 0.5,
+     "p90": 1.7
+    },
+    "hours_aqi_ge_101": {
+     "mean": 1.4643,
+     "p90": 2.5
+    }
+   },
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 5.25,
+     "hours_ge_95f": 3.5,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 49.0,
+     "blocks": [
+      "04:00-09:00",
+      "14:45-18:15"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 5.25,
+     "hours_ge_95f": 2.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 37.0,
+     "blocks": [
+      "04:00-10:30",
+      "17:00-19:00"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 5.25,
+     "hours_ge_95f": 1.25,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 31.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 8.25,
+     "hours_ge_95f": 4.25,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 67.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 6.75,
+     "hours_ge_95f": 2.75,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 49.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 5.25,
+     "hours_ge_95f": 1.25,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 31.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 5.25,
+     "hours_ge_95f": 1.25,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 31.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-08-02-smoke_only",
+   "date": "2025-08-02",
+   "label": "SYNTHETIC: moderate temps, smoke event",
+   "provenance": "synthetic",
+   "stratum": "smoke_only",
+   "robust_flags": [],
+   "robust_uncertainty": {
+    "n_scenarios": 8,
+    "hours_ge_95f": {
+     "mean": 0.7812,
+     "p90": 2.025
+    },
+    "hours_aqi_ge_101": {
+     "mean": 0.5938,
+     "p90": 1.425
+    }
+   },
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 6.75,
+     "hours_aqi_ge_151": 5.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 67.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 6.75,
+     "hours_aqi_ge_151": 5.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 67.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 0.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 6.75,
+     "hours_aqi_ge_151": 4.75,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 66.0,
+     "blocks": [
+      "04:00-10:30",
+      "17:00-19:00"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 8.5,
+     "hours_aqi_ge_151": 8.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 106.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 0.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 8.25,
+     "hours_aqi_ge_151": 6.5,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 87.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 6.75,
+     "hours_aqi_ge_151": 5.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 67.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 6.75,
+     "hours_aqi_ge_151": 5.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 67.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-08-03-co_occurring",
+   "date": "2025-08-03",
+   "label": "SYNTHETIC: hot afternoon with smoke",
+   "provenance": "synthetic",
+   "stratum": "co_occurring",
+   "robust_flags": [],
+   "robust_uncertainty": {
+    "n_scenarios": 9,
+    "hours_ge_95f": {
+     "mean": 0.25,
+     "p90": 1.05
+    },
+    "hours_aqi_ge_101": {
+     "mean": 5.0833,
+     "p90": 6.7
+    }
+   },
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 2.0,
+     "hours_aqi_ge_101": 6.25,
+     "hours_aqi_ge_151": 3.5,
+     "dual_hazard_hours": 2.0,
+     "paid_hours": 8.5,
+     "observed_cost": 103.0,
+     "blocks": [
+      "04:00-10:30",
+      "17:00-19:00"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 2.0,
+     "hours_aqi_ge_101": 6.25,
+     "hours_aqi_ge_151": 3.5,
+     "dual_hazard_hours": 2.0,
+     "paid_hours": 8.5,
+     "observed_cost": 103.0,
+     "blocks": [
+      "04:00-10:30",
+      "17:00-19:00"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.25,
+     "hours_aqi_ge_101": 6.25,
+     "hours_aqi_ge_151": 3.5,
+     "dual_hazard_hours": 2.0,
+     "paid_hours": 8.5,
+     "observed_cost": 89.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 7.5,
+     "hours_ge_95f": 3.25,
+     "hours_aqi_ge_101": 8.5,
+     "hours_aqi_ge_151": 6.5,
+     "dual_hazard_hours": 5.0,
+     "paid_hours": 8.5,
+     "observed_cost": 182.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 6.0,
+     "hours_ge_95f": 1.75,
+     "hours_aqi_ge_101": 7.75,
+     "hours_aqi_ge_151": 5.0,
+     "dual_hazard_hours": 3.5,
+     "paid_hours": 8.5,
+     "observed_cost": 137.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.25,
+     "hours_aqi_ge_101": 6.25,
+     "hours_aqi_ge_151": 3.5,
+     "dual_hazard_hours": 2.0,
+     "paid_hours": 8.5,
+     "observed_cost": 89.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 4.5,
+     "hours_ge_95f": 0.25,
+     "hours_aqi_ge_101": 6.25,
+     "hours_aqi_ge_151": 3.5,
+     "dual_hazard_hours": 2.0,
+     "paid_hours": 8.5,
+     "observed_cost": 89.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-08-04-early_pm25_peak",
+   "date": "2025-08-04",
+   "label": "SYNTHETIC: pre-dawn PM2.5 peak, clearing by day",
+   "provenance": "synthetic",
+   "stratum": "smoke_only",
+   "robust_flags": [],
+   "robust_uncertainty": {
+    "n_scenarios": 10,
+    "hours_ge_95f": {
+     "mean": 0.775,
+     "p90": 2.8
+    },
+    "hours_aqi_ge_101": {
+     "mean": 4.725,
+     "p90": 6.925
+    }
+   },
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 3.25,
+     "hours_aqi_ge_151": 2.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 39.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 3.25,
+     "hours_aqi_ge_151": 2.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 39.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 4.25,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 1.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 21.0,
+     "blocks": [
+      "06:15-14:45"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 5.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.25,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 21.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 3.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 1.75,
+     "hours_aqi_ge_151": 0.75,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 27.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 3.25,
+     "hours_aqi_ge_151": 2.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 39.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 2.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 3.25,
+     "hours_aqi_ge_151": 2.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 39.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-08-05-mild",
+   "date": "2025-08-05",
+   "label": "SYNTHETIC: mild temps, clean air",
+   "provenance": "synthetic",
+   "stratum": "mild",
+   "robust_flags": [],
+   "robust_uncertainty": {
+    "n_scenarios": 11,
+    "hours_ge_95f": {
+     "mean": 0.5455,
+     "p90": 2.25
+    },
+    "hours_aqi_ge_101": {
+     "mean": 3.5682,
+     "p90": 8.5
+    }
+   },
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 0.0,
+     "blocks": [
+      "05:15-13:45"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 0.0,
+     "blocks": [
+      "04:45-13:15"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 0.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 0.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 0.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 0.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 0.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 0.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  },
+  {
+   "id": "syn-2025-08-06-co_occurring_offset",
+   "date": "2025-08-06",
+   "label": "SYNTHETIC: late-afternoon heat, early-morning smoke",
+   "provenance": "synthetic",
+   "stratum": "co_occurring",
+   "robust_flags": [],
+   "robust_uncertainty": {
+    "n_scenarios": 12,
+    "hours_ge_95f": {
+     "mean": 0.0,
+     "p90": 0.0
+    },
+    "hours_aqi_ge_101": {
+     "mean": 1.4583,
+     "p90": 4.975
+    }
+   },
+   "plans": {
+    "optimizer": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 5.0,
+     "hours_aqi_ge_151": 4.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 64.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "robust": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 5.0,
+     "hours_aqi_ge_151": 4.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 64.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "oracle": {
+     "hours_ge_80f": 4.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 3.5,
+     "hours_aqi_ge_151": 2.75,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 52.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "B1": {
+     "hours_ge_80f": 5.5,
+     "hours_ge_95f": 1.5,
+     "hours_aqi_ge_101": 2.0,
+     "hours_aqi_ge_151": 1.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 52.0,
+     "blocks": [
+      "07:00-15:30"
+     ]
+    },
+    "B2": {
+     "hours_ge_80f": 4.0,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 3.5,
+     "hours_aqi_ge_151": 2.75,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 52.0,
+     "blocks": [
+      "05:30-14:00"
+     ]
+    },
+    "b3_early": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 5.0,
+     "hours_aqi_ge_151": 4.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 64.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    },
+    "b3_late": {
+     "hours_ge_80f": 2.5,
+     "hours_ge_95f": 0.0,
+     "hours_aqi_ge_101": 5.0,
+     "hours_aqi_ge_151": 4.25,
+     "dual_hazard_hours": 0.0,
+     "paid_hours": 8.5,
+     "observed_cost": 64.0,
+     "blocks": [
+      "04:00-12:30"
+     ]
+    }
+   }
+  }
+ ],
+ "runtime_seconds": 1.44
+}

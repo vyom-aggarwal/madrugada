@@ -1,4 +1,5 @@
-"""FastAPI entry point: static UI, day list, plan endpoint, printable crew sheet."""
+"""FastAPI entry point: static UI, day list, plan endpoint, backtest results, printable crew sheet."""
+import json
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
@@ -11,6 +12,7 @@ from app.models import PlanRequest
 from app.planning import NoHistory, UnknownDay, day_summary, load_days, plan_for
 
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
+EVAL_RESULTS = Path(__file__).resolve().parent.parent / "eval" / "results.json"
 
 app = FastAPI(title="Madrugada", version="0.3.0")
 
@@ -42,6 +44,16 @@ def _plan(req: PlanRequest) -> dict:
 @app.post("/api/plan")
 def api_plan(req: PlanRequest) -> dict:
     return _plan(req)
+
+
+@app.get("/api/eval")
+def api_eval() -> dict:
+    if not EVAL_RESULTS.exists():
+        return {"available": False, "reason": "eval/results.json not found; run python eval/run_eval.py"}
+    try:
+        return {"available": True, **json.loads(EVAL_RESULTS.read_text(encoding="utf-8"))}
+    except (OSError, ValueError) as e:
+        return {"available": False, "reason": f"eval/results.json unreadable: {e.__class__.__name__}"}
 
 
 @app.get("/crew-sheet", response_class=HTMLResponse)

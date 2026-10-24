@@ -74,11 +74,20 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
     <h2>Trade-offs (Pareto, planned)</h2>
     <svg id="pareto-svg" viewBox="0 0 520 300" style="max-width:620px" role="img" aria-label="Pareto scatter"></svg>
   </section>
+  <section class="card">
+    <h2>Backtest</h2>
+    <p id="bt-banner" class="badge syn"></p>
+    <p class="sub">Wins/ties/losses/mixed by observed weighted cost on modeled exposure-hours (all evaluable days, by stratum).</p>
+    <div id="bt-groups"></div>
+    <p id="bt-oracle"></p>
+    <h2>Weight sensitivity: optimizer vs B2</h2>
+    <div id="bt-sens"></div>
+  </section>
 </main>
 <footer>Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
 <script>
 const $ = id => document.getElementById(id);
-const NS = 'http://www.w3.org/2000/svg', X0 = 48, X1 = 790, ROWS = [['optimizer', 'Optimizer'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
+const NS = 'http://www.w3.org/2000/svg', X0 = 48, X1 = 790, ROWS = [['optimizer', 'Optimizer'], ['robust', 'robust (scenario-averaged)'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
 const COLS = ['hours_ge_80f', 'hours_ge_95f', 'hours_aqi_ge_101', 'hours_aqi_ge_151', 'dual_hazard_hours', 'paid_hours'];
 const state = {days: {}, data: null, view: 'planned', shown: null};
 const xs = s => X0 + (X1 - X0) * s / 96;
@@ -178,7 +187,34 @@ function drawPareto() {
   });
   sv(svg, 'text', {x: R, y: T + 10, class: 'axis', 'text-anchor': 'end'}, `colour = paid hours: light ${lo} h … dark ${hi} h · click a point to show it`);
 }
+function table(parent, head, rows) {
+  const t = document.createElement('table'), tr = t.insertRow();
+  for (const h of head) { const th = document.createElement('th'); th.textContent = h; tr.appendChild(th); }
+  for (const r of rows) { const row = t.insertRow(); for (const c of r) row.insertCell().textContent = c; }
+  const wrap = document.createElement('div'); wrap.className = 'scroll'; wrap.appendChild(t); parent.appendChild(wrap);
+}
+async function backtest() {
+  const r = await (await fetch('/api/eval')).json(), g = $('bt-groups'), s = $('bt-sens');
+  g.replaceChildren(); s.replaceChildren();
+  if (!r.available) { $('bt-banner').textContent = 'Backtest not available: ' + r.reason; return; }
+  $('bt-banner').textContent = r.provenance_statement;
+  const pairs = [];
+  for (const c of ['optimizer', 'robust', 'oracle']) for (const b of ['B2', 'b3_early', 'b3_late']) pairs.push([c, b]);
+  const wtl = x => `${x.win}/${x.tie}/${x.loss}/${x.mixed}`;
+  for (const prov of ['synthetic', 'real_cached']) {
+    const h = document.createElement('h2'); h.textContent = `${prov}: ${r.group_labels[prov]} (n=${r.n_days[prov]})`; g.appendChild(h);
+    if (!r.n_days[prov]) continue;
+    table(g, ['stratum', 'n', ...pairs.map(([c, b]) => `${c} vs ${b}`)],
+      Object.entries(r.groups[prov]).map(([k, v]) => [k, v.n, ...pairs.map(([c, b]) => wtl(v.comparisons[`${c}_vs_${b}`]))]));
+    const sens = r.weight_sensitivity[prov];
+    table(s, ['stratum (' + prov + ')', 'days', 'weakly dominates (totals)', 'strictly improves (totals)', 'weakly dominates (per day)', 'range Δh ≥95F', 'range Δh AQI≥101'],
+      Object.entries(sens).filter(([, v]) => v.n_days).map(([k, v]) => [k, v.n_days, v.weakly_dominates_fraction, v.strictly_improves_fraction,
+        v.per_day_weakly_dominates_fraction, v.range_total_diff_hours_ge_95f.join(' to '), v.range_total_diff_hours_aqi_ge_101.join(' to ')]));
+  }
+  $('bt-oracle').textContent = 'Oracle diagnosis (synthetic): ' + r.oracle_diagnosis.synthetic.sentence;
+}
 async function init() {
+  backtest();
   const days = await (await fetch('/api/days')).json(), sel = $('day');
   for (const d of days) {
     state.days[d.id] = d;

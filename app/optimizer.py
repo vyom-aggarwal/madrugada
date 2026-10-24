@@ -65,13 +65,23 @@ def optimize(temp_f, aqi, paid_hours_target: float | None = None, earliest_start
              tie_break: str = "early") -> ShiftPlan:
     """Min-cost shift on (temp_f, aqi). Unset arguments use config.yaml `shift` defaults."""
     c = cfg or load_config()
+    return optimize_cost(slot_cost(temp_f, aqi, weights, c), paid_hours_target, earliest_start, latest_end,
+                         min_block_hours, min_gap_hours, max_blocks, cfg=c, name=name, tie_break=tie_break)
+
+
+def optimize_cost(cost, paid_hours_target: float | None = None, earliest_start: str | None = None,
+                  latest_end: str | None = None, min_block_hours: float | None = None,
+                  min_gap_hours: float | None = None, max_blocks: int | None = None,
+                  cfg: dict | None = None, name: str = "optimized", tie_break: str = "early") -> ShiftPlan:
+    """Same constraints, search and tie-breaks as optimize(), on a precomputed per-slot cost array."""
+    c = cfg or load_config()
     s = c["shift"]
 
     def pick(v, key):
         return s[key] if v is None else v
 
     total, blocks = search(
-        slot_cost(temp_f, aqi, weights, c),
+        cost,
         hours_to_slots(pick(paid_hours_target, "default_paid_hours"), c),
         hhmm_to_slot(pick(earliest_start, "default_earliest_start"), c),
         hhmm_to_slot(pick(latest_end, "default_latest_end"), c),
