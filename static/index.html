@@ -5,54 +5,133 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Madrugada</title>
 <style>
-:root{--ink:#1d2433;--mute:#5b6475;--line:#d6dae2;--bg:#f6f7f9;--card:#fff;--opt:#2563eb;--b1:#6b7280;--b2:#a16207;--heat:#c2410c;--smoke:#7e22ce}
+/* Design system: warm dawn palette, 8px spacing scale, system fonts, rounded cards. No external assets. */
+:root{color-scheme:light dark;
+  --navy:#16213e;--navy-2:#24345e;--amber:#f0a03c;--cream:#fbf5ea;--coral:#d9573e;--violet:#7464a6;
+  --bg:var(--cream);--surface:#fffdf8;--surface-2:#f5eddf;--ink:#1a2236;--mute:#5a6276;--line:#e4d9c7;
+  --heat:#c44a33;--smoke:#6a5aa3;--accent:var(--amber);--accent-ink:#6e4300;--opt:#2d6aa8;--b1:#6b7280;--b2:#9a5d07;
+  --ok:#2f7d5b;--warn:#8a5200;--err:#a23b2a;--on-navy:#fbf5ea;
+  --sp1:8px;--sp2:16px;--sp3:24px;--sp4:32px;--sp5:48px;--r:16px;--r-sm:10px;--tap:44px;
+  --shadow:0 1px 2px rgba(22,33,62,.06),0 6px 20px rgba(22,33,62,.08);
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--ease:180ms ease}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1528;--surface:#172037;--surface-2:#1f2a46;--ink:#f2ece2;--mute:#a9b0c2;
+  --line:#2e3a5c;--heat:#ff8f75;--smoke:#b9adef;--accent:#f5b65c;--accent-ink:#ffd9a0;--opt:#86b8ee;--b1:#a3aab8;--b2:#e3ad52;
+  --ok:#74d3a4;--warn:#f2b862;--err:#ff8c7c;--shadow:0 1px 2px rgba(0,0,0,.4)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
 *{box-sizing:border-box}
-body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
-header,main,footer{max-width:1100px;margin:0 auto;padding:10px 16px}
-h1{font-size:20px;margin:6px 0 0}h2{font-size:15px;margin:10px 0 8px}h3{font-size:14px;margin:12px 0 6px}
-.sub{color:var(--mute);margin:0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin:10px 0}
-.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.badge{font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px;margin:0}
-.badge.syn{background:#fef3c7;color:#92400e;border:2px solid #d97706}
-.badge.real{background:#dbeafe;color:#1e3a8a;border:2px solid #2563eb}
-.badge.oracle,.badge.snap{background:#fee2e2;color:#991b1b;border:2px solid #dc2626}
-.badge.replay{background:#e5e7eb;color:#111827;border:2px solid #4b5563}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:16px/1.5 var(--font);color:var(--ink);background:var(--bg);padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+@media (min-width:768px){body{padding-bottom:0}}
+h1,h2,h3{line-height:1.25;margin:0}
+h2{font-size:20px}h3{font-size:16px}
+p{margin:var(--sp1) 0}
+a{color:var(--opt)}
 [hidden]{display:none!important}
-label{display:inline-flex;gap:6px;align-items:center}
-select,input,button{font:inherit}
-#day{width:min(560px,calc(100vw - 90px))}
-button{padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer}
-#error{color:#991b1b;font-weight:600}
-#warnings{margin:6px 0 0;padding-left:18px;color:#92400e;font-size:13px}
-.note{color:var(--mute);font-size:13px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 var(--sp2)}
+/* Top bar and tabs (bottom bar on phones, top tabs from 768px) */
+.topbar{background:var(--navy);color:var(--on-navy);position:sticky;top:0;z-index:20;box-shadow:var(--shadow)}
+.topbar .wrap{display:flex;align-items:center;gap:var(--sp2);min-height:60px}
+.brand{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.brand>div{min-width:0}
+.brand svg{flex:none;width:34px;height:34px}
+svg.defs{position:absolute;width:0;height:0;overflow:hidden}
+.brand h1{font-size:20px;letter-spacing:.2px}
+.tagline{margin:0;font-size:13px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);
+  background:var(--surface);border-top:1px solid var(--line);padding:4px 4px calc(4px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(22,33,62,.08)}
+.tab{min-height:56px;border:0;background:none;color:var(--mute);font:600 13px var(--font);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;border-radius:12px;cursor:pointer;transition:background var(--ease)}
+.tab svg{width:22px;height:22px}
+.tab[aria-selected="true"]{color:var(--ink);background:var(--surface-2)}
+.tab[aria-selected="true"] svg{color:var(--accent-ink)}
+@media (min-width:768px){
+  .tabs{position:static;display:flex;gap:4px;margin-left:auto;background:none;border:0;padding:0;box-shadow:none}
+  .tab{flex-direction:row;min-height:var(--tap);padding:0 16px;color:var(--on-navy);opacity:.8;font-size:15px}
+  .tab svg{width:18px;height:18px}
+  .tab[aria-selected="true"]{opacity:1;background:rgba(255,255,255,.12);color:var(--on-navy)}
+  .tab[aria-selected="true"] svg{color:var(--amber)}}
+main{padding:var(--sp2) 0 var(--sp3)}
+.view{animation:fade var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+/* Cards, rows, buttons, inputs */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--sp2);margin:0 0 var(--sp2);box-shadow:var(--shadow)}
+.card>h2,.card>h3{margin-bottom:var(--sp1)}
+.row{display:flex;flex-wrap:wrap;gap:var(--sp2);align-items:center}
+.note{color:var(--mute);font-size:14px}
+.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:12px;font-weight:700;color:var(--mute);margin:0}
+label{display:inline-flex;gap:var(--sp1);align-items:center;font-weight:600}
+select,input,button{font:inherit;color:inherit}
+select,input[type=time]{min-height:var(--tap);padding:0 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);max-width:100%}
+#day{width:min(560px,calc(100vw - 110px))}
+input[type=checkbox],input[type=radio]{width:22px;height:22px;accent-color:var(--navy-2)}
+input[type=range]{accent-color:var(--accent);min-height:var(--tap)}
+button{min-height:var(--tap);padding:0 20px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:700;cursor:pointer;transition:transform var(--ease),background var(--ease)}
+button:hover{background:var(--surface-2)}
+button:active{transform:scale(.98)}
+.btn.primary{background:var(--navy);color:var(--on-navy);border-color:var(--navy)}
+@media (prefers-color-scheme:dark){.btn.primary{background:var(--accent);color:#1a1205;border-color:var(--accent)}}
+button:disabled,input:disabled,select:disabled{opacity:.55;cursor:not-allowed}
+/* Badges: text is always present, colour is never the only signal */
+.badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;padding:4px 10px;border-radius:999px;font-size:13px;margin:0;border:2px solid currentColor}
+.badge.syn{color:var(--warn);background:color-mix(in srgb,var(--amber) 16%,transparent)}
+.badge.real{color:var(--opt);background:color-mix(in srgb,var(--opt) 12%,transparent)}
+.badge.oracle,.badge.snap{color:var(--err);background:color-mix(in srgb,var(--coral) 14%,transparent)}
+.badge.replay{color:var(--mute);background:var(--surface-2)}
+p.badge{display:flex;border-radius:var(--r-sm)}
+#error{color:var(--err);font-weight:700}
+#warnings{margin:6px 0 0;padding-left:20px;color:var(--warn);font-size:14px}
+/* Charts: dashed threshold lines with text labels, hatched work window */
 svg{width:100%;height:auto;display:block}
-.grid{stroke:#eceef2}.work{fill:var(--opt);opacity:.14}.thr{stroke:#4b5563;stroke-dasharray:5 4}
-.series{fill:none;stroke-width:2}.tick,.thr-label,.axis{font-size:11px;fill:var(--mute)}
-.pt{cursor:pointer;stroke:#fff;stroke-width:1.5}.pt.sel{stroke:#111;stroke-width:3}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right}
+.grid{stroke:var(--line)}.work{fill:url(#hatch-work)}.thr{stroke:var(--mute);stroke-dasharray:6 4}
+.series{fill:none;stroke-width:2.5;stroke-linejoin:round}.tick,.thr-label,.axis{font-size:12px;fill:var(--mute);font-family:var(--font)}
+.pt{cursor:pointer;stroke:var(--surface);stroke-width:1.5}.pt.sel{stroke:var(--ink);stroke-width:3}
+/* Tables */
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:right;vertical-align:top}
+th{font-size:13px;color:var(--mute);font-weight:700}
 th:first-child,td:first-child,td:last-child{text-align:left}
 td:last-child,td:first-child{white-space:nowrap}
-.scroll{overflow-x:auto}
-.box{border:2px solid var(--line);border-radius:8px;padding:8px 12px;background:#fafafa}
-footer{color:var(--mute);font-size:12px;padding-bottom:24px}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.box{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 16px;background:var(--surface-2)}
+.box ul{margin:0;padding-left:20px}
+.box li{margin:6px 0}
+footer{color:var(--mute);font-size:13px;padding:var(--sp2) var(--sp2) var(--sp4)}
 </style>
 </head>
 <body>
-<header>
-  <h1>Madrugada</h1>
-  <p class="sub" id="headline" aria-live="polite"><b>We tested whether shifting hours reduces heat exposure.</b> <span id="headline-detail">Loading the results…</span></p>
+<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs><pattern id="hatch-work" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="8" height="8" fill="var(--opt)" opacity=".10"/><line x1="0" y1="0" x2="0" y2="8" stroke="var(--opt)" stroke-width="2" opacity=".35"/></pattern></defs>
+</svg>
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="22" r="9" fill="#f0a03c"/><rect x="2" y="22" width="30" height="10" fill="#16213e"/><path d="M4 22h26" stroke="#fbf5ea" stroke-width="2"/><path d="M17 6v4M7 10l3 3M27 10l-3 3" stroke="#f0a03c" stroke-width="2" stroke-linecap="round"/></svg>
+      <div><h1>Madrugada</h1><p class="tagline">Heat and smoke day briefing for field crews</p></div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Views">
+      <button class="tab" role="tab" id="tab-today" aria-controls="view-today" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="14" r="4"/><path d="M2 18h20M12 4v3M4.9 8.9l2 2M19.1 8.9l-2 2"/></svg>Today</button>
+      <button class="tab" role="tab" id="tab-planner" aria-controls="view-planner" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h7"/></svg>Planner</button>
+      <button class="tab" role="tab" id="tab-evidence" aria-controls="view-evidence" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Evidence</button>
+    </nav>
+  </div>
 </header>
-<main>
+<main class="wrap">
   <p id="snap-banner" class="badge snap" hidden>SNAPSHOT MODE: sliders disabled</p>
-  <section class="card row">
+  <section class="card row" id="daybar" aria-label="Day and place">
     <label>Day <select id="day"></select></label>
     <span id="prov-badge" class="badge"></span>
     <span id="replay-badge" class="badge replay" hidden>REPLAY: recorded data, not live</span>
     <span id="oracle-badge" class="badge oracle" hidden>ORACLE: upper bound, not a forecast</span>
     <span id="rule-note" class="note"></span>
   </section>
+
+  <section class="view" id="view-today" role="tabpanel" aria-labelledby="tab-today">
+    <div class="card"><p class="eyebrow">Today</p><h2>Day briefing</h2><p class="note">The day briefing is built from the same forecast and plan data as the Planner.</p></div>
+  </section>
+
+  <section class="view" id="view-planner" role="tabpanel" aria-labelledby="tab-planner" hidden>
   <section class="card row">
     <label>Paid hours <input id="paid" type="range" min="2" max="12" step="0.25" value="8.5"> <output id="paid-val">8.5</output></label>
     <label>Earliest <input id="earliest" type="time" step="900" value="04:00"></label>
@@ -85,6 +164,11 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
     <h2>Trade-offs (Pareto, planned)</h2>
     <svg id="pareto-svg" viewBox="0 0 520 300" style="max-width:620px" role="img" aria-label="Pareto scatter"></svg>
   </section>
+  </section>
+
+  <section class="view" id="view-evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
+    <div class="card"><p class="eyebrow">What we found</p>
+      <p class="sub" id="headline" aria-live="polite"><b>We tested whether shifting hours reduces heat exposure.</b> <span id="headline-detail">Loading the results…</span></p></div>
   <section class="card">
     <h2>Backtest</h2>
     <p id="bt-banner" class="badge syn"></p>
@@ -97,8 +181,9 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
     <h2>Start-time sensitivity (EXPLORATORY, POST-HOC: not preregistered)</h2>
     <div id="bt-start"></div>
   </section>
+  </section>
 </main>
-<footer>Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
+<footer class="wrap">Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
 <script>
 const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg', X0 = 48, X1 = 790, ROWS = [['optimizer', 'Optimizer'], ['robust', 'robust (scenario-averaged)'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
@@ -363,7 +448,33 @@ function renderEval(g, r) {
     el(g, 'p', `Oracle diagnosis (cost losses to B2): ${od.cost.sentence}`).className = 'note';
   }
 }
+// Tabs: Today (default), Planner, Evidence. Arrow keys move between tabs; the hash remembers the view.
+const VIEWS = ['today', 'planner', 'evidence'];
+function showView(v, focus) {
+  if (!VIEWS.includes(v)) v = 'today';
+  for (const x of VIEWS) {
+    const on = x === v, tab = document.getElementById('tab-' + x);
+    document.getElementById('view-' + x).hidden = !on;
+    tab.setAttribute('aria-selected', on ? 'true' : 'false');
+    tab.tabIndex = on ? 0 : -1;
+  }
+  $('daybar').hidden = v === 'evidence';
+  try { history.replaceState(null, '', location.pathname + location.search + '#' + v); } catch (e) { /* file:// or sandboxed */ }
+  if (focus) document.getElementById('tab-' + v).focus();
+}
+function initTabs() {
+  VIEWS.forEach((v, i) => {
+    const tab = document.getElementById('tab-' + v);
+    tab.addEventListener('click', () => showView(v));
+    tab.addEventListener('keydown', e => {
+      const k = {ArrowRight: 1, ArrowLeft: -1, Home: -i, End: VIEWS.length - 1 - i}[e.key];
+      if (k !== undefined) { e.preventDefault(); showView(VIEWS[(i + k + VIEWS.length) % VIEWS.length], true); }
+    });
+  });
+  showView(location.hash.slice(1));
+}
 async function init() {
+  initTabs();
   backtest();
   const days = (await api('/api/days')).body, sel = $('day');
   for (const d of days) {
