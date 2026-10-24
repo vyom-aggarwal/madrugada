@@ -1,16 +1,20 @@
 """Phase 0 smoke tests: app wiring, config completeness, model validation."""
 import pytest
+from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from app.config import load_config
-from app.main import app, health
+from app.main import app
 from app.models import SLOTS_PER_DAY, DayRecord
+
+client = TestClient(app)
 
 
 def test_health_and_static_mount():
-    assert health() == {"status": "ok"}
-    paths = {getattr(r, "path", None) for r in app.routes}
-    assert {"/health", "/static"} <= paths
+    r = client.get("/health")
+    assert r.status_code == 200 and r.json() == {"status": "ok"}
+    r = client.get("/static/")
+    assert r.status_code == 200 and "Madrugada" in r.text
 
 
 def test_config_has_required_thresholds():

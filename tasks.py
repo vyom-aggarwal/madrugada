@@ -15,7 +15,7 @@ def run(*args: str) -> int:
 
 
 def setup() -> int:
-    return run(PY, "-m", "pip", "install", "-r", "requirements.txt")
+    return run(PY, "-m", "pip", "install", "-r", "requirements.txt", "-r", "requirements-dev.txt")
 
 
 def test() -> int:

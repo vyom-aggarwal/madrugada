@@ -10,7 +10,8 @@ Advisory tool only. It does not certify Cal/OSHA compliance and does not track i
    `provenance` field ("real_cached" | "synthetic") and the UI/eval output must display it.
 2. No ML models. The value is the optimizer, the sensor correction, and the evaluation.
 3. No new heavy dependencies. Allowed: fastapi, uvicorn, pydantic, numpy, pandas, pytest, pyyaml,
-   requests. Frontend is ONE static index.html (vanilla JS) plus a vendored chart lib in /static.
+   requests, httpx (dev/test only, in requirements-dev.txt, never imported by app code).
+   Frontend is ONE static index.html (vanilla JS) plus a vendored chart lib in /static.
    No npm, no build step, no CDN at runtime (must work offline).
 4. Thresholds come from `config.yaml` only (never hardcode):
    - heat: 80F (Cal/OSHA shade trigger), 95F (Cal/OSHA high-heat procedures)

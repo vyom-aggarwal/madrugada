@@ -4,7 +4,7 @@ PY ?= python
 .PHONY: setup test eval demo
 
 setup:
-	$(PY) -m pip install -r requirements.txt
+	$(PY) -m pip install -r requirements.txt -r requirements-dev.txt
 
 test:
 	$(PY) -m pytest -x -q

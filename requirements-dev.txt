@@ -1,0 +1,2 @@
+# Dev/test only. Never imported by app code.
+httpx
