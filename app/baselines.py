@@ -1,5 +1,7 @@
 """Baselines from config.yaml: B1 and B2 fixed shifts, B3 heat-only optimizer.
 
+B3 comes with two explicit tie-break policies, since with no heat signal many plans tie:
+b3_early (earliest start wins ties; also available as "B3") and b3_late (latest start wins).
 Every plan's `cost` is scored with the same (default or given) dual-hazard weights so costs are
 comparable; B3 only *chooses* its blocks with its heat-only weights.
 """
@@ -24,12 +26,22 @@ def b2(temp_f, aqi, weights=None, cfg=None) -> ShiftPlan:
     return fixed("B2", temp_f, aqi, weights, cfg)
 
 
-def b3(temp_f, aqi, weights=None, cfg=None, **shift_kw) -> ShiftPlan:
+def b3(temp_f, aqi, weights=None, cfg=None, tie_break: str = "early", name: str = "B3",
+       **shift_kw) -> ShiftPlan:
     c = cfg or load_config()
     heat_only = {**(weights or {}), **{k: v for k, v in c["baselines"]["B3"].items() if k.startswith("w_")}}
-    plan = optimize(temp_f, aqi, weights=heat_only, cfg=c, name="B3", **shift_kw)
+    plan = optimize(temp_f, aqi, weights=heat_only, cfg=c, name=name, tie_break=tie_break, **shift_kw)
     return plan.model_copy(update={"cost": plan_cost(plan.blocks, temp_f, aqi, weights, c)})
 
 
+def b3_early(temp_f, aqi, weights=None, cfg=None, **shift_kw) -> ShiftPlan:
+    return b3(temp_f, aqi, weights, cfg, tie_break="early", name="b3_early", **shift_kw)
+
+
+def b3_late(temp_f, aqi, weights=None, cfg=None, **shift_kw) -> ShiftPlan:
+    return b3(temp_f, aqi, weights, cfg, tie_break="late", name="b3_late", **shift_kw)
+
+
 def all_baselines(temp_f, aqi, weights=None, cfg=None, **shift_kw) -> list[ShiftPlan]:
-    return [b1(temp_f, aqi, weights, cfg), b2(temp_f, aqi, weights, cfg), b3(temp_f, aqi, weights, cfg, **shift_kw)]
+    return [b1(temp_f, aqi, weights, cfg), b2(temp_f, aqi, weights, cfg),
+            b3_early(temp_f, aqi, weights, cfg, **shift_kw), b3_late(temp_f, aqi, weights, cfg, **shift_kw)]

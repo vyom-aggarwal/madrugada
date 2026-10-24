@@ -17,12 +17,16 @@ def hours_to_slots(hours: float, cfg: dict | None = None) -> int:
 
 
 def search(cost, n_work: int, earliest: int, latest: int, min_block: int, min_gap: int,
-           max_blocks: int = 2) -> tuple[float, list[tuple[int, int]]]:
+           max_blocks: int = 2, tie_break: str = "early") -> tuple[float, list[tuple[int, int]]]:
     """Exact minimum over every layout of 1 or 2 blocks with n_work slots total inside [earliest, latest).
 
     Each block >= min_block slots, gap >= min_gap slots. Ties broken by: lower cost, fewer blocks,
-    earlier start, earlier end of block 1, earlier start of block 2. Returns (cost, [(start, end)]).
+    then (tie_break="early") earlier start, earlier end of block 1, earlier start of block 2, or
+    (tie_break="late") the same keys latest-first. Returns (cost, [(start, end)]).
     """
+    if tie_break not in ("early", "late"):
+        raise ValueError(f"tie_break must be 'early' or 'late', got {tie_break!r}")
+    sign = 1 if tie_break == "early" else -1
     P = np.concatenate([[0.0], np.cumsum(np.asarray(cost, dtype=float))])
     rows = []  # (cost, n_blocks, s1, e1, s2)
     if n_work >= min_block:
@@ -45,7 +49,7 @@ def search(cost, n_work: int, earliest: int, latest: int, min_block: int, min_ga
     if not rows:
         raise ValueError("no feasible shift for these constraints")
     r = np.concatenate(rows)
-    best = r[np.lexsort((r[:, 4], r[:, 3], r[:, 2], r[:, 1], np.round(r[:, 0], 9)))[0]]
+    best = r[np.lexsort((sign * r[:, 4], sign * r[:, 3], sign * r[:, 2], r[:, 1], np.round(r[:, 0], 9)))[0]]
     s1, e1 = int(best[2]), int(best[3])
     blocks = [(s1, e1)]
     if best[1] == 2:
@@ -57,7 +61,8 @@ def search(cost, n_work: int, earliest: int, latest: int, min_block: int, min_ga
 def optimize(temp_f, aqi, paid_hours_target: float | None = None, earliest_start: str | None = None,
              latest_end: str | None = None, min_block_hours: float | None = None,
              min_gap_hours: float | None = None, max_blocks: int | None = None,
-             weights: dict | None = None, cfg: dict | None = None, name: str = "optimized") -> ShiftPlan:
+             weights: dict | None = None, cfg: dict | None = None, name: str = "optimized",
+             tie_break: str = "early") -> ShiftPlan:
     """Min-cost shift on (temp_f, aqi). Unset arguments use config.yaml `shift` defaults."""
     c = cfg or load_config()
     s = c["shift"]
@@ -73,6 +78,7 @@ def optimize(temp_f, aqi, paid_hours_target: float | None = None, earliest_start
         hours_to_slots(pick(min_block_hours, "min_block_hours"), c),
         hours_to_slots(pick(min_gap_hours, "min_gap_hours"), c),
         pick(max_blocks, "max_blocks"),
+        tie_break,
     )
     return ShiftPlan(name=name, blocks=[Block(start_slot=a, end_slot=b) for a, b in blocks], cost=total)
 
@@ -109,8 +115,11 @@ def pareto(temp_f, aqi, paid_hours_target: float | None = None, cfg: dict | None
     for frac in np.round(p["paid_fraction_max"] - p["paid_fraction_step"] * np.arange(n), 6):
         for ratio in p["heat_smoke_ratios"]:
             w = {"w_heat": ratio * c["weights"]["w_smoke"], "w_smoke": c["weights"]["w_smoke"]}
-            plan = optimize(temp_f, aqi, paid_hours_target=float(frac) * target, weights=w, cfg=c,
-                            name=f"pareto_{frac:.2f}_{ratio:g}", **shift_kw)
+            try:
+                plan = optimize(temp_f, aqi, paid_hours_target=float(frac) * target, weights=w, cfg=c,
+                                name=f"pareto_{frac:.2f}_{ratio:g}", **shift_kw)
+            except ValueError:  # e.g. reduced hours fall below min_block_hours: skip that fraction
+                continue
             m = exposure(temp_f, aqi, plan.blocks, target, c)
             points.append(ParetoPoint(paid_fraction=float(frac), heat_smoke_ratio=ratio,
                                       heat_hours=m.hours_ge_80f, smoke_hours=m.hours_aqi_ge_101,

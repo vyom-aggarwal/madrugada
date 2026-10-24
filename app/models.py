@@ -1,12 +1,47 @@
 """Pydantic data models. Types and validation only; no domain logic."""
+import math
 from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
+from app.config import load_config
+
 SLOTS_PER_DAY = 96  # mirrors config.yaml grid.slots_per_day; checked in tests
 
 Provenance = Literal["real_cached", "synthetic"]
-HHMM = Field(pattern=r"^([01]\d|2[0-3]):[0-5]\d$")
+HHMM_RE = r"^([01]\d|2[0-3]):[0-5]\d$"
+HHMM = Field(pattern=HHMM_RE)
+_CFG = load_config()
+
+
+def _minutes(hhmm: str) -> int:
+    h, m = map(int, hhmm.split(":"))
+    return h * 60 + m
+
+
+class PlanRequest(BaseModel):
+    """API request for one day's plan. Defaults come from config.yaml `shift`."""
+    day_id: str = Field(min_length=1, max_length=200)
+    paid_hours: float = Field(default=_CFG["shift"]["default_paid_hours"], ge=2, le=12)
+    earliest: str = Field(default=_CFG["shift"]["default_earliest_start"], pattern=HHMM_RE)
+    latest: str = Field(default=_CFG["shift"]["default_latest_end"], pattern=HHMM_RE)
+    oracle: bool = False
+
+    @model_validator(mode="after")
+    def _window_fits(self):
+        step = _CFG["grid"]["slot_minutes"]
+        e, l = _minutes(self.earliest), _minutes(self.latest)
+        if e % step or l % step:
+            raise ValueError(f"earliest and latest must be on the {step}-minute grid")
+        if e >= l:
+            raise ValueError(f"earliest ({self.earliest}) must be before latest ({self.latest})")
+        paid = math.ceil(self.paid_hours * 60 / step - 1e-9) * step  # minutes actually scheduled
+        if paid < _CFG["shift"]["min_block_hours"] * 60:
+            raise ValueError(f"paid_hours must be at least min_block_hours ({_CFG['shift']['min_block_hours']} h)")
+        if l - e < paid:  # a single block needs no gap; two blocks would need paid + min_gap
+            raise ValueError(f"window {self.earliest}-{self.latest} ({(l - e) / 60:g} h) cannot hold "
+                             f"{paid / 60:g} paid hours")
+        return self
 
 
 class DayRecord(BaseModel):

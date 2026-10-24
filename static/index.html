@@ -1,13 +1,196 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Madrugada</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Madrugada</title>
+<style>
+:root{--ink:#1d2433;--mute:#5b6475;--line:#d6dae2;--bg:#f6f7f9;--card:#fff;--opt:#2563eb;--b1:#6b7280;--b2:#a16207;--heat:#c2410c;--smoke:#7e22ce}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+header,main,footer{max-width:1100px;margin:0 auto;padding:10px 16px}
+h1{font-size:20px;margin:6px 0 0}h2{font-size:15px;margin:0 0 8px}
+.sub{color:var(--mute);margin:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin:10px 0}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.badge{font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px}
+.badge.syn{background:#fef3c7;color:#92400e;border:2px solid #d97706}
+.badge.real{background:#dbeafe;color:#1e3a8a;border:2px solid #2563eb}
+.badge.oracle{background:#fee2e2;color:#991b1b;border:2px solid #dc2626}
+[hidden]{display:none!important}
+label{display:inline-flex;gap:6px;align-items:center}
+select,input,button{font:inherit}
+#day{width:min(560px,calc(100vw - 90px))}
+button{padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer}
+#error{color:#991b1b;font-weight:600}
+#warnings{margin:6px 0 0;padding-left:18px;color:#92400e;font-size:13px}
+svg{width:100%;height:auto;display:block}
+.grid{stroke:#eceef2}.work{fill:var(--opt);opacity:.14}.thr{stroke:#4b5563;stroke-dasharray:5 4}
+.series{fill:none;stroke-width:2}.tick,.thr-label,.axis{font-size:11px;fill:var(--mute)}
+.pt{cursor:pointer;stroke:#fff;stroke-width:1.5}.pt.sel{stroke:#111;stroke-width:3}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right}
+th:first-child,td:first-child,td:last-child{text-align:left}
+td:last-child,td:first-child{white-space:nowrap}
+.scroll{overflow-x:auto}
+footer{color:var(--mute);font-size:12px;padding-bottom:24px}
+</style>
 </head>
 <body>
+<header>
   <h1>Madrugada</h1>
-  <p>Heat + smoke shift planner. Advisory only; not a Cal/OSHA compliance tool.</p>
-  <p>UI coming in a later phase.</p>
+  <p class="sub">Heat + smoke crew shift planner. Reduces modeled exposure-hours while keeping paid hours.</p>
+</header>
+<main>
+  <section class="card row">
+    <label>Day <select id="day"></select></label>
+    <span id="prov-badge" class="badge"></span>
+    <span id="oracle-badge" class="badge oracle" hidden>ORACLE: upper bound, not a forecast</span>
+  </section>
+  <section class="card row">
+    <label>Paid hours <input id="paid" type="range" min="2" max="12" step="0.25" value="8.5"> <output id="paid-val">8.5</output></label>
+    <label>Earliest <input id="earliest" type="time" step="900" value="04:00"></label>
+    <label>Latest <input id="latest" type="time" step="900" value="19:00"></label>
+    <label><input id="oracle" type="checkbox"> ORACLE (uses the day's actual data)</label>
+    <button id="print" type="button">Print crew sheet</button>
+    <div style="flex-basis:100%"><div id="error"></div><ul id="warnings"></ul></div>
+  </section>
+  <section class="card">
+    <h2 id="chart-note">Plan</h2>
+    <svg id="temp-svg" viewBox="0 0 960 180" role="img" aria-label="Temperature"></svg>
+    <svg id="aqi-svg" viewBox="0 0 960 240" role="img" aria-label="AQI"></svg>
+  </section>
+  <section class="card">
+    <div class="row"><h2 style="margin:0">Comparison</h2>
+      <label><input type="radio" name="view" id="view-planned" checked> planned (forecast)</label>
+      <label><input type="radio" name="view" id="view-observed"> observed (what happened)</label>
+    </div>
+    <div class="scroll"><table>
+      <thead><tr><th>Plan</th><th>h ≥80°F</th><th>h ≥95°F</th><th>h AQI≥101</th><th>h AQI≥151</th><th>dual-hazard h</th><th>paid h</th><th>blocks</th></tr></thead>
+      <tbody id="cmp-body"></tbody>
+    </table></div>
+  </section>
+  <section class="card">
+    <h2>Trade-offs (Pareto, planned)</h2>
+    <svg id="pareto-svg" viewBox="0 0 520 300" style="max-width:620px" role="img" aria-label="Pareto scatter"></svg>
+  </section>
+</main>
+<footer>Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
+<script>
+const $ = id => document.getElementById(id);
+const NS = 'http://www.w3.org/2000/svg', X0 = 48, X1 = 790, ROWS = [['optimizer', 'Optimizer'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
+const COLS = ['hours_ge_80f', 'hours_ge_95f', 'hours_aqi_ge_101', 'hours_aqi_ge_151', 'dual_hazard_hours', 'paid_hours'];
+const state = {days: {}, data: null, view: 'planned', shown: null};
+const xs = s => X0 + (X1 - X0) * s / 96;
+function sv(parent, tag, attrs, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs || {}) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  parent.appendChild(e); return e;
+}
+const blocksText = bs => bs.map(b => b.start + '–' + b.end).join(', ');
+function params() {
+  return {day_id: $('day').value, paid_hours: +$('paid').value, earliest: $('earliest').value, latest: $('latest').value, oracle: $('oracle').checked};
+}
+function badges() {
+  const d = state.days[$('day').value], b = $('prov-badge');
+  const syn = !d || d.provenance === 'synthetic';
+  b.className = 'badge ' + (syn ? 'syn' : 'real');
+  b.textContent = syn ? 'SYNTHETIC: ILLUSTRATION ONLY' : 'REAL (cached)';
+  $('oracle-badge').hidden = !$('oracle').checked;
+}
+let timer = null;
+function schedule() { $('paid-val').textContent = $('paid').value; badges(); clearTimeout(timer); timer = setTimeout(plan, 250); }
+async function plan() {
+  badges();
+  const r = await fetch('/api/plan', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params())});
+  const j = await r.json();
+  if (!r.ok) {
+    const d = j.detail;
+    $('error').textContent = 'Cannot plan: ' + (Array.isArray(d) ? d.map(e => e.msg).join('; ') : d);
+    return;
+  }
+  $('error').textContent = '';
+  state.data = j;
+  state.shown = {label: 'Optimizer plan', blocks: j.plans.optimizer.blocks, idx: -1};
+  render();
+}
+function render() {
+  const w = $('warnings'); w.replaceChildren();
+  for (const t of state.data.warnings) { const li = document.createElement('li'); li.textContent = t; w.appendChild(li); }
+  drawCharts(); drawTable(); drawPareto();
+}
+function panel(svg, vals, lines, color, title, axis) {
+  svg.replaceChildren();
+  const top = 10, bot = 170, lo0 = Math.min(...vals, ...lines.map(l => l.v)), hi0 = Math.max(...vals, ...lines.map(l => l.v));
+  const pad = (hi0 - lo0) * 0.08 || 1, y0 = axis ? Math.max(0, lo0 - pad) : lo0 - pad, y1 = hi0 + pad;
+  const ys = v => bot - (bot - top) * (v - y0) / (y1 - y0);
+  for (let h = 0; h <= 24; h += 3) sv(svg, 'line', {x1: xs(h * 4), x2: xs(h * 4), y1: top, y2: bot, class: 'grid'});
+  for (const b of state.shown.blocks) sv(svg, 'rect', {x: xs(b.start_slot), y: top, width: xs(b.end_slot) - xs(b.start_slot), height: bot - top, class: 'work'});
+  for (const l of lines) {
+    sv(svg, 'line', {x1: X0, x2: X1, y1: ys(l.v), y2: ys(l.v), class: 'thr'});
+    sv(svg, 'text', {x: X1 + 6, y: ys(l.v) + 4, class: 'thr-label'}, l.label);
+  }
+  sv(svg, 'polyline', {class: 'series', stroke: color, points: vals.map((v, i) => xs(i + 0.5).toFixed(1) + ',' + ys(v).toFixed(1)).join(' ')});
+  [y0, (y0 + y1) / 2, y1].forEach(v => sv(svg, 'text', {x: X0 - 6, y: ys(v) + 4, class: 'tick', 'text-anchor': 'end'}, Math.round(v)));
+  sv(svg, 'text', {x: X0 + 4, y: top + 12, class: 'axis'}, title);
+  if (!axis) return;
+  const p = state.data.plans;
+  [['B1', 186, 'var(--b1)'], ['B2', 199, 'var(--b2)']].forEach(([k, y, c]) => {
+    for (const b of p[k].blocks) sv(svg, 'rect', {x: xs(b.start_slot), y, width: xs(b.end_slot) - xs(b.start_slot), height: 8, fill: c});
+    sv(svg, 'text', {x: X0 - 6, y: y + 8, class: 'tick', 'text-anchor': 'end'}, k);
+    sv(svg, 'text', {x: X1 + 6, y: y + 8, class: 'tick'}, k + ' ' + blocksText(p[k].blocks));
+  });
+  for (let h = 0; h <= 24; h += 3) sv(svg, 'text', {x: xs(h * 4), y: 228, class: 'axis', 'text-anchor': 'middle'}, ((h % 12) || 12) + (h < 12 || h === 24 ? 'a' : 'p'));
+}
+function drawCharts() {
+  const d = state.data, t = d.thresholds;
+  const mode = d.mode === 'ORACLE' ? 'ORACLE (actual data, upper bound)' : 'forecast proxy (D-1 and prior 7 days)';
+  $('chart-note').textContent = state.shown.label + ': ' + blocksText(state.shown.blocks) + ' · curves: ' + mode;
+  panel($('temp-svg'), d.forecast.temp_f, [{v: t.heat_shade_f, label: t.heat_shade_f + '°F shade trigger'}, {v: t.heat_high_f, label: t.heat_high_f + '°F high-heat procedures'}], 'var(--heat)', 'Temperature °F', false);
+  panel($('aqi-svg'), d.forecast.aqi, [{v: t.aqi_sensitive, label: 'AQI ' + t.aqi_sensitive + ' unhealthy (sensitive)'}, {v: t.aqi_smoke_rule, label: 'AQI ' + t.aqi_smoke_rule + ' smoke rule'}], 'var(--smoke)', 'AQI (PM2.5)', true);
+}
+function drawTable() {
+  const tb = $('cmp-body'); tb.replaceChildren();
+  for (const [k, name] of ROWS) {
+    const tr = document.createElement('tr'), m = state.data.metrics[k][state.view];
+    const cells = [name, ...COLS.map(c => m[c].toFixed(2)), blocksText(state.data.plans[k].blocks)];
+    for (const c of cells) { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); }
+    tb.appendChild(tr);
+  }
+}
+function drawPareto() {
+  const svg = $('pareto-svg'), pts = state.data.pareto; svg.replaceChildren();
+  const L = 52, R = 500, T = 12, B = 250;
+  const mx = Math.max(1, ...pts.map(p => p.heat_hours)) + 0.5, my = Math.max(1, ...pts.map(p => p.smoke_hours)) + 0.5;
+  const px = v => L + (R - L) * v / mx, py = v => B - (B - T) * v / my;
+  sv(svg, 'line', {x1: L, x2: R, y1: B, y2: B, stroke: '#9ca3af'}); sv(svg, 'line', {x1: L, x2: L, y1: T, y2: B, stroke: '#9ca3af'});
+  for (let v = 0; v <= mx; v += Math.max(1, Math.round(mx / 6))) sv(svg, 'text', {x: px(v), y: B + 14, class: 'tick', 'text-anchor': 'middle'}, v);
+  for (let v = 0; v <= my; v += Math.max(1, Math.round(my / 6))) sv(svg, 'text', {x: L - 6, y: py(v) + 4, class: 'tick', 'text-anchor': 'end'}, v);
+  sv(svg, 'text', {x: (L + R) / 2, y: B + 32, class: 'axis', 'text-anchor': 'middle'}, 'hours ≥80°F (planned)');
+  sv(svg, 'text', {x: 12, y: (T + B) / 2, class: 'axis', 'text-anchor': 'middle', transform: `rotate(-90 12 ${(T + B) / 2})`}, 'hours AQI ≥101 (planned)');
+  const paid = pts.map(p => p.paid_hours), lo = Math.min(...paid), hi = Math.max(...paid);
+  const mix = f => `rgb(${[[198, 8], [219, 48], [239, 107]].map(([a, b]) => Math.round(a + (b - a) * f)).join(',')})`;
+  pts.forEach((p, i) => {
+    const c = sv(svg, 'circle', {cx: px(p.heat_hours), cy: py(p.smoke_hours), r: 7, fill: mix(hi > lo ? (p.paid_hours - lo) / (hi - lo) : 1), class: 'pt' + (state.shown.idx === i ? ' sel' : '')});
+    sv(c, 'title', {}, `${p.paid_hours} paid h · ${p.heat_hours} h ≥80°F · ${p.smoke_hours} h AQI≥101 · heat/smoke weight ${p.heat_smoke_ratio} · ${blocksText(p.blocks)}`);
+    c.addEventListener('click', () => { state.shown = {label: `Pareto plan (${p.paid_hours} paid h)`, blocks: p.blocks, idx: i}; drawCharts(); drawPareto(); });
+  });
+  sv(svg, 'text', {x: R, y: T + 10, class: 'axis', 'text-anchor': 'end'}, `colour = paid hours: light ${lo} h … dark ${hi} h · click a point to show it`);
+}
+async function init() {
+  const days = await (await fetch('/api/days')).json(), sel = $('day');
+  for (const d of days) {
+    state.days[d.id] = d;
+    const o = document.createElement('option'); o.value = d.id; o.textContent = `${d.date} · ${d.label}`; sel.appendChild(o);
+  }
+  ['day', 'paid', 'earliest', 'latest', 'oracle'].forEach(id => $(id).addEventListener('input', schedule));
+  $('view-planned').addEventListener('change', () => { state.view = 'planned'; drawTable(); });
+  $('view-observed').addEventListener('change', () => { state.view = 'observed'; drawTable(); });
+  $('print').addEventListener('click', () => window.open('/crew-sheet?' + new URLSearchParams(params()).toString(), '_blank'));
+  plan();
+}
+init();
+</script>
 </body>
 </html>

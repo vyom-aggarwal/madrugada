@@ -11,7 +11,8 @@ Advisory tool only. It does not certify Cal/OSHA compliance and does not track i
 2. No ML models. The value is the optimizer, the sensor correction, and the evaluation.
 3. No new heavy dependencies. Allowed: fastapi, uvicorn, pydantic, numpy, pandas, pytest, pyyaml,
    requests, httpx (dev/test only, in requirements-dev.txt, never imported by app code).
-   Frontend is ONE static index.html (vanilla JS) plus a vendored chart lib in /static.
+   Frontend is ONE static index.html (vanilla JS). No chart library: charts are inline SVG drawn
+   by vanilla JS in static/index.html.
    No npm, no build step, no CDN at runtime (must work offline).
 4. Thresholds come from `config.yaml` only (never hardcode):
    - heat: 80F (Cal/OSHA shade trigger), 95F (Cal/OSHA high-heat procedures)
@@ -27,7 +28,7 @@ madrugada/
   app/ {main.py, models.py, exposure.py, optimizer.py, baselines.py, aqi.py, forecast.py}
   data/ {fixtures/, cache/, make_fixtures.py, fetch_real.py}
   eval/ {days.yaml, run_eval.py, results.json, results.md}
-  static/ {index.html, chart.min.js}
+  static/ {index.html}
   tests/
   Makefile   (targets: setup, test, eval, demo)
 
@@ -68,3 +69,14 @@ madrugada/
 - Default earliest_start 04:00 and latest_end 19:00 (config.yaml). These are tunable assumptions, not legal limits.
 - Fixtures and any replayed data are illustrations. Only the real-data backtest counts as evidence for the
   dual-hazard claim. Never tune fixtures or weights to make a test pass.
+
+## Findings so far
+- Fixtures are synthetic illustrations. Only the real-data backtest counts as evidence for the
+  dual-hazard claim.
+- On the current fixtures the optimizer chose the same plan as B3 on co_occurring. On smoke_only there is
+  no clean window, so B3 vs optimizer is decided by tie-breaks and by AQI>=151 hours (4.75 vs 5.0).
+  Test (c) is xfail for this reason.
+- Cost weights (levels 0/1/3 and the w_* values) are arbitrary assumptions. Phase 4 MUST include a
+  weight-sensitivity analysis: vary the heat/smoke/dual weights over a grid and report how often the
+  optimizer beats B1, B2 and B3, and by how much.
+- No chart library: charts are inline SVG drawn by vanilla JS in static/index.html (see Hard rule 3).
