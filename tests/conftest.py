@@ -10,7 +10,7 @@ FIXTURES = Path(__file__).resolve().parent.parent / "data" / "fixtures"
 
 @pytest.fixture(autouse=True)
 def isolate_real_cache(tmp_path_factory, monkeypatch):
-    """Tests never see locally downloaded real days (data/cache is gitignored and may hold thousands)."""
+    """Tests never see the real days in data/cache (thousands of records); they run on the fixtures."""
     from app import planning
     from eval import run_eval
     empty = tmp_path_factory.mktemp("empty_cache")

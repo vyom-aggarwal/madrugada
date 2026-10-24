@@ -32,6 +32,13 @@ real-data cache, `demo` prints a `?snapshot` URL that runs the UI from the commi
 (real days selected for illustration by a stated rule). Window 2 uses `analysis/fetch_window2.py` and
 `analysis/eval_window2.py`. The real evals refuse to run unless the preregistration hashes match.
 
+## Deploy on Vercel
+Import the GitHub repository in Vercel with the framework preset **Other** and no build command; `vercel.json`
+does the rest. Vercel's CDN serves `static/`, and `/` redirects to the app. `/api/*`, `/crew-sheet` and `/health`
+run the same FastAPI app as one Python function (`api/index.py`, dependencies from `requirements.txt`). The
+derived real-day records in `data/cache/real-*.json` (about 6 MB) are committed so the deployed planner has the
+same real days. If the function is unavailable, the page falls back to the committed demo snapshot (SNAPSHOT MODE).
+
 ## Provenance rules
 - Every day is `synthetic` or `real_cached`, shown as a badge; all days are replays ("REPLAY: recorded data, not live").
 - Synthetic results are labeled "SYNTHETIC, NOT EVIDENCE" and never pooled with real days. Real windows are

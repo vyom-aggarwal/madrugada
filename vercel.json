@@ -1,0 +1,30 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "functions": {
+    "api/index.py": {"maxDuration": 30}
+  },
+  "redirects": [
+    {"source": "/", "destination": "/static/index.html", "permanent": false},
+    {"source": "/static", "destination": "/static/index.html", "permanent": false}
+  ],
+  "rewrites": [
+    {"source": "/api/:path*", "destination": "/api/index"},
+    {"source": "/crew-sheet", "destination": "/api/index"},
+    {"source": "/health", "destination": "/api/index"}
+  ],
+  "headers": [
+    {
+      "source": "/api/:name(eval|eval_w2|start_sensitivity|days)",
+      "headers": [{"key": "Cache-Control", "value": "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800"}]
+    },
+    {
+      "source": "/static/:file(demo_snapshot|limitations).json",
+      "headers": [{"key": "Cache-Control", "value": "public, max-age=300, s-maxage=86400, stale-while-revalidate=604800"}]
+    },
+    {
+      "source": "/static/index.html",
+      "headers": [{"key": "Cache-Control", "value": "public, max-age=0, must-revalidate"}]
+    }
+  ]
+}

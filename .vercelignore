@@ -1,0 +1,10 @@
+# Not needed by the deployed site or the API function
+submission/
+tests/
+.claude/
+.venv/
+.pytest_cache/
+data/cache/raw/
+data/cache/meta/
+data/cache_w2/
+static/snapshot.json

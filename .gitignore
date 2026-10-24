@@ -4,5 +4,8 @@ __pycache__/
 .venv/
 data/cache/*
 !data/cache/.gitkeep
+# the derived real-day records (about 6 MB) are committed so a Vercel deploy serves the same real days;
+# raw downloads and metadata stay local
+!data/cache/real-*.json
 static/snapshot.json
 data/cache_w2/
