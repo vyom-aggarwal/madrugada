@@ -2,8 +2,8 @@
 import numpy as np
 import pytest
 
-from app.aqi import (extrapolation_warning, load_breakpoints, pm25_to_aqi,
-                     pm25_to_aqi_scalar, truncate_pm25)
+from app.aqi import (extrapolation_warning, invalid_input_warning, load_breakpoints,
+                     pm25_to_aqi, pm25_to_aqi_scalar, truncate_pm25)
 
 
 @pytest.mark.parametrize("pm, expected", [(9.0, 50), (35.4, 100), (55.5, 151)])
@@ -42,3 +42,11 @@ def test_vectorized_and_warning():
     assert r.extrapolated.tolist() == [False, False, False, True]
     assert "extrapolated" in extrapolation_warning(r)
     assert extrapolation_warning(pm25_to_aqi([10.0])) is None
+
+
+def test_negative_input_clamped_and_flagged():
+    r = pm25_to_aqi([-3.0, -0.01, 0.0, 12.0])
+    assert r.aqi[:3].tolist() == [0, 0, 0]
+    assert r.invalid_input.tolist() == [True, True, False, False]
+    assert "2 slot(s)" in invalid_input_warning(r)
+    assert invalid_input_warning(pm25_to_aqi([0.0, 5.0])) is None

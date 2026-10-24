@@ -44,6 +44,7 @@ aqi_pm25:
     - [225.5, 325.4, 301, 500]   # unverified
 
 # PurpleAir correction, EPA US-wide: pm = a*pm_cf1 + b*RH + c (verify against Barkjohn et al. 2021).
+# Coefficients and threshold below are UNVERIFIED.
 purpleair:
   a_pm_cf1: 0.524
   b_rh: -0.0862
@@ -72,4 +73,20 @@ baselines:
 forecast:
   weight_prev_day: 0.5
   weight_prior_mean: 0.5
-  prior_days: 7
+  prior_days: 7              # mean over D-1 .. D-7 (includes D-1)
+
+# Real-data sources for data/fetch_real.py. ALL URLs, parameter names, response field names and
+# units are UNVERIFIED: check against current CIMIS and AirNow API docs before relying on them.
+real_data:
+  region: fresno
+  max_missing_hours: 4       # per field; gaps are linearly interpolated
+  cimis:
+    url: "https://et.water.ca.gov/api/data"     # unverified
+    station: "80"                               # Fresno State (unverified)
+    units: "M"                                  # metric: C, %, W/m2 (unverified)
+    data_items: {temp_f: hly-air-tmp, rh: hly-rel-hum, solar_wm2: hly-sol-rad}  # unverified
+    response_fields: {temp_f: HlyAirTmp, rh: HlyRelHum, solar_wm2: HlySolRad}   # unverified
+  airnow:
+    url: "https://www.airnowapi.org/aq/data/"   # unverified
+    bbox: "-120.1,36.5,-119.5,37.0"             # lon_min,lat_min,lon_max,lat_max near Fresno (unverified)
+    utc_offset_hours: -7                        # PDT; use -8 outside daylight time

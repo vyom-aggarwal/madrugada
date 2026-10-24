@@ -14,6 +14,7 @@ class DayRecord(BaseModel):
     label: str
     region: str
     provenance: Provenance
+    date: str | None = Field(default=None, pattern=r"^\d{4}-\d{2}-\d{2}$")  # local date; forecast needs it
     temp_f: list[float]
     rh: list[float]
     solar_wm2: list[float]
