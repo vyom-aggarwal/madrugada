@@ -1,0 +1,13 @@
+{
+ "source": "docs/PITCH_filled.md (d) Limitations",
+ "limitations": [
+  "Airport (ASOS) air temperature, not field temperature; no solar load.",
+  "Monitor distance: PM2.5 monitors are 4.39 to 22.45 km from the weather stations; the farthest is Tulare in 2018-2020 (window 2). Bakersfield 2018-2020 excluded in window 2 (no active PM2.5 monitor within 25 km).",
+  "The forecast is a simple proxy (yesterday plus the 7-day mean), not a weather model.",
+  "Cost weights and levels are assumptions.",
+  "PM2.5 AQI breakpoints are marked unverified in config (a later read-only check matched EPA's May 2026 document). Hourly values are scored against 24-hour breakpoints.",
+  "EPA AirData release status (preliminary or certified) is unverifiable from the listing.",
+  "No worker input: preferences, breaks, piece rates and travel were not modeled.",
+  "The Spanish text needs a native-speaker review."
+ ]
+}

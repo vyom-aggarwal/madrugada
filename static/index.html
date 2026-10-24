@@ -169,6 +169,76 @@ details.acc[open]>summary::before{content:"−"}
 details.acc>summary h2{font-size:18px}
 details.acc>:not(summary){margin-left:var(--sp2);margin-right:var(--sp2)}
 details.acc>:last-child{margin-bottom:var(--sp2)}
+/* Hero (two columns from 860px) and call to action */
+.hero{position:relative;overflow:hidden;padding:var(--sp3)}
+.hero::after{content:"";position:absolute;right:-80px;bottom:-120px;width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(240,160,60,.28),rgba(240,160,60,0) 70%);pointer-events:none}
+.hero-grid{display:grid;gap:var(--sp3);position:relative;z-index:1}
+@media (min-width:860px){.hero-grid{grid-template-columns:1.7fr 1fr;align-items:center}.hero h2{font-size:32px}}
+.hero-aside{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:var(--r);padding:var(--sp2) var(--sp3)}
+.sunmark{width:140px;height:auto;margin:0 0 4px}
+@media (max-width:859px){
+  .hero{padding:var(--sp2)}
+  .hero-grid{gap:var(--sp2)}
+  .hero-aside{order:-1;display:grid;grid-template-columns:64px 1fr;column-gap:14px;align-items:center;padding:12px 14px}
+  .hero-aside .sunmark{grid-column:1;grid-row:1/5;width:64px;margin:0}
+  .hero-aside>p{grid-column:2}
+  .hero p.hero-time{font-size:34px;margin:0 0 6px}
+  .hero p.hero-plan{font-size:18px}
+  .hero h2{font-size:24px}
+  .hero p{font-size:16px}}
+@media (max-width:767px){
+  #daybar{grid-template-columns:1fr 1.25fr;padding:12px}
+  #daybar select{font-size:16px}
+  #daybar .badges{grid-column:1/-1}
+  #rule-note{font-size:12px}}
+.hero p.eyebrow{font-size:12px;margin:0 0 2px}
+.hero p.note{font-size:13px}
+.hero p.hero-time{font-size:48px;font-weight:800;line-height:1.05;margin:0 0 14px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.hero p.hero-plan{font-size:22px;font-weight:700;margin:0;font-variant-numeric:tabular-nums}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:var(--sp2) 0 4px}
+button svg,.btn svg{width:20px;height:20px;flex:none;display:inline-block}
+.btn.cta{white-space:nowrap;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px;font-size:17px;background:var(--amber);color:#1d1404;border:0;box-shadow:0 6px 18px rgba(240,160,60,.35)}
+.btn.cta:hover{background:#f4b45e}
+.hero .hero-actions .note{color:rgba(251,245,234,.85)}
+/* Today dashboard: ribbon left, tiles right on wide screens */
+.today-grid{display:grid;gap:var(--sp2)}
+.today-grid>.card,.today-grid>.tiles{margin:0}
+@media (min-width:960px){.today-grid{grid-template-columns:2fr 1fr;align-items:start}.today-grid .tiles{grid-template-columns:1fr}}
+.today-grid+*{margin-top:var(--sp2)}
+#view-today>.today-grid{margin-bottom:var(--sp2)}
+/* Evidence: finding cards generated from the results */
+.story-title{font-size:24px;margin:4px 0 var(--sp2)}
+@media (min-width:860px){.story-title{font-size:28px}}
+.findings{display:grid;gap:var(--sp2);margin-bottom:var(--sp2)}
+@media (min-width:760px){.findings{grid-template-columns:repeat(3,1fr)}}
+.finding{border-radius:var(--r-sm);padding:var(--sp2);background:var(--surface-2);border-left:6px solid var(--line)}
+.finding.yes{border-left-color:var(--ok)}.finding.no{border-left-color:var(--mute)}.finding.smoke{border-left-color:var(--smoke)}
+.finding .tag{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin:0}
+.finding h3{font-size:17px;margin:4px 0 8px}
+.finding .num{font-size:30px;font-weight:800;margin:0;font-variant-numeric:tabular-nums}
+.finding .ci{font-size:13px;color:var(--mute);margin:2px 0 8px}
+.finding .line{font-size:14px;margin:6px 0 0}
+#headline{font-size:14px;color:var(--mute)}
+#headline b{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}  /* same sentence is the card title */
+/* About sheet and first-run intro */
+.icon-btn{min-height:var(--tap);min-width:var(--tap);padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:transparent;color:var(--on-navy);font-weight:700}
+.icon-btn:hover{background:rgba(255,255,255,.12)}
+dialog.sheet{border:0;border-radius:var(--r) var(--r) 0 0;padding:0;max-width:640px;width:100%;margin:auto auto 0;background:var(--surface);color:var(--ink);box-shadow:var(--shadow);max-height:88vh}
+@media (min-width:768px){dialog.sheet{border-radius:var(--r);margin:auto}}
+dialog.sheet::backdrop{background:rgba(14,21,40,.55)}
+.sheet-body{padding:var(--sp3);overflow:auto;max-height:88vh}
+.sheet-body ul{padding-left:20px}.sheet-body li{margin:6px 0}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;gap:var(--sp2);margin-bottom:var(--sp1)}
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(14,21,40,.6);display:grid;place-items:center;padding:var(--sp2)}
+.intro{background:var(--surface);color:var(--ink);border-radius:var(--r);max-width:440px;width:100%;padding:var(--sp3);box-shadow:var(--shadow);animation:fade var(--ease)}
+.intro .step-num{color:var(--accent-ink);font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:0}
+.intro h2{font-size:22px;margin:4px 0 8px}
+.intro-nav{display:flex;justify-content:space-between;align-items:center;gap:var(--sp1);margin-top:var(--sp2)}
+.intro-nav a{min-height:var(--tap);display:inline-flex;align-items:center;font-weight:600}
+.dots{display:flex;gap:6px;margin:var(--sp2) 0 0}
+.dots span{width:24px;height:6px;border-radius:3px;background:var(--line)}
+.dots span.on{background:var(--accent)}
 /* Loading skeletons */
 .loading .skel,.skel.loading{color:transparent!important;background:linear-gradient(90deg,var(--surface-2) 0%,var(--line) 50%,var(--surface-2) 100%);background-size:200% 100%;animation:shimmer 1.2s linear infinite;border-radius:8px;min-height:1em}
 .hero.loading .skel{background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.18),rgba(255,255,255,.08));background-size:200% 100%}
@@ -186,6 +256,7 @@ details.acc>:last-child{margin-bottom:var(--sp2)}
       <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="22" r="9" fill="#f0a03c"/><rect x="2" y="22" width="30" height="10" fill="#16213e"/><path d="M4 22h26" stroke="#fbf5ea" stroke-width="2"/><path d="M17 6v4M7 10l3 3M27 10l-3 3" stroke="#f0a03c" stroke-width="2" stroke-linecap="round"/></svg>
       <div><h1>Madrugada</h1><p class="tagline">Heat and smoke day briefing for field crews</p></div>
     </div>
+    <button class="icon-btn" id="about-btn" type="button" aria-haspopup="dialog">About</button>
     <nav class="tabs" role="tablist" aria-label="Views">
       <button class="tab" role="tab" id="tab-today" aria-controls="view-today" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="14" r="4"/><path d="M2 18h20M12 4v3M4.9 8.9l2 2M19.1 8.9l-2 2"/></svg>Today</button>
       <button class="tab" role="tab" id="tab-planner" aria-controls="view-planner" aria-selected="false" tabindex="-1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h7"/></svg>Planner</button>
@@ -208,17 +279,35 @@ details.acc>:last-child{margin-bottom:var(--sp2)}
 
   <section class="view" id="view-today" role="tabpanel" aria-labelledby="tab-today">
     <article class="card hero loading" id="today-hero" aria-live="polite" aria-busy="true">
-      <p class="eyebrow" id="today-eyebrow">Day briefing</p>
-      <h2 id="today-title" class="skel">Loading the day…</h2>
-      <p id="today-summary" class="skel">Reading the forecast for this day.</p>
-      <p class="note">Forecast-based estimate. The forecast is a simple proxy (yesterday plus the prior 7-day mean); numbers are modeled exposure-hours.</p>
+      <div class="hero-grid">
+        <div class="hero-main">
+          <p class="eyebrow" id="today-eyebrow">Day briefing</p>
+          <h2 id="today-title" class="skel">Loading the day…</h2>
+          <p id="today-summary" class="skel">Reading the forecast for this day.</p>
+          <div class="hero-actions">
+            <button id="make-sheet" class="btn cta" type="button">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Make crew sheet</button>
+            <span class="note" id="make-sheet-note"></span>
+          </div>
+          <p class="note">Forecast-based estimate. The forecast is a simple proxy (yesterday plus the prior 7-day mean); numbers are modeled exposure-hours.</p>
+        </div>
+        <aside class="hero-aside" aria-label="First light and work plan">
+          <svg class="sunmark" viewBox="0 0 200 90" aria-hidden="true"><defs><linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a03c"/><stop offset="1" stop-color="#d9573e"/></linearGradient></defs><path d="M30 86a70 70 0 0 1 140 0z" fill="url(#dawn)" opacity=".9"/><path d="M100 4v12M38 26l9 9M162 26l-9 9M10 86h180" stroke="#f0a03c" stroke-width="4" stroke-linecap="round"/></svg>
+          <p class="eyebrow">First light</p>
+          <p class="hero-time skel" id="hero-firstlight">–</p>
+          <p class="eyebrow">Best plan from first light</p>
+          <p class="hero-plan skel" id="hero-plan">–</p>
+        </aside>
+      </div>
     </article>
     <div class="card" id="today-error" role="alert" hidden>
       <h3>We couldn't build this day's briefing</h3>
       <p id="today-error-text"></p>
       <button id="today-retry" type="button">Try again</button>
     </div>
-    <div class="card">
+    <div class="today-grid">
+    <div class="card" id="ribbon-card">
       <h3>The day at a glance</h3>
       <svg id="ribbon-svg" viewBox="0 0 480 290" role="img" aria-labelledby="ribbon-desc"></svg>
       <p class="note" id="ribbon-desc">Temperature and air quality across the day.</p>
@@ -234,8 +323,7 @@ details.acc>:last-child{margin-bottom:var(--sp2)}
       <div class="tile smoke loading" id="tile-smoke"><p class="tile-icon">Smoke</p><p class="tile-label" id="tile-smoke-label">Forecast smoke hours</p><p class="tile-num skel" id="tile-smoke-num">–</p><p class="tile-sub">Whole day · forecast-based estimate</p></div>
       <div class="tile unfix loading" id="tile-unfix"><p class="tile-icon">Plan</p><p class="tile-label">Hours scheduling can't fix</p><p class="tile-num skel" id="tile-unfix-num">–</p><p class="tile-sub" id="tile-unfix-sub">These hours need shade, rest or crew changes, not a different start time.</p></div>
     </div>
-    <button id="make-sheet" class="btn primary big" type="button">Make crew sheet</button>
-    <p class="note" id="make-sheet-note"></p>
+    </div>
   </section>
 
   <section class="view" id="view-planner" role="tabpanel" aria-labelledby="tab-planner" hidden>
@@ -297,7 +385,9 @@ details.acc>:last-child{margin-bottom:var(--sp2)}
   </section>
 
   <section class="view" id="view-evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
-    <div class="card"><p class="eyebrow">What we found</p>
+    <div class="card story"><p class="eyebrow">What we found</p>
+      <h2 class="story-title">We tested whether shifting hours reduces heat exposure.</h2>
+      <div class="findings" id="findings" aria-live="polite"></div>
       <p class="sub" id="headline" aria-live="polite"><b>We tested whether shifting hours reduces heat exposure.</b> <span id="headline-detail">Loading the results…</span></p></div>
     <details class="card acc" open>
       <summary><h2>Headline finding</h2><span class="note">Both windows, start time, smoke</span></summary>
@@ -319,13 +409,42 @@ details.acc>:last-child{margin-bottom:var(--sp2)}
     </details>
   </section>
 </main>
-<footer class="wrap">Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
+<footer class="wrap">Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.
+  It does not replace the employer's written Cal/OSHA Heat Illness Prevention Plan.</footer>
+
+<dialog class="sheet" id="about" aria-labelledby="about-title">
+  <div class="sheet-body">
+    <div class="sheet-head"><h2 id="about-title">About Madrugada</h2><button id="about-close" type="button">Close</button></div>
+    <p>An advisory day briefing for field crews: forecast temperature and air quality for a replayed day, a work plan that starts no earlier than first light, and the hours scheduling can't fix. Numbers are modeled exposure-hours and forecast-based estimates.</p>
+    <p>It does not replace the employer's written Cal/OSHA Heat Illness Prevention Plan. Water, shade and rest requirements still apply.</p>
+    <h3>Limitations</h3>
+    <ul id="about-list"><li>Loading…</li></ul>
+    <p class="note" id="about-source"></p>
+    <p class="note">Spanish text needs native-speaker review.</p>
+  </div>
+</dialog>
+
+<div class="overlay" id="intro" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
+  <div class="intro">
+    <p class="step-num" id="intro-count">Step 1 of 3</p>
+    <h2 id="intro-title"></h2>
+    <p id="intro-text"></p>
+    <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="intro-nav">
+      <a href="#" id="intro-skip">Skip</a>
+      <div class="row" style="gap:8px"><button id="intro-back" type="button">Back</button><button id="intro-next" class="btn primary" type="button">Next</button></div>
+    </div>
+  </div>
+</div>
 <script>
 const $ = id => document.getElementById(id);
-const NS = 'http://www.w3.org/2000/svg', X0 = 48, X1 = 790, ROWS = [['optimizer', 'Optimizer'], ['robust', 'robust (scenario-averaged)'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
+const NS = 'http://www.w3.org/2000/svg', X0 = 48, ROWS = [['optimizer', 'Optimizer'], ['robust', 'robust (scenario-averaged)'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
 const COLS = ['hours_ge_80f', 'hours_ge_95f', 'hours_aqi_ge_101', 'hours_aqi_ge_151', 'dual_hazard_hours', 'paid_hours'];
 const state = {days: {}, data: null, view: 'planned', shown: null, snap: null};
+let X1 = 790;  // right edge of the planner charts; set from the measured width on each draw
 const xs = s => X0 + (X1 - X0) * s / 96;
+// Charts use a viewBox as wide as their container, so text keeps a constant on-screen size at any width.
+const fitW = (svg, lo = 320, hi = 1040) => Math.round(Math.min(hi, Math.max(lo, svg.getBoundingClientRect().width || svg.parentNode.getBoundingClientRect().width || 480)));
 function sv(parent, tag, attrs, text) {
   const e = document.createElementNS(NS, tag);
   for (const k in attrs || {}) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
@@ -465,12 +584,17 @@ function renderToday() {
     $('tile-unfix-sub').textContent = u.error ? 'Not available: ' + u.error :
       `At or above ${t.heat_high_f}°F in the best plan from first light (${blocksText(u.blocks)}). ${u.line}`;
   }
+  $('hero-firstlight').textContent = u && !u.error ? hhmm12(u.first_light_start) : '–';
+  $('hero-plan').textContent = !u ? '–' : u.error ? 'Not available' : u.blocks.map(b => `${hhmm12(b.start)} – ${hhmm12(b.end)}`).join(', ');
   ribbon(d, u && !u.error ? u : null);
   $('make-sheet-note').textContent = state.snap ? 'The crew sheet needs the server; it is not available in snapshot mode.' : '';
 }
+const hourLabel = h => h === 12 ? 'noon' : h === 0 || h === 24 ? 'midnight' : ((h % 12) || 12) + (h < 12 ? ' AM' : ' PM');
 function ribbon(d, u) {
-  const svg = $('ribbon-svg'), t = d.thresholds, L = 44, R = 470, xr = s => L + (R - L) * s / 96;
+  const svg = $('ribbon-svg'), t = d.thresholds, W = fitW(svg), L = 44, R = W - 8, xr = s => L + (R - L) * s / 96;
+  svg.setAttribute('viewBox', `0 0 ${W} 290`);
   svg.replaceChildren();
+  for (let h = 0; h <= 24; h += 3) sv(svg, 'line', {x1: xr(h * 4), x2: xr(h * 4), y1: 18, y2: 258, class: 'grid'});
   const lane = (vals, top, bot, lines, cls, title) => {
     const lo = Math.min(...vals, ...lines.map(l => l.v)), hi = Math.max(...vals, ...lines.map(l => l.v));
     const pad = (hi - lo) * 0.1 || 1, y0 = Math.max(0, lo - pad), y1 = hi + pad, ys = v => bot - (bot - top) * (v - y0) / (y1 - y0);
@@ -490,7 +614,8 @@ function ribbon(d, u) {
   }
   lane(d.forecast.temp_f, 30, 125, [{v: t.heat_shade_f, label: `${t.heat_shade_f}°F shade needed`}, {v: t.heat_high_f, label: `${t.heat_high_f}°F high heat`}], 'temp', 'Temperature (°F)');
   lane(d.forecast.aqi, 160, 240, [{v: t.aqi_sensitive, label: `AQI ${t.aqi_sensitive} sensitive groups`}, {v: t.aqi_smoke_rule, label: `AQI ${t.aqi_smoke_rule} smoke rule`}], 'aqi', 'Air quality (AQI)');
-  for (let h = 0; h <= 24; h += 6) sv(svg, 'text', {x: xr(h * 4), y: 278, class: 'tick', 'text-anchor': h === 0 ? 'start' : h === 24 ? 'end' : 'middle'}, h === 12 ? 'noon' : h === 0 || h === 24 ? 'midnight' : ((h % 12) || 12) + (h < 12 ? ' AM' : ' PM'));
+  const step = W > 700 ? 3 : 6;
+  for (let h = 0; h <= 24; h += step) sv(svg, 'text', {x: xr(h * 4), y: 278, class: 'tick', 'text-anchor': h === 0 ? 'start' : h === 24 ? 'end' : 'middle'}, hourLabel(h));
   $('ribbon-desc').textContent = `Forecast temperature (solid line) and AQI (dotted line) by hour. Dashed lines: ${t.heat_shade_f}°F shade trigger, ${t.heat_high_f}°F high-heat procedures, AQI ${t.aqi_sensitive} unhealthy for sensitive groups, AQI ${t.aqi_smoke_rule} wildfire-smoke rule.` +
     (u ? ` Hatched band: the best work plan starting no earlier than first light (${blocksText(u.blocks)}).` : '');
 }
@@ -513,6 +638,9 @@ function render() {
   drawCharts(); drawTable(); drawPareto();
 }
 function panel(svg, vals, lines, color, title, axis) {
+  const W = fitW(svg);
+  X1 = W - 10;
+  svg.setAttribute('viewBox', `0 0 ${W} ${axis ? 240 : 180}`);
   svg.replaceChildren();
   const top = 10, bot = 170, lo0 = Math.min(...vals, ...lines.map(l => l.v)), hi0 = Math.max(...vals, ...lines.map(l => l.v));
   const pad = (hi0 - lo0) * 0.08 || 1, y0 = axis ? Math.max(0, lo0 - pad) : lo0 - pad, y1 = hi0 + pad;
@@ -521,7 +649,7 @@ function panel(svg, vals, lines, color, title, axis) {
   for (const b of state.shown.blocks) sv(svg, 'rect', {x: xs(b.start_slot), y: top, width: xs(b.end_slot) - xs(b.start_slot), height: bot - top, class: 'work'});
   for (const l of lines) {
     sv(svg, 'line', {x1: X0, x2: X1, y1: ys(l.v), y2: ys(l.v), class: 'thr'});
-    sv(svg, 'text', {x: X1 + 6, y: ys(l.v) + 4, class: 'thr-label'}, l.label);
+    sv(svg, 'text', {x: X1 - 2, y: ys(l.v) - 4, class: 'rib-label', 'text-anchor': 'end'}, l.label);
   }
   sv(svg, 'polyline', {class: 'series', stroke: color, points: vals.map((v, i) => xs(i + 0.5).toFixed(1) + ',' + ys(v).toFixed(1)).join(' ')});
   [y0, (y0 + y1) / 2, y1].forEach(v => sv(svg, 'text', {x: X0 - 6, y: ys(v) + 4, class: 'tick', 'text-anchor': 'end'}, Math.round(v)));
@@ -531,9 +659,10 @@ function panel(svg, vals, lines, color, title, axis) {
   [['B1', 186, 'var(--b1)'], ['B2', 199, 'var(--b2)']].forEach(([k, y, c]) => {
     for (const b of p[k].blocks) sv(svg, 'rect', {x: xs(b.start_slot), y, width: xs(b.end_slot) - xs(b.start_slot), height: 8, fill: c});
     sv(svg, 'text', {x: X0 - 6, y: y + 8, class: 'tick', 'text-anchor': 'end'}, k);
-    sv(svg, 'text', {x: X1 + 6, y: y + 8, class: 'tick'}, k + ' ' + blocksText(p[k].blocks));
+    sv(svg, 'text', {x: X1, y: y + 8, class: 'rib-label', 'text-anchor': 'end'}, k + ' ' + blocksText(p[k].blocks));
   });
-  for (let h = 0; h <= 24; h += 3) sv(svg, 'text', {x: xs(h * 4), y: 228, class: 'axis', 'text-anchor': 'middle'}, ((h % 12) || 12) + (h < 12 || h === 24 ? 'a' : 'p'));
+  const step = W > 700 ? 3 : 6;
+  for (let h = 0; h <= 24; h += step) sv(svg, 'text', {x: xs(h * 4), y: 228, class: 'axis', 'text-anchor': h === 0 ? 'start' : h === 24 ? 'end' : 'middle'}, hourLabel(h));
 }
 function drawCharts() {
   const d = state.data, t = d.thresholds;
@@ -645,6 +774,7 @@ async function backtest() {
   const r2 = (await api('/api/eval_w2')).body, st = (await api('/api/start_sensitivity')).body;
   const s = story(r, r2, st);
   $('headline-detail').textContent = s;
+  findings(r, r2, st);
   el(box, 'li', 'We tested whether shifting hours reduces heat exposure. ' + s).style.fontWeight = '700';
   el(box, 'li', 'Window 1: ' + claim(r)).style.fontWeight = '600';
   if (r2.available && r2.n_days.real_cached) el(box, 'li', 'Window 2 (separate, preregistered): ' + claim(r2)).style.fontWeight = '600';
@@ -676,6 +806,34 @@ function story(r1, r2, st) {
     `At 05:30 or a sunrise-aligned start the benefit disappears (window 1: 05:30 ${w(at(s1, '05:30'))}, sunrise ${w(at(s1, 'sunrise'))}` +
     (s2 ? `; window 2: 05:30 ${w(at(s2, '05:30'))}, sunrise ${w(at(s2, 'sunrise'))}` : '') + '; EXPLORATORY). ' +
     `Smoke: ${smokeW2}, ${vsB3} (window 1 ${w(c1.optimizer_vs_b3_early, a)}` + (c2 ? `, window 2 ${w(c2.optimizer_vs_b3_early, a)}` : '') + '). All numbers are modeled exposure-hours.';
+}
+// Three finding cards: the same comparisons as story(), each window with its own CI; titles follow the CIs.
+function findings(r1, r2, st) {
+  const box = $('findings'); box.replaceChildren();
+  const below = (c, k) => c && c.ci95 && c.ci95[k][1] < 0, h = 'hours_ge_95f', a = 'hours_aqi_ge_101';
+  const ov = r => r && r.available && r.n_days.real_cached ? r.groups.real_cached.overall.comparisons : null;
+  const c1 = ov(r1), c2 = ov(r2), s1 = st.window1 && st.window1.settings, s2 = st.window2 && st.window2.settings;
+  if (!c1 || !s1) return;
+  const at = (s, k) => s ? s[k].groups.overall.optimizer_vs_B2 : null;
+  const card = (cls, tag, title, num, lines) => {
+    const f = el(box, 'article'); f.className = 'finding ' + cls;
+    el(f, 'p', tag).className = 'tag'; el(f, 'h3', title);
+    if (num) el(f, 'p', num).className = 'num';
+    for (const l of lines) if (l) el(f, 'p', l).className = 'ci';
+  };
+  const num = (c, k, d = 2) => `${sgn(c.mean_diff[k], d)} h/day`;
+  card(below(c1.optimizer_vs_B2, h) ? 'yes' : 'no', 'Heat · earliest start 04:00',
+    below(c1.optimizer_vs_B2, h) ? 'Starting before dawn cuts high-heat hours' : 'No clear change at a 04:00 start',
+    num(c1.optimizer_vs_B2, h), [`At or above 95°F vs the fixed 05:30 shift.`, `Window 1: ${ciTxt(c1.optimizer_vs_B2)}`, c2 ? `Window 2: ${ciTxt(c2.optimizer_vs_B2)}` : '']);
+  const later = [at(s1, '05:30'), at(s1, 'sunrise'), at(s2, '05:30'), at(s2, 'sunrise')];
+  card(later.some(c => below(c, h)) ? 'yes' : 'no', 'Heat · start 05:30 or at sunrise (exploratory)',
+    later.some(c => below(c, h)) ? 'Some benefit remains with a later start' : 'With a later start, the benefit disappears',
+    num(at(s1, '05:30'), h, 3), [`Window 1: 05:30 ${ciTxt(at(s1, '05:30'))}, sunrise ${ciTxt(at(s1, 'sunrise'))}`,
+      s2 ? `Window 2: 05:30 ${ciTxt(at(s2, '05:30'))}, sunrise ${ciTxt(at(s2, 'sunrise'))}` : '']);
+  const b3 = [c1, c2].some(c => c && below(c.optimizer_vs_b3_early, a));
+  card('smoke', 'Smoke · AQI 101 or higher', b3 ? 'Some smoke benefit vs heat-only planning' : 'No smoke benefit vs heat-only planning',
+    num(c1.optimizer_vs_b3_early, a, 3), [`Vs heat-only planning: window 1 ${ciTxt(c1.optimizer_vs_b3_early, a)}` + (c2 ? `, window 2 ${ciTxt(c2.optimizer_vs_b3_early, a)}` : ''),
+      c2 ? `Vs the fixed 05:30 shift, window 2: ${ciTxt(c2.optimizer_vs_B2, a)}` : '']);
 }
 function startClaim(w) {
   const s = w.settings, a = s['04:00'].groups.overall.optimizer_vs_B2, b = s['05:30'].groups.overall.optimizer_vs_B2, c = s.sunrise.groups.overall.optimizer_vs_B2;
@@ -725,9 +883,17 @@ function showView(v, focus) {
     tab.tabIndex = on ? 0 : -1;
   }
   $('daybar').hidden = v === 'evidence';
+  redraw();  // hidden views measure 0 px wide, so charts are redrawn when their view appears
   try { history.replaceState(null, '', location.pathname + location.search + '#' + v); } catch (e) { /* file:// or sandboxed */ }
   if (focus) document.getElementById('tab-' + v).focus();
 }
+function redraw() {
+  if (!state.data) return;
+  if (!$('view-today').hidden) ribbon(state.data, state.unfix && !state.unfix.error ? state.unfix : null);
+  if (!$('view-planner').hidden) drawCharts();
+}
+let resizeTimer = null;
+window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(redraw, 150); });
 function initTabs() {
   VIEWS.forEach((v, i) => {
     const tab = document.getElementById('tab-' + v);
@@ -739,8 +905,47 @@ function initTabs() {
   });
   showView(location.hash.slice(1));
 }
+// ---------- About sheet (limitations copied from the pitch data into static/limitations.json) ----------
+function initAbout() {
+  const dlg = $('about');
+  $('about-btn').addEventListener('click', async () => {
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+    try {
+      const j = await (await fetch('limitations.json')).json(), ul = $('about-list');
+      ul.replaceChildren();
+      for (const s of j.limitations) el(ul, 'li', s);
+      $('about-source').textContent = 'Source: ' + j.source + '.';
+    } catch (e) { $('about-list').replaceChildren(); el($('about-list'), 'li', 'The limitations list could not be loaded.'); }
+  });
+  $('about-close').addEventListener('click', () => dlg.close ? dlg.close() : dlg.removeAttribute('open'));
+}
+// ---------- First-run intro (remembered in localStorage when available) ----------
+const INTRO = [
+  ['Pick a place and a day', 'Choose an area and a replayed summer day. Every day is recorded data and carries its source badge.'],
+  ['Read the day at a glance', 'The ribbon shows forecast temperature and air quality, with labelled threshold lines and the first-light work plan hatched.'],
+  ["See what scheduling can't fix", "The last tile shows high-heat hours left even in the best plan from first light: those need shade, rest or crew changes. Use Make crew sheet to share the plan."],
+];
+function initIntro() {
+  let seen = false, i = 0;
+  try { seen = localStorage.getItem('madrugada.introSeen') === '1'; } catch (e) { /* storage unavailable */ }
+  if (seen) return;
+  const box = $('intro'), done = () => { box.hidden = true; try { localStorage.setItem('madrugada.introSeen', '1'); } catch (e) { /* ignore */ } $('tab-today').focus(); };
+  const draw = () => {
+    $('intro-count').textContent = `Step ${i + 1} of ${INTRO.length}`;
+    $('intro-title').textContent = INTRO[i][0]; $('intro-text').textContent = INTRO[i][1];
+    box.querySelectorAll('.dots span').forEach((s, k) => s.classList.toggle('on', k === i));
+    $('intro-back').disabled = i === 0; $('intro-next').textContent = i === INTRO.length - 1 ? 'Done' : 'Next';
+  };
+  $('intro-next').addEventListener('click', () => { if (i === INTRO.length - 1) done(); else { i++; draw(); } });
+  $('intro-back').addEventListener('click', () => { if (i > 0) { i--; draw(); } });
+  $('intro-skip').addEventListener('click', e => { e.preventDefault(); done(); });
+  box.addEventListener('keydown', e => { if (e.key === 'Escape') done(); if (e.key === 'ArrowRight') $('intro-next').click(); if (e.key === 'ArrowLeft') $('intro-back').click(); });
+  box.hidden = false; draw(); $('intro-next').focus();
+}
 async function init() {
   initTabs();
+  initAbout();
+  initIntro();
   backtest();
   const dr = await api('/api/days');
   if (!dr.ok || !dr.body.length) { todayError(dr.ok ? 'No days are available yet.' : detailText(dr.body.detail)); return; }
