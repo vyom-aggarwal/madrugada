@@ -1,0 +1,75 @@
+# Madrugada configuration. All thresholds, weights, and levels live here; code must not hardcode them.
+
+grid:
+  slot_minutes: 15
+  slots_per_day: 96
+
+heat:
+  shade_trigger_f: 80        # Cal/OSHA shade trigger
+  high_heat_f: 95            # Cal/OSHA high-heat procedures
+  cost_levels:               # heat_cost(T): below shade -> 0, shade..high -> 1, >= high -> 3
+    below_shade: 0
+    shade_to_high: 1
+    high: 3
+
+smoke:
+  aqi_unhealthy_sensitive: 101
+  aqi_wildfire_rule: 151     # Cal/OSHA wildfire smoke rule trigger
+  cost_levels:               # smoke_cost(AQI): < 101 -> 0, 101..150 -> 1, >= 151 -> 3
+    below_101: 0
+    from_101_to_150: 1
+    at_or_above_151: 3
+
+# Dual-hazard is our own tunable definition, not a regulatory threshold.
+dual_hazard:
+  temp_f: 90
+  aqi: 101
+
+weights:
+  w_heat: 1.0
+  w_smoke: 1.0
+  w_dual: 2.0
+
+# Verify PM2.5->AQI breakpoints against current EPA table.
+# Rows: [pm_low, pm_high, aqi_low, aqi_high], PM2.5 24h in ug/m3 (truncated to 0.1).
+# Based on the 2024 EPA PM2.5 NAAQS revision as best known; every row is unverified.
+aqi_pm25:
+  status: unverified
+  breakpoints:
+    - [0.0, 9.0, 0, 50]          # unverified
+    - [9.1, 35.4, 51, 100]       # unverified
+    - [35.5, 55.4, 101, 150]     # unverified
+    - [55.5, 125.4, 151, 200]    # unverified
+    - [125.5, 225.4, 201, 300]   # unverified
+    - [225.5, 325.4, 301, 500]   # unverified
+
+# PurpleAir correction, EPA US-wide: pm = a*pm_cf1 + b*RH + c (verify against Barkjohn et al. 2021).
+purpleair:
+  a_pm_cf1: 0.524
+  b_rh: -0.0862
+  c_intercept: 5.75
+  warn_above_ugm3: 250       # formula known to underestimate above ~250 ug/m3
+
+shift:
+  max_blocks: 2
+  min_block_hours: 2
+  min_gap_hours: 1
+  default_paid_hours: 8.5
+  default_earliest_start: "04:00"
+  default_latest_end: "20:00"
+
+pareto:
+  paid_fraction_max: 1.0
+  paid_fraction_min: 0.8
+  paid_fraction_step: 0.05
+  heat_smoke_ratios: [0.25, 0.5, 1.0, 2.0, 4.0]   # w_heat / w_smoke
+
+baselines:
+  B1: {label: "Fixed 07:00-15:30", start: "07:00", end: "15:30"}
+  B2: {label: "Fixed early 05:30-14:00", start: "05:30", end: "14:00"}
+  B3: {label: "Heat-only optimizer", w_smoke: 0.0}
+
+forecast:
+  weight_prev_day: 0.5
+  weight_prior_mean: 0.5
+  prior_days: 7
