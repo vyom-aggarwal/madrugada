@@ -91,9 +91,9 @@ def render(plan: dict, unfix: dict | None = None) -> str:
 body{{font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);margin:0;background:#fff}}
 .page{{max-width:880px;margin:0 auto;padding:20px 20px 28px}}
 header{{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;border-bottom:4px solid var(--amber);padding-bottom:10px}}
-h1{{font-size:24px;margin:0}} h3{{font-size:13px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}}
+h1{{font:600 24px/1.15 Georgia,"Iowan Old Style","Palatino Linotype",serif;letter-spacing:-.01em;margin:0}} h3{{font-size:13px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}}
 .day{{margin:4px 0 0;color:var(--mute)}}
-.brand{{display:flex;align-items:center;gap:10px}} .mark{{width:40px;height:40px;border-radius:22%}}
+.brand{{display:flex;align-items:center;gap:10px;-webkit-print-color-adjust:exact;print-color-adjust:exact}} .mark{{width:40px;height:40px;border-radius:22%}}
 .word{{margin:0;font:600 20px/1.1 Georgia,"Iowan Old Style",serif;letter-spacing:.05em}} .tag{{margin:0;font-size:12px;color:var(--mute)}}
 button{{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--navy);color:#fff;font:700 15px inherit;cursor:pointer}}
 .prov{{font-weight:700;padding:8px 10px;margin:12px 0;border:2px solid #b45309;background:#fef3c7;color:#7c2d12;border-radius:8px}}
@@ -101,12 +101,12 @@ button{{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(
 table{{width:100%;border-collapse:separate;border-spacing:0 8px}}
 td{{width:50%;vertical-align:top;padding:10px 12px;border:1px solid var(--line);background:#fff}}
 td:first-child{{border-radius:8px 0 0 8px}} td:last-child{{border-radius:0 8px 8px 0;border-left:0;background:var(--cream)}}
-.time{{font-size:34px;font-weight:800;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--navy)}}
-.oracle td{{background:#fde2e2;font-weight:700}}
+.time{{font:700 34px/1.15 Georgia,"Iowan Old Style","Palatino Linotype",serif;letter-spacing:-.01em;line-height:1.15;font-variant-numeric:tabular-nums;color:var(--navy)}}
+.oracle td{{background:#fde2e2;font-weight:700;border-width:2px;border-style:dashed}}
 .cols{{display:grid;grid-template-columns:1fr 1fr;gap:0}} .cols h3{{margin-top:6px}}
 .note{{color:var(--mute);font-size:12px}}
 @page{{size:letter;margin:12mm}}
-@media print{{button{{display:none}} .page{{padding:0}} body{{font-size:12.5px}} .time{{font-size:28px}} td{{padding:7px 9px}} table{{break-inside:avoid}}}}
+@media print{{.prov{{background:#fff;color:#000;border:2px dashed #000}} .prov.real{{border-style:solid}} header{{border-bottom:3px double #000}} td{{background:#fff!important;border-color:#777}} .time{{color:#000}} .oracle td{{border-color:#000}} h3,.note,.day,.tag{{color:#333}} button{{display:none}} .page{{padding:0}} body{{font-size:12.5px}} .time{{font-size:28px}} td{{padding:7px 9px}} table{{break-inside:avoid}}}}
 </style></head><body><div class="page">
 <header><div class="brand">{MARK}<div><p class="word">Madrugada</p><p class="tag">Same hours. Smarter dawn.</p></div></div><div><h1>Crew shift sheet · Hoja de turno</h1><p class="day">{rows[0][1]}</p></div>
 <button onclick="window.print()">Print / Imprimir</button></header>
