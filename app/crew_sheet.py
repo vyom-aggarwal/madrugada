@@ -6,6 +6,9 @@ from html import escape
 
 import numpy as np
 
+# The Madrugada mark (same artwork as static/index.html), inline so the sheet works offline.
+MARK = ('<svg class="mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="cs-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141a3d"/><stop offset="1" stop-color="#2f2c6b"/></linearGradient><linearGradient id="cs-sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf6a"/><stop offset=".55" stop-color="#f7904d"/><stop offset="1" stop-color="#e5584d"/></linearGradient><linearGradient id="cs-haze" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a996f5" stop-opacity="0"/><stop offset=".18" stop-color="#a996f5" stop-opacity=".9"/><stop offset=".82" stop-color="#a996f5" stop-opacity=".9"/><stop offset="1" stop-color="#a996f5" stop-opacity="0"/></linearGradient><linearGradient id="cs-field" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1f4a"/><stop offset="1" stop-color="#0d1030"/></linearGradient><linearGradient id="cs-rows" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3a53f" stop-opacity="0"/><stop offset=".35" stop-color="#f3a53f" stop-opacity=".55"/><stop offset="1" stop-color="#f6b25a"/></linearGradient><clipPath id="cs-clip"><rect width="64" height="64" rx="14"/></clipPath></defs><g clip-path="url(#cs-clip)"><rect width="64" height="64" fill="url(#cs-sky)"/><path d="M13 41a19 19 0 0 1 38 0z" fill="url(#cs-sun)"/><rect y="36.5" width="64" height="5.5" fill="url(#cs-haze)"/><rect y="42" width="64" height="22" fill="url(#cs-field)"/><path d="M32 42-12 64H-1ZM32 42 9 64H18ZM32 42 27.5 64H36.5ZM32 42 46 64H55ZM32 42 65 64H76Z" fill="url(#cs-rows)"/><path d="M0 42.2h64" stroke="#ffd8a0" stroke-width="1" opacity=".45"/></g></svg>')
+
 
 def _e(v) -> str:
     return escape(str(v), quote=True)
@@ -90,6 +93,8 @@ body{{font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 header{{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;border-bottom:4px solid var(--amber);padding-bottom:10px}}
 h1{{font-size:24px;margin:0}} h3{{font-size:13px;margin:0 0 4px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}}
 .day{{margin:4px 0 0;color:var(--mute)}}
+.brand{{display:flex;align-items:center;gap:10px}} .mark{{width:40px;height:40px;border-radius:22%}}
+.word{{margin:0;font:600 20px/1.1 Georgia,"Iowan Old Style",serif;letter-spacing:.05em}} .tag{{margin:0;font-size:12px;color:var(--mute)}}
 button{{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--navy);color:#fff;font:700 15px inherit;cursor:pointer}}
 .prov{{font-weight:700;padding:8px 10px;margin:12px 0;border:2px solid #b45309;background:#fef3c7;color:#7c2d12;border-radius:8px}}
 .prov.real{{border-color:#1d4ed8;background:#dbeafe;color:#1e3a8a}}
@@ -103,7 +108,7 @@ td:first-child{{border-radius:8px 0 0 8px}} td:last-child{{border-radius:0 8px 8
 @page{{size:letter;margin:12mm}}
 @media print{{button{{display:none}} .page{{padding:0}} body{{font-size:12.5px}} .time{{font-size:28px}} td{{padding:7px 9px}} table{{break-inside:avoid}}}}
 </style></head><body><div class="page">
-<header><div><h1>Crew shift sheet · Hoja de turno</h1><p class="day">{rows[0][1]}</p></div>
+<header><div class="brand">{MARK}<div><p class="word">Madrugada</p><p class="tag">Same hours. Smarter dawn.</p></div></div><div><h1>Crew shift sheet · Hoja de turno</h1><p class="day">{rows[0][1]}</p></div>
 <button onclick="window.print()">Print / Imprimir</button></header>
 <p class="prov{'' if synthetic else ' real'}">{prov_en} &nbsp;|&nbsp; {prov_es}</p>
 <table><tr><td><h3>{rows[1][0]}</h3></td><td lang="es"><h3>{rows[1][2]}</h3></td></tr>{times}{oracle_row}{body}
