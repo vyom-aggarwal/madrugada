@@ -69,9 +69,25 @@ def evaluate_day(day: DayRecord, pool: list[DayRecord], cfg: dict) -> dict:
             "plans": {k: score(p.blocks, ot, oa, cfg) for k, p in plans.items()}}
 
 
+def classify_physical(a: dict, b: dict, cfg: dict) -> str:
+    """PRIMARY outcome, a vs b on observed values. tie: every physical metric within tie_hours.
+    win: no more hours >=95F and no more AQI>=101 hours, and strictly less on at least one.
+    loss: the reverse. Otherwise 'mixed'."""
+    th = cfg["eval"]["tie_hours"]
+    if all(abs(a[k] - b[k]) < th for k in PHYS):
+        return "tie"
+    d95, d101 = a["hours_ge_95f"] - b["hours_ge_95f"], a["hours_aqi_ge_101"] - b["hours_aqi_ge_101"]
+    if d95 < th and d101 < th and (d95 <= -th or d101 <= -th):
+        return "win"
+    if d95 > -th and d101 > -th and (d95 >= th or d101 >= th):
+        return "loss"
+    return "mixed"
+
+
 def classify(a: dict, b: dict, cfg: dict) -> str:
-    """a vs b on observed values: tie if every physical metric is within tie_hours and cost within tie_cost;
-    otherwise win/loss by observed cost; 'mixed' if costs are equal but physical metrics differ."""
+    """SECONDARY outcome (uses the optimizer's own cost), a vs b on observed values: tie if every physical
+    metric is within tie_hours and cost within tie_cost; otherwise win/loss by observed cost; 'mixed' if
+    costs are equal but physical metrics differ."""
     e = cfg["eval"]
     dc = a["observed_cost"] - b["observed_cost"]
     if all(abs(a[k] - b[k]) < e["tie_hours"] for k in PHYS) and abs(dc) < e["tie_cost"]:
@@ -129,6 +145,6 @@ def forecast_sensitivity(days: list[DayRecord], pool: list[DayRecord], cfg: dict
             a = score(optimize(ft, fa, cfg=cfg).blocks, ot, oa, cfg)
             b = score(b2(ft, fa, cfg=cfg).blocks, ot, oa, cfg)
             rows.append({"id": d.id, "stratum": stratum(ot, oa, cfg), "provenance": d.provenance,
-                         "outcome": classify(a, b, cfg)})
+                         "physical": classify_physical(a, b, cfg), "cost": classify(a, b, cfg)})
         out[name] = rows
     return out

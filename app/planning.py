@@ -50,6 +50,23 @@ def get_day(day_id: str) -> DayRecord:
     raise UnknownDay(day_id)
 
 
+RULE_LABEL = ("selected for illustration by rule (highest observed dual-hazard hours); "
+              "the evaluation uses all days")
+
+
+@lru_cache(maxsize=1)
+def rule_selected_day() -> str | None:
+    """UI default when real days exist: the real_cached day with the most observed dual-hazard hours
+    (whole day; ties -> latest date). None when there are no real days."""
+    real = [d for d in load_days() if d.provenance == "real_cached"]
+    if not real:
+        return None
+
+    def dual_hours(d: DayRecord) -> float:
+        return exposure(np.asarray(d.temp_f), pm25_to_aqi(d.pm25_ugm3).aqi, np.ones(len(d.temp_f), bool)).dual_hazard_hours
+    return max(real, key=lambda d: (dual_hours(d), d.date or "")).id
+
+
 def day_summary(d: DayRecord) -> dict:
     return {"id": d.id, "label": d.label, "date": d.date, "provenance": d.provenance}
 

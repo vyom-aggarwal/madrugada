@@ -123,3 +123,22 @@ eval:
   forecast_proxies:          # default_blend is the `forecast` section above (unchanged)
     prev_day_only: {weight_prev_day: 1.0, weight_prior_mean: 0.0}
     mean_7day_only: {weight_prev_day: 0.0, weight_prior_mean: 1.0}
+
+# Real-data job (tasks.py real -> data/real_job.py). ALL values are ASSUMPTIONS; URLs/fields UNVERIFIED.
+real_job:
+  regions:                   # region centres (approximate, assumed)
+    bakersfield: {lat: 35.373, lon: -119.019}
+    fresno: {lat: 36.738, lon: -119.787}
+    tulare: {lat: 36.208, lon: -119.347}
+  years: [2022, 2023, 2024, 2025]
+  season: {start: "06-01", end: "09-30"}
+  history_days_before_start: 14
+  cimis_station_list_url: "https://et.water.ca.gov/api/station"   # unverified
+  cimis_max_candidates: 5    # try nearest active stations in order until one returns hourly data
+  airnow_search_deg: 0.35    # bbox half-width around the region centre when looking for monitors
+  airnow_max_km: 25
+  airnow_site_box_deg: 0.02  # bbox half-width around the chosen monitor for daily requests
+  cimis_expected_units: {temp_f: "C", rh: "%", solar_wm2: "W"}   # unit substrings expected (metric request)
+  usable_fraction: 0.9       # temp AND PM2.5 must have >= 90% of slots observed after short-gap filling
+  max_gap_hours: 2           # interior gaps up to this long are linearly interpolated
+  throttle: {min_interval_s: 1.0, max_retries: 4, backoff_base_s: 2.0}

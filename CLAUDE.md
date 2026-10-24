@@ -59,6 +59,7 @@ madrugada/
 - Run tests with `pytest -x -q`. Never loop on a failing test more than 3 attempts, then report.
 - After each phase: run tests, commit with message "phase N: <summary>", and print a status of 10 lines max.
 - No web browsing, no downloading datasets inside a phase unless the phase says so.
+- When the user says keys are set, run tasks.py real and report the results; do not ask them to run commands.
 
 ## Phase 2 decisions
 - DayRecord slots are LOCAL CLOCK TIME (America/Los_Angeles, including daylight time). Every real-data
@@ -84,8 +85,20 @@ madrugada/
   B3 variants. On early_pm25_peak and co_occurring_offset the optimizer has higher observed cost than B1
   and B2. Hypothesis, to be tested in Phase 4 and not assumed: forecast-proxy error, because these days
   differ from their history.
+- Phase 4 backtest on the 13 synthetic days: the optimizer never beats either B3 variant on smoke hours
+  (AQI>=101). The 2 optimizer cost losses to B2 do not appear under the oracle (1 oracle win, 1 tie).
+  Day-level weight sensitivity (optimizer weakly dominates B2) is 72% overall and 35% on co_occurring, while
+  stratum totals show 100%. Seven of the 13 days are generated history days, so none of this is
+  independent evidence.
 
 ## Evaluation rules
+- PRIMARY outcome is physical dominance over a baseline: a win means no more hours >=95F and no more
+  AQI>=101 hours AND strictly less on at least one; a loss is the reverse; otherwise "mixed", or "tie" when
+  all physical metrics are within 0.125 h. Cost-based outcomes are secondary and labeled "uses the
+  optimizer's own cost".
+- Headline sensitivity numbers are day-level (stratum totals are secondary).
+- Real-data conclusions need at least 20 real days.
+- Real days are never pooled with synthetic days.
 - Evaluate ALL days in the available range, never a hand-picked subset.
 - Strata are assigned by a rule on observed data, defined in config.yaml `eval.strata`: heat_only (max temp
   >= 95F and max AQI < 101), smoke_only (max temp < 95F and max AQI >= 101), co_occurring (both), mild (neither).

@@ -33,7 +33,8 @@ def test_bootstrap_deterministic_and_skipped_for_small_n():
     plan = {k: 0.0 for k in metrics.PHYS} | {"observed_cost": 0.0}
     days = [{"plans": {"optimizer": plan, "B2": {**plan, "observed_cost": 1.0}}}] * 9
     r = stats.compare(days, "optimizer", "B2", load_config())
-    assert r["ci95"] is None and r["ci_note"] == "n too small for CIs" and r["win"] == 9
+    assert r["ci95"] is None and r["ci_note"] == "n too small for CIs"
+    assert r["cost"]["win"] == 9 and r["physical"]["tie"] == 9  # same hours, different cost
     r10 = stats.compare(days + days[:1], "optimizer", "B2", load_config())
     assert r10["ci95"]["observed_cost"] == (-1.0, -1.0)
 
@@ -44,6 +45,16 @@ def test_classify_tie_and_mixed():
     assert metrics.classify(a, dict(a), cfg) == "tie"
     assert metrics.classify(a, {**a, "hours_ge_80f": 2.0}, cfg) == "mixed"
     assert metrics.classify(a, {**a, "observed_cost": 6.0}, cfg) == "win"
+
+
+@pytest.mark.parametrize("d95, d101, other, expected", [
+    (0, 0, 0, "tie"), (-0.25, 0, 0, "win"), (0, -1.0, 0, "win"), (0.25, 0, 0, "loss"), (0, 0.5, 0, "loss"),
+    (-0.25, 0.25, 0, "mixed"), (0, 0, 1.0, "mixed"),  # equal 95F/101 hours, other metric differs
+])
+def test_classify_physical(d95, d101, other, expected):
+    base = {k: 2.0 for k in metrics.PHYS} | {"observed_cost": 0.0}
+    a = {**base, "hours_ge_95f": 2.0 + d95, "hours_aqi_ge_101": 2.0 + d101, "hours_ge_80f": 2.0 + other}
+    assert metrics.classify_physical(a, base, load_config()) == expected
 
 
 def test_sensitivity_does_not_mutate_global_config(test_days, history):
@@ -75,7 +86,14 @@ def test_eval_end_to_end(tmp_path):
     assert res["n_days"] == {"synthetic": 13, "real_cached": 0}  # every day with proxy history
     assert {d["stratum"] for d in res["days"]} <= set(metrics.STRATA)
     assert all(set(d["plans"]) == set(metrics.PLANS) for d in res["days"])
-    assert res["oracle_diagnosis"]["synthetic"]["sentence"].endswith("losses disappear under the oracle.")
+    od = res["oracle_diagnosis"]["synthetic"]
+    assert "losses become oracle wins" in od["physical"]["sentence"] and "become ties" in od["cost"]["sentence"]
+    assert "Heat-only planning is the closest baseline; see the B3 rows." in res["summary_box"]
+    fb = set(res["robust_fallback_days"]["synthetic"])
+    n_robust = res["groups"]["synthetic"]["overall"]["comparisons"]["robust_vs_B2"]["n"]
+    assert n_robust == 13 - len(fb) and all(d["robust_flags"] for d in res["days"] if d["id"] in fb)
+    if not any(stats.b3_smoke_wins(res["days"], load_config()).values()):
+        assert any("never has fewer AQI>=101 hours than either B3" in s for s in res["summary_box"])
     assert json.loads(j.read_text(encoding="utf-8"))["n_days"]["synthetic"] == 13
 
 

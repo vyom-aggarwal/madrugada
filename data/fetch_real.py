@@ -55,8 +55,11 @@ class CimisAdapter(Adapter):
     name, env_key, fields = "CIMIS", "CIMIS_APPKEY", ("temp_f", "rh", "solar_wm2")
 
     def request(self, day, key):
+        return self._get(self.params(day, key))
+
+    def params(self, day, key) -> dict:
         c = self.cfg  # local day D spans PST dates D-1 (summer, 23:00 PST = 00:00 PDT) and D
-        return self._get({"appKey": key, "targets": c["station"], "startDate": (day - timedelta(days=1)).isoformat(),
+        return ({"appKey": key, "targets": c["station"], "startDate": (day - timedelta(days=1)).isoformat(),
                           "endDate": day.isoformat(), "unitOfMeasure": c["units"],
                           "dataItems": ",".join(c["data_items"][f] for f in self.fields)})
 
@@ -81,9 +84,12 @@ class AirNowAdapter(Adapter):
     name, env_key, fields = "AirNow", "AIRNOW_KEY", ("pm25_ugm3",)
 
     def request(self, day, key):
+        return self._get(self.params(day, key))
+
+    def params(self, day, key) -> dict:
         start = datetime.combine(day, time(0), self.tz).astimezone(timezone.utc)
         end = datetime.combine(day + timedelta(days=1), time(0), self.tz).astimezone(timezone.utc) - timedelta(hours=1)
-        return self._get({"startDate": start.strftime("%Y-%m-%dT%H"), "endDate": end.strftime("%Y-%m-%dT%H"),
+        return ({"startDate": start.strftime("%Y-%m-%dT%H"), "endDate": end.strftime("%Y-%m-%dT%H"),
                           "parameters": "PM25", "BBOX": self.cfg["bbox"], "dataType": "C",
                           "format": "application/json", "API_KEY": key})
 

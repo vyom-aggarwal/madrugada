@@ -9,14 +9,15 @@
 *{box-sizing:border-box}
 body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
 header,main,footer{max-width:1100px;margin:0 auto;padding:10px 16px}
-h1{font-size:20px;margin:6px 0 0}h2{font-size:15px;margin:0 0 8px}
+h1{font-size:20px;margin:6px 0 0}h2{font-size:15px;margin:10px 0 8px}h3{font-size:14px;margin:12px 0 6px}
 .sub{color:var(--mute);margin:0}
 .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin:10px 0}
 .row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.badge{font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px}
+.badge{font-weight:700;padding:4px 10px;border-radius:6px;font-size:13px;margin:0}
 .badge.syn{background:#fef3c7;color:#92400e;border:2px solid #d97706}
 .badge.real{background:#dbeafe;color:#1e3a8a;border:2px solid #2563eb}
-.badge.oracle{background:#fee2e2;color:#991b1b;border:2px solid #dc2626}
+.badge.oracle,.badge.snap{background:#fee2e2;color:#991b1b;border:2px solid #dc2626}
+.badge.replay{background:#e5e7eb;color:#111827;border:2px solid #4b5563}
 [hidden]{display:none!important}
 label{display:inline-flex;gap:6px;align-items:center}
 select,input,button{font:inherit}
@@ -24,6 +25,7 @@ select,input,button{font:inherit}
 button{padding:6px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer}
 #error{color:#991b1b;font-weight:600}
 #warnings{margin:6px 0 0;padding-left:18px;color:#92400e;font-size:13px}
+.note{color:var(--mute);font-size:13px}
 svg{width:100%;height:auto;display:block}
 .grid{stroke:#eceef2}.work{fill:var(--opt);opacity:.14}.thr{stroke:#4b5563;stroke-dasharray:5 4}
 .series{fill:none;stroke-width:2}.tick,.thr-label,.axis{font-size:11px;fill:var(--mute)}
@@ -33,6 +35,7 @@ th,td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right}
 th:first-child,td:first-child,td:last-child{text-align:left}
 td:last-child,td:first-child{white-space:nowrap}
 .scroll{overflow-x:auto}
+.box{border:2px solid var(--line);border-radius:8px;padding:8px 12px;background:#fafafa}
 footer{color:var(--mute);font-size:12px;padding-bottom:24px}
 </style>
 </head>
@@ -42,10 +45,13 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
   <p class="sub">Heat + smoke crew shift planner. Reduces modeled exposure-hours while keeping paid hours.</p>
 </header>
 <main>
+  <p id="snap-banner" class="badge snap" hidden>SNAPSHOT MODE: sliders disabled</p>
   <section class="card row">
     <label>Day <select id="day"></select></label>
     <span id="prov-badge" class="badge"></span>
+    <span id="replay-badge" class="badge replay" hidden>REPLAY: recorded data, not live</span>
     <span id="oracle-badge" class="badge oracle" hidden>ORACLE: upper bound, not a forecast</span>
+    <span id="rule-note" class="note"></span>
   </section>
   <section class="card row">
     <label>Paid hours <input id="paid" type="range" min="2" max="12" step="0.25" value="8.5"> <output id="paid-val">8.5</output></label>
@@ -77,11 +83,8 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
   <section class="card">
     <h2>Backtest</h2>
     <p id="bt-banner" class="badge syn"></p>
-    <p class="sub">Wins/ties/losses/mixed by observed weighted cost on modeled exposure-hours (all evaluable days, by stratum).</p>
+    <div class="box"><h3>What this does and does not show</h3><ul id="bt-box"></ul></div>
     <div id="bt-groups"></div>
-    <p id="bt-oracle"></p>
-    <h2>Weight sensitivity: optimizer vs B2</h2>
-    <div id="bt-sens"></div>
   </section>
 </main>
 <footer>Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
@@ -89,7 +92,7 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
 const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg', X0 = 48, X1 = 790, ROWS = [['optimizer', 'Optimizer'], ['robust', 'robust (scenario-averaged)'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
 const COLS = ['hours_ge_80f', 'hours_ge_95f', 'hours_aqi_ge_101', 'hours_aqi_ge_151', 'dual_hazard_hours', 'paid_hours'];
-const state = {days: {}, data: null, view: 'planned', shown: null};
+const state = {days: {}, data: null, view: 'planned', shown: null, snap: null};
 const xs = s => X0 + (X1 - X0) * s / 96;
 function sv(parent, tag, attrs, text) {
   const e = document.createElementNS(NS, tag);
@@ -98,6 +101,30 @@ function sv(parent, tag, attrs, text) {
   parent.appendChild(e); return e;
 }
 const blocksText = bs => bs.map(b => b.start + '–' + b.end).join(', ');
+async function loadSnapshot() {
+  if (!state.snap) {
+    state.snap = await (await fetch('snapshot.json')).json();
+    $('snap-banner').hidden = false;
+    const p = state.snap.default_params;
+    $('paid').value = p.paid_hours; $('paid-val').textContent = p.paid_hours; $('earliest').value = p.earliest; $('latest').value = p.latest; $('oracle').checked = p.oracle;
+    ['paid', 'earliest', 'latest', 'oracle', 'print'].forEach(id => { $(id).disabled = true; });
+  }
+  return state.snap;
+}
+// Live API first; on a network error or 5xx, switch to static/snapshot.json for the rest of the session.
+async function api(path, opts) {
+  if (!state.snap) {
+    try {
+      const r = await fetch(path, opts);
+      if (r.status < 500) return {ok: r.ok, body: await r.json()};
+    } catch (e) { /* fall through to snapshot */ }
+  }
+  const s = await loadSnapshot();
+  if (path === '/api/days') return {ok: true, body: s.days};
+  if (path === '/api/eval') return {ok: true, body: s.eval};
+  const p = s.plans[JSON.parse(opts.body).day_id];
+  return p && !p.error ? {ok: true, body: p} : {ok: false, body: {detail: p ? p.error : 'Day not found in snapshot.'}};
+}
 function params() {
   return {day_id: $('day').value, paid_hours: +$('paid').value, earliest: $('earliest').value, latest: $('latest').value, oracle: $('oracle').checked};
 }
@@ -106,22 +133,23 @@ function badges() {
   const syn = !d || d.provenance === 'synthetic';
   b.className = 'badge ' + (syn ? 'syn' : 'real');
   b.textContent = syn ? 'SYNTHETIC: ILLUSTRATION ONLY' : 'REAL (cached)';
+  $('replay-badge').hidden = !(d && (d.provenance === 'synthetic' || d.provenance === 'real_cached'));
   $('oracle-badge').hidden = !$('oracle').checked;
+  $('rule-note').textContent = d && d.selected_by_rule ? d.selected_by_rule : '';
 }
 let timer = null;
 function schedule() { $('paid-val').textContent = $('paid').value; badges(); clearTimeout(timer); timer = setTimeout(plan, 250); }
 async function plan() {
   badges();
-  const r = await fetch('/api/plan', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params())});
-  const j = await r.json();
+  const r = await api('/api/plan', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params())});
   if (!r.ok) {
-    const d = j.detail;
+    const d = r.body.detail;
     $('error').textContent = 'Cannot plan: ' + (Array.isArray(d) ? d.map(e => e.msg).join('; ') : d);
     return;
   }
   $('error').textContent = '';
-  state.data = j;
-  state.shown = {label: 'Optimizer plan', blocks: j.plans.optimizer.blocks, idx: -1};
+  state.data = r.body;
+  state.shown = {label: 'Optimizer plan', blocks: r.body.plans.optimizer.blocks, idx: -1};
   render();
 }
 function render() {
@@ -163,8 +191,7 @@ function drawTable() {
   const tb = $('cmp-body'); tb.replaceChildren();
   for (const [k, name] of ROWS) {
     const tr = document.createElement('tr'), m = state.data.metrics[k][state.view];
-    const cells = [name, ...COLS.map(c => m[c].toFixed(2)), blocksText(state.data.plans[k].blocks)];
-    for (const c of cells) { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); }
+    for (const c of [name, ...COLS.map(c => m[c].toFixed(2)), blocksText(state.data.plans[k].blocks)]) { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); }
     tb.appendChild(tr);
   }
 }
@@ -187,39 +214,51 @@ function drawPareto() {
   });
   sv(svg, 'text', {x: R, y: T + 10, class: 'axis', 'text-anchor': 'end'}, `colour = paid hours: light ${lo} h … dark ${hi} h · click a point to show it`);
 }
+function el(parent, tag, text) { const e = document.createElement(tag); if (text != null) e.textContent = text; parent.appendChild(e); return e; }
 function table(parent, head, rows) {
   const t = document.createElement('table'), tr = t.insertRow();
-  for (const h of head) { const th = document.createElement('th'); th.textContent = h; tr.appendChild(th); }
+  for (const h of head) el(tr, 'th', h);
   for (const r of rows) { const row = t.insertRow(); for (const c of r) row.insertCell().textContent = c; }
-  const wrap = document.createElement('div'); wrap.className = 'scroll'; wrap.appendChild(t); parent.appendChild(wrap);
+  const wrap = el(parent, 'div'); wrap.className = 'scroll'; wrap.appendChild(t);
+}
+const wtl = x => `${x.win}/${x.tie}/${x.loss}/${x.mixed}`;
+function outcomes(parent, groups, kind) {
+  const strata = Object.keys(groups), names = Object.keys(groups.overall.comparisons).filter(n => /_vs_(B2|b3_)/.test(n));
+  table(parent, ['comparison (W/T/L/mixed)', ...strata.map(s => `${s} (n=${groups[s].n})`)],
+    names.map(n => [n.replace('_vs_', ' vs '), ...strata.map(s => { const c = groups[s].comparisons[n]; return c.n ? `${wtl(c[kind])} (n=${c.n})` : '–'; })]));
 }
 async function backtest() {
-  const r = await (await fetch('/api/eval')).json(), g = $('bt-groups'), s = $('bt-sens');
-  g.replaceChildren(); s.replaceChildren();
+  const r = (await api('/api/eval')).body, g = $('bt-groups'), box = $('bt-box');
+  g.replaceChildren(); box.replaceChildren();
   if (!r.available) { $('bt-banner').textContent = 'Backtest not available: ' + r.reason; return; }
   $('bt-banner').textContent = r.provenance_statement;
-  const pairs = [];
-  for (const c of ['optimizer', 'robust', 'oracle']) for (const b of ['B2', 'b3_early', 'b3_late']) pairs.push([c, b]);
-  const wtl = x => `${x.win}/${x.tie}/${x.loss}/${x.mixed}`;
+  for (const s of r.summary_box) el(box, 'li', s);
   for (const prov of ['synthetic', 'real_cached']) {
-    const h = document.createElement('h2'); h.textContent = `${prov}: ${r.group_labels[prov]} (n=${r.n_days[prov]})`; g.appendChild(h);
+    el(g, 'h2', `${prov}: ${r.group_labels[prov]} (n=${r.n_days[prov]})`);
     if (!r.n_days[prov]) continue;
-    table(g, ['stratum', 'n', ...pairs.map(([c, b]) => `${c} vs ${b}`)],
-      Object.entries(r.groups[prov]).map(([k, v]) => [k, v.n, ...pairs.map(([c, b]) => wtl(v.comparisons[`${c}_vs_${b}`]))]));
-    const sens = r.weight_sensitivity[prov];
-    table(s, ['stratum (' + prov + ')', 'days', 'weakly dominates (totals)', 'strictly improves (totals)', 'weakly dominates (per day)', 'range Δh ≥95F', 'range Δh AQI≥101'],
-      Object.entries(sens).filter(([, v]) => v.n_days).map(([k, v]) => [k, v.n_days, v.weakly_dominates_fraction, v.strictly_improves_fraction,
-        v.per_day_weakly_dominates_fraction, v.range_total_diff_hours_ge_95f.join(' to '), v.range_total_diff_hours_aqi_ge_101.join(' to ')]));
+    el(g, 'h3', 'PRIMARY: physical dominance (no more hours ≥95°F and AQI≥101, strictly less on one)');
+    outcomes(g, r.groups[prov], 'physical');
+    const fb = r.robust_fallback_days[prov];
+    el(g, 'p', `Robust rows use only days without fallback. Fallback days (${fb.length}): ${fb.join(', ') || 'none'}.`).className = 'note';
+    const od = r.oracle_diagnosis[prov];
+    el(g, 'p', `Oracle diagnosis (optimizer physical losses to B2): ${od.physical.sentence}`);
+    el(g, 'h3', 'Weight sensitivity vs B2 (headline: day-level)');
+    table(g, ['stratum', 'days', 'day-level weakly dominates', 'day-level strictly improves', 'stratum totals: weakly', 'stratum totals: strictly'],
+      Object.entries(r.weight_sensitivity[prov]).filter(([, v]) => v.n_days).map(([k, v]) => [k, v.n_days, v.day_level_weakly_dominates, v.day_level_strictly_improves, v.totals_weakly_dominates, v.totals_strictly_improves]));
+    el(g, 'h3', `Secondary: cost-based outcomes (${od.cost.label})`);
+    outcomes(g, r.groups[prov], 'cost');
+    el(g, 'p', `Oracle diagnosis (cost losses to B2): ${od.cost.sentence}`).className = 'note';
   }
-  $('bt-oracle').textContent = 'Oracle diagnosis (synthetic): ' + r.oracle_diagnosis.synthetic.sentence;
 }
 async function init() {
   backtest();
-  const days = await (await fetch('/api/days')).json(), sel = $('day');
+  const days = (await api('/api/days')).body, sel = $('day');
   for (const d of days) {
     state.days[d.id] = d;
-    const o = document.createElement('option'); o.value = d.id; o.textContent = `${d.date} · ${d.label}`; sel.appendChild(o);
+    const o = el(sel, 'option', `${d.date} · ${d.label}`); o.value = d.id;
   }
+  const chosen = days.find(d => d.selected_by_rule);
+  if (chosen) sel.value = chosen.id;
   ['day', 'paid', 'earliest', 'latest', 'oracle'].forEach(id => $(id).addEventListener('input', schedule));
   $('view-planned').addEventListener('change', () => { state.view = 'planned'; drawTable(); });
   $('view-observed').addEventListener('change', () => { state.view = 'observed'; drawTable(); });

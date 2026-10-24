@@ -9,7 +9,7 @@ from pydantic import ValidationError
 
 from app.crew_sheet import render
 from app.models import PlanRequest
-from app.planning import NoHistory, UnknownDay, day_summary, load_days, plan_for
+from app.planning import RULE_LABEL, NoHistory, UnknownDay, day_summary, load_days, plan_for, rule_selected_day
 
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 EVAL_RESULTS = Path(__file__).resolve().parent.parent / "eval" / "results.json"
@@ -29,14 +29,17 @@ def root():
 
 @app.get("/api/days")
 def api_days() -> list[dict]:
-    return [day_summary(d) for d in load_days()]
+    selected = rule_selected_day()
+    return [{**day_summary(d), **({"selected_by_rule": RULE_LABEL} if d.id == selected else {})}
+            for d in load_days()]
 
 
 def _plan(req: PlanRequest) -> dict:
     try:
         return plan_for(req.day_id, req.paid_hours, req.earliest, req.latest, req.oracle)
     except UnknownDay:
-        raise HTTPException(status_code=404, detail="unknown day_id")
+        raise HTTPException(status_code=404, detail="Day not found: no day with that day_id. "
+                                                    "GET /api/days lists the available days.")
     except NoHistory as e:
         raise HTTPException(status_code=422, detail=f"no forecast history for this day: {e}")
 
