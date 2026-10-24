@@ -261,6 +261,7 @@ button svg,.btn svg{width:20px;height:20px;flex:none;display:inline-block}
 /* About sheet and first-run intro */
 .icon-btn{min-height:var(--tap);min-width:var(--tap);padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:transparent;color:var(--on-navy);font-weight:700}
 .icon-btn:hover{background:rgba(255,255,255,.12)}
+.icon-btn.replay{padding:0;display:grid;place-items:center}.icon-btn.replay svg{width:18px;height:18px;fill:currentColor}
 dialog.sheet{border:0;border-radius:var(--r) var(--r) 0 0;padding:0;max-width:640px;width:100%;margin:auto auto 0;background:var(--surface);color:var(--ink);box-shadow:var(--shadow);max-height:88vh}
 @media (min-width:768px){dialog.sheet{border-radius:var(--r);margin:auto}}
 dialog.sheet::backdrop{background:rgba(14,21,40,.55)}
@@ -369,7 +370,7 @@ details.acc>summary:hover h2{color:var(--accent-ink)}
 @media print{
   :root{--bg:#fff;--surface:#fff;--surface-2:#fff;--surface-3:#eee;--ink:#000;--mute:#333;--line:#999;--line-strong:#666;--heat:#000;--smoke:#000;--accent-ink:#000}
   body{background:#fff;padding:0;font-size:12.5px}
-  .tabs,#about-btn,.splash,#intro,#about,#today-retry,.tip,.cursor,.daybar select{display:none!important}
+  .tabs,#about-btn,#replay-intro,.cine,.splash,#intro,#about,#today-retry,.tip,.cursor,.daybar select{display:none!important}
   .topbar::before{display:none}
   .topbar{position:static;background:#fff!important;color:#000;border-bottom:3px double #000;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
   .tagline{opacity:1;color:#333}
@@ -382,6 +383,32 @@ details.acc>summary:hover h2{color:var(--accent-ink)}
   .view{animation:none}
   a{color:#000}
 }
+/* ============ Cinematic opening (always its own dark theme) ============ */
+body.cine-on{overflow:hidden}
+.cine{position:fixed;inset:0;z-index:200;background:#03050d;color:#f7f2ea;overflow:hidden;color-scheme:dark;font-family:var(--font);-webkit-tap-highlight-color:transparent;outline:none}
+.cine-bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cine-stage{position:absolute;inset:0;display:grid;place-items:center;padding:clamp(16px,5vw,64px) clamp(16px,5vw,64px) calc(96px + env(safe-area-inset-bottom))}
+.cine-scene{position:relative;width:min(1040px,100%);text-align:center;padding:clamp(8px,2vw,24px)}
+.cine-scene::before{content:"";position:absolute;inset:-6% -4%;z-index:-1;background:radial-gradient(closest-side,rgba(3,5,13,.62),rgba(3,5,13,0));pointer-events:none}
+.cine-ui{position:absolute;left:0;right:0;bottom:0;padding:14px clamp(12px,4vw,32px) calc(14px + env(safe-area-inset-bottom));background:linear-gradient(rgba(3,5,13,0),rgba(3,5,13,.75));transition:opacity 280ms ease-out}
+.cine.idle .cine-ui{opacity:0}.cine.idle{cursor:none}
+.cine-bar{position:relative;height:4px;margin:0 0 12px;border-radius:4px;background:rgba(255,255,255,.2);cursor:pointer;touch-action:none}
+.cine-bar::before{content:"";position:absolute;left:0;right:0;top:-12px;bottom:-12px}
+.cine-fill{position:absolute;inset:0;border-radius:4px;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#f7b44c,#ea6a52)}
+.cine-tick{position:absolute;top:-3px;width:2px;height:10px;margin-left:-1px;border-radius:1px;background:rgba(255,255,255,.55)}
+.cine-btns{display:flex;align-items:center;gap:8px}
+.cine .cine-b{min-width:44px;width:44px;min-height:44px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#f7f2ea;display:grid;place-items:center}
+.cine .cine-b:hover{background:rgba(255,255,255,.18)}
+.cine .cine-b svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cine-count{font-size:13px;letter-spacing:.04em;color:#d8d2e6;margin-left:4px;white-space:nowrap}
+.cine .cine-skip{margin-left:auto;min-height:44px;padding:0 20px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(10,14,34,.6);color:#f7f2ea;font-weight:700;opacity:0;pointer-events:none;transition:opacity 200ms ease-out}
+.cine .cine-skip:hover{background:rgba(255,255,255,.16)}
+.cine .cine-skip.on{opacity:1;pointer-events:auto}
+.cine button:focus-visible,.cine-bar:focus-visible{outline:3px solid #f6b65c;outline-offset:3px}
+.cine.static [data-a="toggle"]{display:none}
+.cine.static .cine-ui{opacity:1}
+.cine-h{font:600 clamp(28px,5.4vw,62px)/1.1 var(--font-display);letter-spacing:-.015em;margin:0 auto;max-width:20ch;text-shadow:0 2px 28px rgba(3,5,13,.7)}
+.cine .w{display:inline-block;will-change:transform,opacity}
 </style>
 </head>
 <body>
@@ -396,6 +423,7 @@ details.acc>summary:hover h2{color:var(--accent-ink)}
       <svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#mark"/></svg>
       <div class="wordmark"><h1>Madrugada</h1><p class="tagline">Same hours. Smarter dawn.</p></div>
     </div>
+    <button class="icon-btn replay" id="replay-intro" type="button" aria-label="Replay intro" title="Replay intro"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg></button>
     <button class="icon-btn" id="about-btn" type="button" aria-haspopup="dialog">About</button>
     <nav class="tabs" role="tablist" aria-label="Views">
       <button class="tab" role="tab" id="tab-today" aria-controls="view-today" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="14" r="4"/><path d="M2 18h20M12 4v3M4.9 8.9l2 2M19.1 8.9l-2 2"/></svg>Today</button>
@@ -422,7 +450,7 @@ details.acc>summary:hover h2{color:var(--accent-ink)}
       <div class="hero-grid">
         <div class="hero-main">
           <p class="eyebrow" id="today-eyebrow">Day briefing</p>
-          <h2 id="today-title" class="skel">Loading the day…</h2>
+          <h2 id="today-title" class="skel" tabindex="-1">Loading the day…</h2>
           <p id="today-summary" class="skel">Reading the forecast for this day.</p>
           <div class="hero-actions">
             <button id="make-sheet" class="btn cta" type="button">
@@ -559,6 +587,7 @@ details.acc>summary:hover h2{color:var(--accent-ink)}
     <h3>Who it helps</h3>
     <p>Crew leads, foremen and farm labor contractors in the Central Valley who set tomorrow's start time, and the crews who get the plan as a bilingual (English/Spanish) sheet. It holds paid hours constant and tracks no individual workers.</p>
     <p>It does not replace the employer's written Cal/OSHA Heat Illness Prevention Plan. Water, shade and rest requirements still apply.</p>
+    <p><button id="about-replay" class="btn" type="button">Replay intro</button></p>
     <h3>Limitations</h3>
     <ul id="about-list"><li>Loading…</li></ul>
     <p class="note" id="about-source"></p>
@@ -579,6 +608,77 @@ details.acc>summary:hover h2{color:var(--accent-ink)}
     </div>
   </div>
 </div>
+<script id="intro-core">
+// ---------- Pure functions (no DOM): the intro timeline and the CI-driven wording shared with the Evidence view ----------
+const CINE_SCENES = [{id: 'cold', dur: 5}, {id: 'problem', dur: 7}, {id: 'idea', dur: 6}, {id: 'test', dur: 8},
+  {id: 'honest', dur: 7}, {id: 'cantfix', dur: 5}, {id: 'limits', dur: 5}];
+const CINE_STATIC = [1, 2, 3, 4, 5, 6];  // reduced motion: six still slides (the cold-open line rides on the first)
+const CINE_SKIP_AT = 0.5;
+function cineTimeline(scenes) {
+  const starts = []; let total = 0;
+  for (const sc of scenes) { starts.push(total); total += sc.dur; }
+  const clamp = t => Math.min(total, Math.max(0, t));
+  const at = t => {
+    t = clamp(t); let i = scenes.length - 1;
+    while (i > 0 && t < starts[i]) i--;
+    return {i, local: t - starts[i], p: Math.min(1, (t - starts[i]) / scenes[i].dur)};
+  };
+  const prev = t => { const {i, local} = at(t); return local > 1 || i === 0 ? starts[i] : starts[i - 1]; };
+  const next = t => { const {i} = at(t); return i + 1 < scenes.length ? starts[i + 1] : total; };
+  return {starts, total, clamp, at, prev, next};
+}
+// Master clock step: frame gaps are capped at 0.1 s so a stalled tab never jumps a scene.
+function cineAdvance(t, dt, playing, total) {
+  const n = playing ? Math.min(total, t + Math.max(0, Math.min(dt, 0.1))) : t;
+  return {t: n, ended: n >= total};
+}
+function cineMode(search, reduced) {
+  if (new URLSearchParams(search).get('intro') === '0') return 'off';
+  return reduced ? 'static' : 'motion';  // ?intro=1 or no parameter: shown on every load
+}
+const cineKey = k => ({Escape: 'skip', Enter: 'skip', ' ': 'toggle', Spacebar: 'toggle', ArrowLeft: 'prev', ArrowRight: 'next'})[k] || null;
+const cineSkipVisible = t => t >= CINE_SKIP_AT;
+const clamp01 = v => Math.min(1, Math.max(0, v));
+const cineType = (text, p) => text.slice(0, Math.round(clamp01(p) * text.length));
+const easeOut = p => 1 - Math.pow(1 - clamp01(p), 3);
+const easeInOut = p => (p = clamp01(p)) < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const rise = (local, at, d = .7) => easeOut((local - at) / d);
+const sgn = (v, d = 3) => (v > 0 ? '+' : '') + v.toFixed(d);
+const ciTxt = (c, k = 'hours_ge_95f') => c.mean_diff[k] == null ? '–' : sgn(c.mean_diff[k]) + (c.ci95 ? ` [${sgn(c.ci95[k][0])}, ${sgn(c.ci95[k][1])}]` : '');
+const ciBelow = (c, k) => !!(c && c.ci95 && c.ci95[k][1] < 0);
+// The pieces of the headline story, chosen from the CIs; each window keeps its own CI (never pooled).
+function storyParts(r1, r2, st) {
+  const h = 'hours_ge_95f', a = 'hours_aqi_ge_101';
+  const ov = r => r && r.available && r.n_days.real_cached ? r.groups.real_cached.overall.comparisons : null;
+  const c1 = ov(r1), c2 = ov(r2), sw = w => w ? w.settings : null, s1 = sw(st && st.window1), s2 = sw(st && st.window2);
+  if (!c1 || !s1) return null;
+  const at = (s, k) => s ? s[k].groups.overall.optimizer_vs_B2 : null;
+  const w = (c, k = h) => c ? `${ciTxt(c, k)} h/day` : 'n/a';
+  const only04 = ciBelow(c1.optimizer_vs_B2, h) && !ciBelow(at(s1, '05:30'), h) && !ciBelow(at(s1, 'sunrise'), h);
+  return {c1, c2, s1, s2, at, w, h, a,
+    heat: only04 ? 'It does only if crews can start before dawn (04:00)' : 'The heat result depends on the earliest start allowed',
+    replicated: ciBelow(c1.optimizer_vs_B2, h) && ciBelow(c2 && c2.optimizer_vs_B2, h),
+    smokeW2: c2 && ciBelow(c2.optimizer_vs_B2, a) ? `small reduction vs the early fixed shift in window 2 (${w(c2.optimizer_vs_B2, a)})` : `no clear reduction vs the early fixed shift in window 2 (${w(c2 && c2.optimizer_vs_B2, a)})`,
+    vsB3: [c1, c2].some(c => c && ciBelow(c.optimizer_vs_b3_early, a)) ? 'some vs heat-only planning' : 'none vs heat-only planning'};
+}
+function story(r1, r2, st) {
+  const P = storyParts(r1, r2, st);
+  if (!P) return 'Real-data results are not available.';
+  const {c1, c2, s1, s2, at, w, a} = P;
+  return `${P.heat}: vs the fixed 05:30 shift, ${w(c1.optimizer_vs_B2)} at or above 95°F in window 1` + (c2 ? ` and ${w(c2.optimizer_vs_B2)} in window 2` : '') + '. ' +
+    `At 05:30 or a sunrise-aligned start the benefit disappears (window 1: 05:30 ${w(at(s1, '05:30'))}, sunrise ${w(at(s1, 'sunrise'))}` +
+    (s2 ? `; window 2: 05:30 ${w(at(s2, '05:30'))}, sunrise ${w(at(s2, 'sunrise'))}` : '') + '; EXPLORATORY). ' +
+    `Smoke: ${P.smokeW2}, ${P.vsB3} (window 1 ${w(c1.optimizer_vs_b3_early, a)}` + (c2 ? `, window 2 ${w(c2.optimizer_vs_b3_early, a)}` : '') + '). All numbers are modeled exposure-hours.';
+}
+// One-line verdict for a start-time setting, chosen from its CI (hours at or above the high-heat line).
+function startVerdict(c) {
+  const k = 'hours_ge_95f';
+  if (!c || !c.ci95) return 'not computed';
+  if (c.ci95[k][1] < 0) return 'still fewer high-heat hours';
+  if (c.ci95[k][0] > 0) return 'about zero: no reduction left';
+  return 'about zero: no clear change';
+}
+</script>
 <script>
 const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg', X0 = 48, ROWS = [['optimizer', 'Optimizer'], ['robust', 'robust (scenario-averaged)'], ['B1', 'B1 fixed'], ['B2', 'B2 fixed'], ['b3_early', 'B3 (early)'], ['b3_late', 'B3 (late)']];
@@ -920,6 +1020,7 @@ async function backtest() {
   if (!r.available) { $('bt-banner').textContent = 'Backtest not available: ' + r.reason; return; }
   $('bt-banner').textContent = r.provenance_statement;
   const r2 = (await api('/api/eval_w2')).body, st = (await api('/api/start_sensitivity')).body;
+  state.ev = {r1: r, r2, st};  // the opening sequence reads the same results
   const s = story(r, r2, st);
   $('headline-detail').textContent = s;
   findings(r, r2, st);
@@ -935,25 +1036,6 @@ async function backtest() {
   $('bt2-banner').textContent = r2.available ? (r2.window || 'WINDOW 2') + ' · ' + r2.provenance_statement : 'Window 2 not available: ' + r2.reason;
   if (r2.available) renderEval(g2, r2);
   startTable($('bt-start'), st);
-}
-const sgn = (v, d = 3) => (v > 0 ? '+' : '') + v.toFixed(d);
-const ciTxt = (c, k = 'hours_ge_95f') => c.mean_diff[k] == null ? '–' : sgn(c.mean_diff[k]) + (c.ci95 ? ` [${sgn(c.ci95[k][0])}, ${sgn(c.ci95[k][1])}]` : '');
-// The headline story, generated from the result files; each window keeps its own CI (never pooled).
-function story(r1, r2, st) {
-  const below = (c, k) => c && c.ci95 && c.ci95[k][1] < 0, h = 'hours_ge_95f', a = 'hours_aqi_ge_101';
-  const ov = r => r && r.available && r.n_days.real_cached ? r.groups.real_cached.overall.comparisons : null;
-  const c1 = ov(r1), c2 = ov(r2), sw = w => w ? w.settings : null, s1 = sw(st.window1), s2 = sw(st.window2);
-  if (!c1 || !s1) return 'Real-data results are not available.';
-  const at = (s, k) => s ? s[k].groups.overall.optimizer_vs_B2 : null;
-  const w = (c, k = h) => c ? `${ciTxt(c, k)} h/day` : 'n/a';
-  const only04 = below(c1.optimizer_vs_B2, h) && !below(at(s1, '05:30'), h) && !below(at(s1, 'sunrise'), h);
-  const heat = only04 ? 'It does only if crews can start before dawn (04:00)' : 'The heat result depends on the earliest start allowed';
-  const smokeW2 = c2 && below(c2.optimizer_vs_B2, a) ? `small reduction vs the early fixed shift in window 2 (${w(c2.optimizer_vs_B2, a)})` : `no clear reduction vs the early fixed shift in window 2 (${w(c2 && c2.optimizer_vs_B2, a)})`;
-  const vsB3 = [c1, c2].some(c => c && below(c.optimizer_vs_b3_early, a)) ? 'some vs heat-only planning' : 'none vs heat-only planning';
-  return `${heat}: vs the fixed 05:30 shift, ${w(c1.optimizer_vs_B2)} at or above 95°F in window 1` + (c2 ? ` and ${w(c2.optimizer_vs_B2)} in window 2` : '') + '. ' +
-    `At 05:30 or a sunrise-aligned start the benefit disappears (window 1: 05:30 ${w(at(s1, '05:30'))}, sunrise ${w(at(s1, 'sunrise'))}` +
-    (s2 ? `; window 2: 05:30 ${w(at(s2, '05:30'))}, sunrise ${w(at(s2, 'sunrise'))}` : '') + '; EXPLORATORY). ' +
-    `Smoke: ${smokeW2}, ${vsB3} (window 1 ${w(c1.optimizer_vs_b3_early, a)}` + (c2 ? `, window 2 ${w(c2.optimizer_vs_b3_early, a)}` : '') + '). All numbers are modeled exposure-hours.';
 }
 // Three finding cards: the same comparisons as story(), each window with its own CI; titles follow the CIs.
 function findings(r1, r2, st) {
@@ -1125,7 +1207,6 @@ async function init() {
   sliderFill();
   initTabs();
   initAbout();
-  initIntro();
   backtest();
   const dr = await api('/api/days');
   if (!dr.ok || !dr.body.length) { todayError(dr.ok ? 'No days are available yet.' : detailText(dr.body.detail)); return; }
@@ -1146,6 +1227,134 @@ async function init() {
   plan();
 }
 init();
+</script>
+<script id="intro-cine">
+// ---------- Cinematic opening: scenes on a master clock (seek, pause, skip). Any error drops straight into the app. ----------
+const CINE = {build: {}, running: null};
+const CINE_ICON = {prev: '<path d="M15 5 8 12l7 7"/>', next: '<path d="m9 5 7 7-7 7"/>',
+  pause: '<path d="M9 5v14M15 5v14"/>', play: '<path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/>'};
+const cineSvg = d => `<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
+function cinePlaceholder(box) { el(box, 'h2', '').className = 'cine-h'; return {frame() {}}; }
+function startCinema(mode) {
+  if (CINE.running || mode === 'off') return;
+  const still = mode === 'static', cleanup = [], inert = [];
+  let root = null, S = {raf: 0, done: false};
+  const on = (tg, ev, fn, o) => { tg.addEventListener(ev, fn, o); cleanup.push(() => tg.removeEventListener(ev, fn, o)); };
+  function teardown() {
+    if (!root) return;
+    cancelAnimationFrame(S.raf); clearTimeout(S.idleT);
+    cleanup.forEach(f => f()); root.remove(); root = null; CINE.running = null;
+    document.body.classList.remove('cine-on');
+    inert.forEach(n => { n.inert = false; });
+    CINE.after();
+  }
+  const safe = fn => (...a) => { try { return fn(...a); } catch (e) { teardown(); } };
+  try {
+    root = document.createElement('div');
+    root.className = 'cine' + (still ? ' static' : '');
+    root.setAttribute('role', 'dialog'); root.setAttribute('aria-modal', 'true'); root.setAttribute('aria-label', 'Madrugada opening sequence');
+    root.innerHTML = '<canvas class="cine-bg" aria-hidden="true"></canvas><div class="cine-stage" aria-live="polite"></div>' +
+      '<div class="cine-ui"><div class="cine-bar" role="slider" tabindex="0" aria-label="Intro progress" aria-valuemin="0"><span class="cine-fill"></span></div>' +
+      `<div class="cine-btns"><button type="button" class="cine-b" data-a="prev" aria-label="Previous scene">${cineSvg(CINE_ICON.prev)}</button>` +
+      `<button type="button" class="cine-b" data-a="toggle" aria-label="Pause">${cineSvg(CINE_ICON.pause)}</button>` +
+      `<button type="button" class="cine-b" data-a="next" aria-label="Next scene">${cineSvg(CINE_ICON.next)}</button>` +
+      '<span class="cine-count"></span><button type="button" class="cine-skip" data-a="skip">Skip intro</button></div></div>';
+    const q = c => root.querySelector(c), T = cineTimeline(CINE_SCENES), cv = q('.cine-bg'), ctx = cv.getContext('2d');
+    const bar = q('.cine-bar'), fill = q('.cine-fill'), skip = q('.cine-skip'), tog = q('[data-a="toggle"]'), count = q('.cine-count');
+    Object.assign(S, {t: 0, playing: false, last: 0, cur: -1, slide: 0, W: 0, H: 0, scenes: []});
+    bar.setAttribute('aria-valuemax', T.total);
+    for (const sc of CINE_SCENES) { const b = el(q('.cine-stage'), 'div'); b.className = 'cine-scene s-' + sc.id; b.hidden = true; S.scenes.push({box: b, frame: null, partial: true}); }
+    T.starts.slice(1).forEach(x => { const k = el(bar, 'span'); k.className = 'cine-tick'; k.style.left = (100 * x / T.total) + '%'; });
+    const ensure = i => {
+      const sc = S.scenes[i];
+      if (sc.frame && !sc.partial) return sc;
+      sc.box.replaceChildren();
+      const r = (CINE.build[CINE_SCENES[i].id] || cinePlaceholder)(sc.box, still);
+      sc.frame = r.frame; sc.partial = !!r.partial;
+      return sc;
+    };
+    const render = () => {
+      const {i, local} = T.at(S.t), dur = CINE_SCENES[i].dur, last = i === CINE_SCENES.length - 1;
+      if (i !== S.cur) { if (S.cur >= 0) S.scenes[S.cur].box.hidden = true; ensure(i).box.hidden = false; S.cur = i; }
+      count.textContent = still ? `${S.slide + 1} / ${CINE_STATIC.length}` : `${i + 1} / ${CINE_SCENES.length}`;
+      const sc = S.scenes[i];
+      sc.box.style.opacity = still ? 1 : Math.min(clamp01(local / .45), last ? 1 : clamp01((dur - local) / .4));
+      sc.frame(local, still);
+      CINE.bg(ctx, S.W, S.H, S.t, S);
+      fill.style.transform = `scaleX(${S.t / T.total})`;
+      bar.setAttribute('aria-valuenow', Math.round(S.t));
+      skip.classList.toggle('on', still || cineSkipVisible(S.t));
+    };
+    const finish = () => { if (S.done) return; S.done = true; cancelAnimationFrame(S.raf); try { CINE.leave(root, ctx, S, still, teardown); } catch (e) { teardown(); } };
+    const loop = safe(now => {
+      const r = cineAdvance(S.t, S.last ? (now - S.last) / 1000 : 0, S.playing, T.total);
+      S.last = now; S.t = r.t; render();
+      if (r.ended) return finish();
+      if (S.playing) S.raf = requestAnimationFrame(loop);
+    });
+    const play = v => {
+      S.playing = v; S.last = 0; cancelAnimationFrame(S.raf);
+      tog.innerHTML = cineSvg(v ? CINE_ICON.pause : CINE_ICON.play); tog.setAttribute('aria-label', v ? 'Pause' : 'Play');
+      if (v && !S.done) S.raf = requestAnimationFrame(loop);
+    };
+    const seek = t => { S.t = T.clamp(t); S.last = 0; render(); };
+    const showSlide = () => { const i = CINE_STATIC[S.slide]; S.t = T.starts[i] + CINE_SCENES[i].dur * .999; render(); };
+    const act = safe(a => {
+      if (a === 'skip') return finish();
+      if (still) {
+        if (a === 'next' || a === 'toggle') { if (S.slide + 1 >= CINE_STATIC.length) return finish(); S.slide++; }
+        if (a === 'prev') S.slide = Math.max(0, S.slide - 1);
+        return showSlide();
+      }
+      if (a === 'toggle') play(!S.playing);
+      if (a === 'prev') seek(T.prev(S.t));
+      if (a === 'next') { const n = T.next(S.t); if (n >= T.total) return finish(); seek(n); }
+    });
+    const size = safe(() => {
+      const d = Math.min(2, window.devicePixelRatio || 1);
+      S.W = root.clientWidth; S.H = root.clientHeight;
+      cv.width = Math.round(S.W * d); cv.height = Math.round(S.H * d); ctx.setTransform(d, 0, 0, d, 0, 0);
+      render();
+    });
+    const wake = () => {
+      if (!root) return;
+      root.classList.remove('idle'); clearTimeout(S.idleT);
+      S.idleT = setTimeout(() => { if (root && !still && S.playing) root.classList.add('idle'); }, 2000);
+    };
+    on(root, 'click', e => { const b = e.target.closest('[data-a]'); if (b) act(b.dataset.a); });
+    on(bar, 'pointerdown', safe(e => { if (still) return; const r = bar.getBoundingClientRect(); seek(T.total * clamp01((e.clientX - r.left) / r.width)); }));
+    on(document, 'keydown', e => {
+      const a = cineKey(e.key), onBtn = e.target.closest && e.target.closest('.cine button');
+      if (!a || (onBtn && (e.key === 'Enter' || e.key === ' '))) return;
+      e.preventDefault(); act(a);
+    });
+    for (const ev of ['pointermove', 'pointerdown', 'keydown', 'focusin']) on(document, ev, wake, {passive: true});
+    on(document, 'visibilitychange', () => { if (still || S.done) return; if (document.hidden) { S.resume = S.playing; play(false); } else if (S.resume) play(true); });
+    on(window, 'resize', size);
+    CINE.running = root;
+    document.body.appendChild(root);
+    for (const n of document.body.children) if (n !== root && n.tagName !== 'SCRIPT' && !n.inert) { n.inert = true; inert.push(n); }
+    document.body.classList.add('cine-on');
+    root.tabIndex = -1; root.focus({preventScroll: true});
+    size(); wake();
+    if (still) showSlide(); else play(true);
+  } catch (e) { teardown(); }
+}
+CINE.bg = (ctx, W, H) => { ctx.fillStyle = '#0b1027'; ctx.fillRect(0, 0, W, H); };
+CINE.leave = (root, ctx, S, still, done) => done();
+// After the hand-off the app's main heading takes focus.
+CINE.after = () => {
+  try { ($('view-today').hidden ? document.querySelector('.tab[aria-selected="true"]') : $('today-title')).focus({preventScroll: true}); } catch (e) { /* ignore */ }
+};
+const cineReduced = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+CINE.mode = (() => { try { return cineMode(location.search, cineReduced()); } catch (e) { return 'off'; } })();
+$('replay-intro').addEventListener('click', () => startCinema(cineReduced() ? 'static' : 'motion'));
+$('about-replay').addEventListener('click', () => { const d = $('about'); if (d.close) d.close(); else d.removeAttribute('open'); startCinema(cineReduced() ? 'static' : 'motion'); });
+if (CINE.mode === 'off') initIntro();  // first-visit coach tips only when the opening sequence is skipped by ?intro=0
+else { const sp = document.getElementById('splash'); if (sp) sp.remove(); }
+// @scenes
+// @leave
+startCinema(CINE.mode);
 </script>
 </body>
 </html>
