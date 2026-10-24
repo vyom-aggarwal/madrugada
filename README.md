@@ -13,6 +13,10 @@ its own CI and they are never pooled. Numbers live in the result files, not in t
 - Start-time sensitivity (EXPLORATORY, POST-HOC): `docs/start_sensitivity.md`
 - Pitch with every number filled from those files: `docs/PITCH_filled.md`
 
+**Who it helps:** crew leads, foremen and farm labor contractors in the Central Valley who set tomorrow's start
+time, and the crews who get the plan as a printable bilingual (English/Spanish) crew sheet. Paid hours are an
+input the tool holds constant; it tracks no individual workers.
+
 **It is not** a compliance tool, a health prediction, or a worker tracker. It does not replace the employer's
 written Cal/OSHA Heat Illness Prevention Plan. Water, shade and rest requirements still apply.
 
