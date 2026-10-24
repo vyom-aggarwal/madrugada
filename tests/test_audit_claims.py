@@ -50,3 +50,14 @@ def test_headline_numbers_match_source_json():
     for res in (src["r1"], src["r2"]):
         o = res["groups"]["real_cached"]["overall"]["comparisons"]["optimizer_vs_B2"]
         assert f"{o['n']} region-days" in text
+
+
+def test_intro_scene_text_has_no_claims():
+    """The opening sequence is scanned on its own, with stricter stems, and must keep its limits scene."""
+    html = (ROOT / "static" / "index.html").read_text(encoding="utf-8")
+    text = "".join(re.findall(r'<script id="intro-(?:core|cine)">(.*?)</script>', html, re.S))
+    assert "startCinema" in text and "storyParts" in text
+    low = text.lower().replace("preventdefault", "").replace("preventscroll", "")  # DOM API names
+    hits = [w for w in FORBIDDEN + ["safe", "protect", "prevent", "complian", "guarantee", "outperform", "beats"] if w in low]
+    assert not hits, hits
+    assert "Advisory aid; does not replace the written Cal/OSHA plan." in text and "Modeled exposure-hours" in text

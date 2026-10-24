@@ -407,22 +407,22 @@ body.cine-on{overflow:hidden}
 .cine button:focus-visible,.cine-bar:focus-visible{outline:3px solid #f6b65c;outline-offset:3px}
 .cine.static [data-a="toggle"]{display:none}
 .cine.static .cine-ui{opacity:1}
-.cine-h{font:600 clamp(28px,5.4vw,62px)/1.1 var(--font-display);letter-spacing:-.015em;margin:0 auto;max-width:20ch;text-shadow:0 2px 28px rgba(3,5,13,.7)}
+.cine-h{font:600 clamp(26px,min(5.4vw,7vh),62px)/1.1 var(--font-display);letter-spacing:-.015em;margin:0 auto;max-width:20ch;text-shadow:0 2px 28px rgba(3,5,13,.7)}
 .cine .w{display:inline-block;will-change:transform,opacity}
 .cine-type{position:relative;margin:0 auto;max-width:22ch;text-align:left;font:500 clamp(24px,4.6vw,50px)/1.28 var(--font-display);letter-spacing:-.01em;text-shadow:0 2px 20px rgba(3,5,13,.85)}
 .cine-type .ghost{visibility:hidden}.cine-type .typed{position:absolute;inset:0}
 .cine-type .caret{display:inline-block;width:.07em;height:.95em;margin-left:.06em;vertical-align:-.1em;background:#f6b65c}
-.cine-h-sm{font-size:clamp(24px,4.2vw,46px);max-width:24ch}
+.cine-h-sm{font-size:clamp(22px,min(4vw,5.2vh),44px);max-width:26ch}
 .cine-sub{margin:14px auto 0;max-width:44ch;font-size:clamp(16px,2.1vw,21px);line-height:1.5;color:#ece6f5;text-shadow:0 1px 14px rgba(3,5,13,.9)}
 .cine-eyebrow{margin:0 0 12px;font-size:12.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#f6b65c}
 .cine-note{margin:14px auto 0;max-width:62ch;font-size:13px;line-height:1.5;color:#d4cde4;text-shadow:0 1px 10px rgba(3,5,13,.9)}
 .cine-static-only{display:none}.cine.static .cine-static-only{display:block}
-.cine-chart{display:block;width:100%;height:auto;margin:4px 0 10px;overflow:visible}
+.cine-chart{display:block;width:100%;height:auto;max-height:44vh;margin:4px 0 10px;overflow:visible}
 .cine-chart text,.cine-dial text{font:600 15px var(--font);fill:#f7f2ea;paint-order:stroke;stroke:rgba(3,5,13,.85);stroke-width:4px;stroke-linejoin:round}
 .cine-line{fill:none;stroke-width:3;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
 .cine-thr{fill:none;stroke-width:1.6;stroke-dasharray:1;stroke-dashoffset:1}
-.cine svg.cine-mark{width:clamp(72px,12vw,112px);height:auto;margin:0 auto 14px;display:block;border-radius:22%;box-shadow:0 10px 40px rgba(236,107,78,.35)}
-.cine-word{margin:0;font:600 clamp(40px,8vw,88px)/1.05 var(--font-display);white-space:nowrap}
+.cine svg.cine-mark{width:clamp(56px,min(12vw,13vh),112px);height:auto;margin:0 auto 14px;display:block;border-radius:22%;box-shadow:0 10px 40px rgba(236,107,78,.35)}
+.cine-word{margin:0;font:600 clamp(38px,min(8vw,10vh),88px)/1.05 var(--font-display);white-space:nowrap}
 .cine-shift{margin:22px auto 0;max-width:640px}
 .cine-track{position:relative;height:30px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
 .cine-block{position:absolute;top:3px;bottom:3px;border-radius:6px;background:linear-gradient(90deg,#f7b44c,#ea6a52);box-shadow:0 0 18px rgba(240,138,75,.45)}
@@ -430,8 +430,8 @@ body.cine-on{overflow:hidden}
 .cine-axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
 .cine-shift-lab{margin:12px 0 0;font-size:15px;color:#ece6f5}
 .cine-paid{margin:6px 0 0;font:600 clamp(20px,3vw,28px) var(--font-display);color:#ffd27a}
-.cine svg.cine-dial{display:block;width:min(420px,90%);height:auto;margin:4px auto 0;overflow:visible}
-.cine-num{margin:0;font:600 clamp(52px,11vw,112px)/1 var(--font-display);letter-spacing:-.02em;color:#ffd27a;text-shadow:0 4px 30px rgba(3,5,13,.75)}
+.cine svg.cine-dial{display:block;width:min(380px,86%,46vh);height:auto;margin:4px auto 0;overflow:visible}
+.cine-num{margin:0;font:600 clamp(44px,min(10vw,11vh),104px)/1 var(--font-display);letter-spacing:-.02em;color:#ffd27a;text-shadow:0 4px 30px rgba(3,5,13,.75)}
 .cine-unit{font-size:.36em;margin-left:.15em;color:#ece6f5}
 .cine-ci{position:relative;width:min(420px,90%);height:24px;margin:12px auto 0}
 .cine-ci i{position:absolute}
@@ -439,9 +439,12 @@ body.cine-on{overflow:hidden}
 .cine-ci .zero{top:2px;width:2px;height:20px;background:#f7f2ea}
 .cine-ci .band{top:7px;height:10px;border-radius:5px;background:rgba(255,190,110,.6);transition:left .3s ease-out,width .3s ease-out}
 .cine-ci .dot{top:5px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ffd27a;box-shadow:0 0 0 3px rgba(3,5,13,.6);transition:left .3s ease-out}
+.cine-test-grid{display:grid;gap:4px 40px;align-items:center;margin-top:10px}
+.cine-test-grid .cine-eyebrow{margin:8px 0 0}
+@media (min-aspect-ratio:1/1) and (min-width:640px){.cine-test-grid{grid-template-columns:1fr 1fr}}
 .cine-flip{display:inline-block;transition:opacity .25s ease-out,transform .25s ease-out}
-.cine-beat{margin:0 auto 18px;max-width:42ch;transition:opacity .3s ease-out}
-.cine-beat h3{margin:0;font:600 clamp(21px,3.4vw,36px)/1.2 var(--font-display);text-shadow:0 2px 20px rgba(3,5,13,.85)}
+.cine-beat{margin:0 auto min(18px,2vh);max-width:42ch;transition:opacity .3s ease-out}
+.cine-beat h3{margin:0;font:600 clamp(19px,min(3.2vw,4.2vh),34px)/1.2 var(--font-display);text-shadow:0 2px 20px rgba(3,5,13,.85)}
 .cine-beat p{margin:8px 0 0;font-size:clamp(14px,1.8vw,17px);line-height:1.5;color:#e2dcef}
 .cine-meter{position:relative;height:22px;max-width:560px;margin:18px auto 6px;border-radius:11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);overflow:hidden}
 .cine-meter span{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);background:repeating-linear-gradient(135deg,#ec6b4e 0 10px,#f08a4b 10px 20px)}
@@ -449,8 +452,11 @@ body.cine-on{overflow:hidden}
 .cine-quiet{margin:0 auto 12px;max-width:34ch;font:500 clamp(20px,3.2vw,32px)/1.35 var(--font-display);color:#f3eee6;text-shadow:0 2px 18px rgba(3,5,13,.85)}
 .cine .cine-enter{margin-top:18px;min-height:52px;padding:0 30px;border:0;border-radius:999px;background:linear-gradient(135deg,#f7b44c,#f08a4b 55%,#ea6a52);color:#1d1404;font-weight:800;font-size:17px;box-shadow:0 10px 30px -10px rgba(236,107,78,.7)}
 .cine-chip{display:inline-block;margin:10px 0 0;padding:4px 10px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.04em;color:#ece6f5;background:rgba(3,5,13,.4)}
-@media (max-height:560px){.cine-stage{padding-top:10px;padding-bottom:84px}.cine svg.cine-dial{width:min(240px,50%)}.cine-num{font-size:44px}
-  .cine svg.cine-mark{width:52px;margin-bottom:6px}.cine-chart{max-height:40vh}.cine-beat{margin-bottom:8px}.cine-sub{margin-top:6px}.cine-note{margin-top:6px}}
+@media (max-height:560px){.cine-stage{padding-top:8px;padding-bottom:72px}.cine-ui{padding-top:6px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}.cine-bar{margin-bottom:6px}
+  .cine .cine-b{width:40px;min-width:40px;min-height:40px}.cine .cine-skip{min-height:40px}.cine svg.cine-dial{width:min(220px,40vh)}.cine-num{font-size:40px}
+  .cine-h{font-size:22px}.cine-h-sm{font-size:20px}.cine-sub{margin-top:4px;font-size:14px}.cine-note{margin-top:4px;font-size:11.5px;line-height:1.35}.cine-eyebrow{margin-bottom:4px}
+  .cine svg.cine-mark{width:44px;margin-bottom:6px}.cine-chart{max-height:34vh;margin:2px 0 4px}.cine-beat{margin-bottom:6px}.cine-beat h3{font-size:17px}.cine-beat p{font-size:13px;margin-top:2px}
+  .cine-quiet{font-size:18px;margin-bottom:6px}.cine .cine-enter{min-height:44px;margin-top:6px}.cine-chip{margin-top:4px;font-size:11px}.cine-shift{margin-top:8px}.cine-ci{margin-top:4px}.cine-meter{margin-top:8px}}
 /* Hand-off: the app settles in under the iris (opacity only on the bars, so the fixed phone tab bar never moves) */
 @keyframes cine-fade{from{opacity:0}}
 @keyframes cine-up{from{opacity:0;transform:translateY(14px)}}
@@ -724,7 +730,7 @@ function startVerdict(c) {
   const k = 'hours_ge_95f';
   if (!c || !c.ci95) return 'not computed';
   if (c.ci95[k][1] < 0) return 'still fewer high-heat hours';
-  if (c.ci95[k][0] > 0) return 'about zero: no reduction left';
+  if (c.ci95[k][0] > 0) return 'no reduction left (slightly more high-heat hours)';
   return 'about zero: no clear change';
 }
 </script>
@@ -1409,6 +1415,7 @@ const CINE_STARS = (r => Array.from({length: 140}, () => ({x: r(), y: r(), r: .4
 const CINE_DUST = (r => Array.from({length: 60}, () => ({x: r(), y: r(), v: .3 + r(), r: .6 + r() * 1.3, ph: r() * 6.28})))(cineRand(11));
 const cineDay = () => state.days[$('day').value] || null;
 const cineProv = d => !d ? '' : d.provenance === 'synthetic' ? 'SYNTHETIC: ILLUSTRATION ONLY' : 'REAL (cached) · REPLAY: recorded data, not live';
+const cineDayName = d => { const m = d.label.match(/(\d{4}-\d\d-\d\d) \(([^)]+)\)/); return m ? `${m[2]}, ${m[1]}` : d.label; };
 const cineHiF = () => state.data ? state.data.thresholds.heat_high_f + '°F' : 'the high-heat line';
 const cineMins = x => { const [h, m] = x.split(':').map(Number); return h * 60 + m; };
 const cineBlocks = bs => bs.map(b => `${hhmm12(b.start)}–${hhmm12(b.end)}`).join(' + ');
@@ -1537,7 +1544,7 @@ CINE.build.problem = box => {
   }
   cineKin(box, 'h2', 'cine-h cine-h-sm', 'Heat and smoke rules trigger at thresholds.', .3);
   cineKin(box, 'p', 'cine-sub', 'They don\u2019t help rebuild the shift.', 4.2);
-  if (d && day) { const c = cineP(box, 'cine-chip', `${day.label} · ${cineProv(day)}`, 1.2); c.style.display = 'inline-block'; }
+  if (d && day) { const c = cineP(box, 'cine-chip', `${cineDayName(day)} · ${cineProv(day)}`, 1.2); c.style.display = 'inline-block'; }
   const rz = cineRise(box);
   return {partial: !d, frame(local, still) {
     rz(local, still);
@@ -1602,7 +1609,9 @@ CINE.build.test = box => {
   cineKin(box, 'h2', 'cine-h cine-h-sm', 'Move the earliest start later. Watch the benefit.', .2, .05);
   if (!w1 || !ev.r1 || !ev.r1.available) { cineP(box, 'cine-sub', 'Real-data results are not available.', .8); return {partial: true, frame: cineRise(box)}; }
   const keys = Object.keys(w1.settings).filter(k => /^\d\d:\d\d$/.test(k)), C = keys.map(k => w1.settings[k].groups.overall.optimizer_vs_B2), n = keys.length;
-  const dial = sv(box, 'svg', {viewBox: '0 0 400 214', class: 'cine-dial', role: 'img', 'aria-label': 'Earliest start time, moving later across a sunrise arc'});
+  const grid = el(box, 'div'); grid.className = 'cine-test-grid';
+  const colA = el(grid, 'div'), colB = el(grid, 'div');
+  const dial = sv(colA, 'svg', {viewBox: '0 0 400 214', class: 'cine-dial', role: 'img', 'aria-label': 'Earliest start time, moving later across a sunrise arc'});
   sv(dial, 'path', {d: 'M40 196A160 160 0 0 1 360 196', fill: 'none', stroke: 'rgba(255,255,255,.28)', 'stroke-width': 3});
   const pt = (j, r = 160) => { const a = Math.PI * (1 - j / (n - 1)); return [200 + r * Math.cos(a), 196 - r * Math.sin(a)]; };
   keys.forEach((k, j) => {
@@ -1611,18 +1620,18 @@ CINE.build.test = box => {
     sv(dial, 'text', {x: lx, y: ly + 5, 'text-anchor': 'middle'}, hhmm12(k).replace(':00', ''));
   });
   const sun = sv(dial, 'circle', {r: 13, fill: '#ffb35c', stroke: '#ffe2b0', 'stroke-width': 2});
-  const startLab = cineP(box, 'cine-eyebrow', '', .6);
-  const num = el(box, 'p'); num.className = 'cine-num'; num.dataset.at = .8;
+  const startLab = cineP(colA, 'cine-eyebrow', '', .6);
+  const num = el(colB, 'p'); num.className = 'cine-num'; num.dataset.at = .8;
   const val = el(num, 'span'); val.className = 'cine-flip'; el(num, 'span', 'h/day').className = 'cine-unit';
   const lo = Math.min(0, ...C.map(c => c.ci95[H95][0])), hi = Math.max(0, ...C.map(c => c.ci95[H95][1])), pad = (hi - lo) * .12;
   const xp = v => 100 * (v - lo + pad) / (hi - lo + 2 * pad);
-  const ci = el(box, 'div'); ci.className = 'cine-ci'; ci.dataset.at = 1;
+  const ci = el(colB, 'div'); ci.className = 'cine-ci'; ci.dataset.at = 1;
   el(ci, 'i').className = 'axis'; const z = el(ci, 'i'); z.className = 'zero'; z.style.left = xp(0) + '%';
   const band = el(ci, 'i'); band.className = 'band'; const dot = el(ci, 'i'); dot.className = 'dot';
-  const ciLab = cineP(box, 'cine-note', '', 1);
+  const ciLab = cineP(colB, 'cine-note', '', 1);
   const b2 = d ? hhmm12(d.plans.B2.blocks[0].start) : 'early';
-  cineP(box, 'cine-note', `Change in hours at or above ${cineHiF()} per day, optimizer vs the fixed ${b2} shift · window 1 · exploratory, post-hoc`, 1.2);
-  const verdict = cineP(box, 'cine-sub', `Earliest start ${hhmm12(keys[n - 1])}: ${startVerdict(C[n - 1])}.`, 6.5);
+  cineP(colB, 'cine-note', `Change in hours at or above ${cineHiF()} per day, optimizer vs the fixed ${b2} shift · window 1 · exploratory, post-hoc`, 1.2);
+  const verdict = cineP(colB, 'cine-sub', `Earliest start ${hhmm12(keys[n - 1])}: ${startVerdict(C[n - 1])}.`, 6.5);
   verdict.style.color = '#ffd27a';
   const r2 = ev.r2 && ev.r2.available && ev.r2.n_days.real_cached ? ev.r2.n_days.real_cached : 0, fmt = v => v.toLocaleString('en-US');
   cineP(box, 'cine-chip', r2 ? `Real data. Two preregistered windows. ${fmt(ev.r1.n_days.real_cached)} and ${fmt(r2)} region-days.`
@@ -1672,7 +1681,7 @@ CINE.build.cantfix = box => {
   const lab = el(box, 'div'); lab.className = 'cine-meter-lab'; lab.dataset.at = .4; el(lab, 'span', '0 h'); el(lab, 'span', `${u.paid_hours} paid hours`);
   const num = el(box, 'p'); num.className = 'cine-num'; num.dataset.at = 2; el(num, 'span', String(h)); el(num, 'span', 'h').className = 'cine-unit';
   cineP(box, 'cine-note', `Modeled exposure-hours at or above ${hi} left in the best plan starting no earlier than first light (${hhmm12(u.first_light_start)})` +
-    (day ? ` · ${day.label}` : '') + ' · forecast-based estimate', 2.2);
+    (day ? ` · ${cineDayName(day)}` : '') + ' · forecast-based estimate', 2.2);
   cineKin(box, 'p', 'cine-sub', u.line, 2.8, .05).style.color = '#ffd27a';
   const rz = cineRise(box);
   return {frame(local, still) { rz(local, still); fill.style.transform = `scaleX(${((still ? 1 : easeInOut((local - .6) / 1.4)) * frac).toFixed(4)})`; }};
