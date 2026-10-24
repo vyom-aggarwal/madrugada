@@ -97,6 +97,41 @@ td:last-child,td:first-child{white-space:nowrap}
 .box ul{margin:0;padding-left:20px}
 .box li{margin:6px 0}
 footer{color:var(--mute);font-size:13px;padding:var(--sp2) var(--sp2) var(--sp4)}
+/* Day and place picker */
+#daybar{display:grid;grid-template-columns:1fr;gap:12px}
+#daybar label{display:grid;gap:4px;font-size:13px;color:var(--mute)}
+#daybar select{width:100%;font-size:17px;font-weight:600;color:var(--ink)}
+#daybar .badges{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+@media (min-width:768px){#daybar{grid-template-columns:minmax(180px,1fr) minmax(240px,2fr)}#daybar .badges{grid-column:1/-1}}
+/* Today: hero, ribbon, tiles */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 70%,#3a3f6b 100%);color:var(--on-navy);border:0}
+.hero .eyebrow{color:var(--amber)}
+.hero h2{font-size:26px;margin:4px 0 8px}
+.hero p{font-size:17px;max-width:62ch}
+.hero .note{color:rgba(251,245,234,.8);font-size:13px}
+.tiles{display:grid;grid-template-columns:1fr;gap:var(--sp2);margin-bottom:var(--sp2)}
+@media (min-width:600px){.tiles{grid-template-columns:repeat(3,1fr)}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--sp2);box-shadow:var(--shadow);border-top:6px solid var(--line)}
+.tile.heat{border-top-color:var(--heat)}.tile.smoke{border-top-color:var(--smoke)}.tile.unfix{border-top-color:var(--accent)}
+.tile-label{margin:0;font-weight:700;font-size:14px;color:var(--mute)}
+.tile-icon{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.tile.heat .tile-icon{color:var(--heat)}.tile.smoke .tile-icon{color:var(--smoke)}.tile.unfix .tile-icon{color:var(--accent-ink)}
+.tile-num{margin:4px 0;font-size:40px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile-sub{margin:0;font-size:14px;color:var(--mute)}
+.big{width:100%;min-height:56px;font-size:18px}
+@media (min-width:768px){.big{width:auto;padding:0 32px}}
+.lane-title{font-size:13px;font-weight:700;fill:var(--ink);font-family:var(--font)}
+.rib-temp{stroke:var(--heat)}.rib-aqi{stroke:var(--smoke);stroke-dasharray:1 0}
+.rib-area-temp{fill:var(--heat);opacity:.12}.rib-area-aqi{fill:var(--smoke);opacity:.12}
+.rib-label{font-size:12px;fill:var(--ink);font-family:var(--font);paint-order:stroke;stroke:var(--surface);stroke-width:3px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:8px 0 0;padding:0;list-style:none;font-size:13px;color:var(--mute)}
+.legend li{display:flex;align-items:center;gap:6px}
+.key{display:inline-block;width:22px;height:0;border-top:3px solid currentColor}
+.key.dash{border-top-style:dashed}.key.hatch{height:12px;border:1px solid var(--opt);background:repeating-linear-gradient(45deg,transparent 0 3px,var(--opt) 3px 5px);opacity:.6}
+/* Loading skeletons */
+.loading .skel,.skel.loading{color:transparent!important;background:linear-gradient(90deg,var(--surface-2) 0%,var(--line) 50%,var(--surface-2) 100%);background-size:200% 100%;animation:shimmer 1.2s linear infinite;border-radius:8px;min-height:1em}
+.hero.loading .skel{background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.18),rgba(255,255,255,.08));background-size:200% 100%}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
 </style>
 </head>
 <body>
@@ -119,16 +154,47 @@ footer{color:var(--mute);font-size:13px;padding:var(--sp2) var(--sp2) var(--sp4)
 </header>
 <main class="wrap">
   <p id="snap-banner" class="badge snap" hidden>SNAPSHOT MODE: sliders disabled</p>
-  <section class="card row" id="daybar" aria-label="Day and place">
-    <label>Day <select id="day"></select></label>
-    <span id="prov-badge" class="badge"></span>
-    <span id="replay-badge" class="badge replay" hidden>REPLAY: recorded data, not live</span>
-    <span id="oracle-badge" class="badge oracle" hidden>ORACLE: upper bound, not a forecast</span>
-    <span id="rule-note" class="note"></span>
+  <section class="card" id="daybar" aria-label="Day and place">
+    <label for="place">Place <select id="place"></select></label>
+    <label for="day">Day <select id="day"></select></label>
+    <div class="badges">
+      <span id="prov-badge" class="badge"></span>
+      <span id="replay-badge" class="badge replay" hidden>REPLAY: recorded data, not live</span>
+      <span id="oracle-badge" class="badge oracle" hidden>ORACLE: upper bound, not a forecast</span>
+      <span id="rule-note" class="note"></span>
+    </div>
   </section>
 
   <section class="view" id="view-today" role="tabpanel" aria-labelledby="tab-today">
-    <div class="card"><p class="eyebrow">Today</p><h2>Day briefing</h2><p class="note">The day briefing is built from the same forecast and plan data as the Planner.</p></div>
+    <article class="card hero loading" id="today-hero" aria-live="polite" aria-busy="true">
+      <p class="eyebrow" id="today-eyebrow">Day briefing</p>
+      <h2 id="today-title" class="skel">Loading the day…</h2>
+      <p id="today-summary" class="skel">Reading the forecast for this day.</p>
+      <p class="note">Forecast-based estimate. The forecast is a simple proxy (yesterday plus the prior 7-day mean); numbers are modeled exposure-hours.</p>
+    </article>
+    <div class="card" id="today-error" role="alert" hidden>
+      <h3>We couldn't build this day's briefing</h3>
+      <p id="today-error-text"></p>
+      <button id="today-retry" type="button">Try again</button>
+    </div>
+    <div class="card">
+      <h3>The day at a glance</h3>
+      <svg id="ribbon-svg" viewBox="0 0 480 290" role="img" aria-labelledby="ribbon-desc"></svg>
+      <p class="note" id="ribbon-desc">Temperature and air quality across the day.</p>
+      <ul class="legend" aria-hidden="true">
+        <li><span class="key" style="color:var(--heat)"></span>Temperature</li>
+        <li><span class="key" style="color:var(--smoke);border-top-width:3px;border-top-style:dotted"></span>Air quality (AQI)</li>
+        <li><span class="key dash" style="color:var(--mute)"></span>Threshold lines (labelled)</li>
+        <li><span class="key hatch"></span>Work plan from first light</li>
+      </ul>
+    </div>
+    <div class="tiles" id="today-tiles">
+      <div class="tile heat loading" id="tile-heat"><p class="tile-icon">Heat</p><p class="tile-label" id="tile-heat-label">Forecast hours at or above the high-heat level</p><p class="tile-num skel" id="tile-heat-num">–</p><p class="tile-sub">Whole day · forecast-based estimate</p></div>
+      <div class="tile smoke loading" id="tile-smoke"><p class="tile-icon">Smoke</p><p class="tile-label" id="tile-smoke-label">Forecast smoke hours</p><p class="tile-num skel" id="tile-smoke-num">–</p><p class="tile-sub">Whole day · forecast-based estimate</p></div>
+      <div class="tile unfix loading" id="tile-unfix"><p class="tile-icon">Plan</p><p class="tile-label">Hours scheduling can't fix</p><p class="tile-num skel" id="tile-unfix-num">–</p><p class="tile-sub" id="tile-unfix-sub">These hours need shade, rest or crew changes, not a different start time.</p></div>
+    </div>
+    <button id="make-sheet" class="btn primary big" type="button">Make crew sheet</button>
+    <p class="note" id="make-sheet-note"></p>
   </section>
 
   <section class="view" id="view-planner" role="tabpanel" aria-labelledby="tab-planner" hidden>
@@ -192,7 +258,7 @@ const state = {days: {}, data: null, view: 'planned', shown: null, snap: null};
 const xs = s => X0 + (X1 - X0) * s / 96;
 function sv(parent, tag, attrs, text) {
   const e = document.createElementNS(NS, tag);
-  for (const k in attrs || {}) e.setAttribute(k, attrs[k]);
+  for (const k in attrs || {}) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
   if (text != null) e.textContent = text;
   parent.appendChild(e); return e;
 }
@@ -206,7 +272,7 @@ async function loadSnapshot() {
     if (state.snap.note) $('snap-banner').textContent = 'SNAPSHOT MODE: sliders disabled (' + state.snap.note + ')';
     const p = state.snap.default_params;
     $('paid').value = p.paid_hours; $('paid-val').textContent = p.paid_hours; $('earliest').value = p.earliest; $('latest').value = p.latest; $('oracle').checked = p.oracle;
-    ['paid', 'earliest', 'latest', 'oracle', 'print'].forEach(id => { $(id).disabled = true; });
+    ['paid', 'earliest', 'latest', 'oracle', 'print', 'make-sheet'].forEach(id => { $(id).disabled = true; });
   }
   return state.snap;
 }
@@ -245,29 +311,131 @@ function badges() {
 }
 let timer = null;
 function schedule() { $('paid-val').textContent = $('paid').value; badges(); clearTimeout(timer); timer = setTimeout(plan, 250); }
+const detailText = d => Array.isArray(d) ? d.map(e => e.msg).join('; ') : d;
 async function plan() {
   badges();
+  todayLoading(true);
   const r = await api('/api/plan', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(params())});
   if (!r.ok) {
-    const d = r.body.detail;
-    $('error').textContent = 'Cannot plan: ' + (Array.isArray(d) ? d.map(e => e.msg).join('; ') : d);
+    $('error').textContent = 'Cannot plan: ' + detailText(r.body.detail);
+    todayError(detailText(r.body.detail));
     return;
   }
   $('error').textContent = '';
   state.data = r.body;
+  state.unfix = null;
   state.shown = {label: 'Optimizer plan', blocks: r.body.plans.optimizer.blocks, idx: -1};
   render();
+  renderToday();
   unfixable();
 }
 // "Hours scheduling can't fix": best plan starting no earlier than first light, computed per request.
 async function unfixable() {
   const p = params(), t = state.data.thresholds;
   const u = await api('/api/unfixable?' + new URLSearchParams({day_id: p.day_id, paid_hours: p.paid_hours, latest: p.latest}).toString());
-  if (!u.ok) { $('unfix-text').textContent = 'Not available: ' + (Array.isArray(u.body.detail) ? u.body.detail.map(e => e.msg).join('; ') : u.body.detail); $('unfix-note').textContent = ''; return; }
+  if (!u.ok) {
+    $('unfix-text').textContent = 'Not available: ' + detailText(u.body.detail); $('unfix-note').textContent = '';
+    state.unfix = {error: detailText(u.body.detail)}; renderToday(); return;
+  }
   const b = u.body, h = b.hours_ge_95f;
+  state.unfix = b; renderToday();
   $('unfix-text').textContent = `Starting no earlier than first light (${b.first_light_start}; sunrise about ${b.sunrise_approx}), the best plan (${blocksText(b.blocks)}) ` +
     `still has ${h.planned} modeled exposure-hours at or above ${t.heat_high_f}°F (forecast-based estimate; observed on this replayed day: ${h.observed} h). ${b.line}`;
   $('unfix-note').textContent = b.note;
+}
+// ---------- Today view (all numbers come from /api/plan and /api/unfixable) ----------
+function clock12(slot) {
+  const m = slot * 15, h = Math.floor(m / 60) % 24, mm = String(m % 60).padStart(2, '0');
+  return `${(h % 12) || 12}:${mm} ${h < 12 ? 'AM' : 'PM'}`;
+}
+const hhmm12 = s => { const [h, m] = s.split(':').map(Number); return clock12((h * 60 + m) / 15); };
+function crossing(vals, thr) {  // first slot at/above the threshold and the slot after the last one
+  let a = -1, b = -1;
+  vals.forEach((v, i) => { if (v >= thr) { if (a < 0) a = i; b = i + 1; } });
+  return a < 0 ? null : {from: a, to: b};
+}
+const hoursAtOrAbove = (vals, thr) => vals.filter(v => v >= thr).length / 4;
+function todayLoading(on) {
+  for (const id of ['today-hero', 'tile-heat', 'tile-smoke', 'tile-unfix']) $(id).classList.toggle('loading', on);
+  $('today-hero').setAttribute('aria-busy', on ? 'true' : 'false');
+  if (on) $('today-error').hidden = true;
+}
+function todayError(msg) {
+  todayLoading(false);
+  $('today-error').hidden = false;
+  $('today-error-text').textContent = msg || 'The server did not answer.';
+  $('today-title').textContent = 'No briefing for this day';
+  $('today-summary').textContent = 'Pick another day, or try again.';
+}
+function renderToday() {
+  const d = state.data, t = d.thresholds, temp = d.forecast.temp_f, aqi = d.forecast.aqi, u = state.unfix;
+  const c80 = crossing(temp, t.heat_shade_f), c95 = crossing(temp, t.heat_high_f);
+  const c101 = crossing(aqi, t.aqi_sensitive), c151 = crossing(aqi, t.aqi_smoke_rule);
+  const day = state.days[$('day').value] || {};
+  $('today-eyebrow').textContent = `${day.date || ''} · ${placeOf(day)}` + (d.mode === 'ORACLE' ? ' · ORACLE' : '');
+  $('today-title').textContent = c95 && c101 ? 'High heat and smoke today' : c95 ? 'High heat expected' : c101 ? 'Smoke today, heat below the high-heat level'
+    : c80 ? 'Warm day, below the high-heat level' : 'Mild day';
+  const parts = [];
+  if (u && !u.error) parts.push(`First light about ${hhmm12(u.first_light_start)} (sunrise about ${hhmm12(u.sunrise_approx)}).`);
+  const first = (c, v, unit) => c.from === 0 ? `is already at or above ${v}${unit} at midnight` : `first reaches ${v}${unit} around ${clock12(c.from)}`;
+  parts.push(!c80 ? `The forecast stays below ${t.heat_shade_f}°F all day.` :
+    `The forecast ${first(c80, t.heat_shade_f, '°F')}` + (c95 ? ` and ${first(c95, t.heat_high_f, '°F').replace(/^is already/, 'is')}; it is at or above ${t.heat_high_f}°F at times between ${clock12(c95.from)} and ${clock12(c95.to)}.` : `, and stays below ${t.heat_high_f}°F.`));
+  parts.push(!c101 ? `Air quality stays below AQI ${t.aqi_sensitive} all day.` :
+    `Air quality is at or above AQI ${t.aqi_sensitive} at times between ${clock12(c101.from)} and ${clock12(c101.to)}` + (c151 ? `, and reaches AQI ${t.aqi_smoke_rule} around ${clock12(c151.from)}.` : `, and stays below AQI ${t.aqi_smoke_rule}.`));
+  $('today-summary').textContent = parts.join(' ');
+  $('tile-heat-label').textContent = `Forecast hours at or above ${t.heat_high_f}°F`;
+  $('tile-heat-num').textContent = hoursAtOrAbove(temp, t.heat_high_f) + ' h';
+  $('tile-smoke-label').textContent = `Forecast smoke hours (AQI ${t.aqi_sensitive} or higher)`;
+  $('tile-smoke-num').textContent = hoursAtOrAbove(aqi, t.aqi_sensitive) + ' h';
+  for (const id of ['today-hero', 'tile-heat', 'tile-smoke']) $(id).classList.remove('loading');
+  $('today-hero').setAttribute('aria-busy', 'false');
+  if (u) {
+    $('tile-unfix').classList.remove('loading');
+    $('tile-unfix-num').textContent = u.error ? '–' : u.hours_ge_95f.planned + ' h';
+    $('tile-unfix-sub').textContent = u.error ? 'Not available: ' + u.error :
+      `At or above ${t.heat_high_f}°F in the best plan from first light (${blocksText(u.blocks)}). ${u.line}`;
+  }
+  ribbon(d, u && !u.error ? u : null);
+  $('make-sheet-note').textContent = state.snap ? 'The crew sheet needs the server; it is not available in snapshot mode.' : '';
+}
+function ribbon(d, u) {
+  const svg = $('ribbon-svg'), t = d.thresholds, L = 44, R = 470, xr = s => L + (R - L) * s / 96;
+  svg.replaceChildren();
+  const lane = (vals, top, bot, lines, cls, title) => {
+    const lo = Math.min(...vals, ...lines.map(l => l.v)), hi = Math.max(...vals, ...lines.map(l => l.v));
+    const pad = (hi - lo) * 0.1 || 1, y0 = Math.max(0, lo - pad), y1 = hi + pad, ys = v => bot - (bot - top) * (v - y0) / (y1 - y0);
+    sv(svg, 'text', {x: L, y: top - 6, class: 'lane-title'}, title);
+    const pts = vals.map((v, i) => `${xr(i + 0.5).toFixed(1)},${ys(v).toFixed(1)}`);
+    sv(svg, 'polygon', {class: 'rib-area-' + cls, points: `${xr(0.5)},${bot} ${pts.join(' ')} ${xr(95.5)},${bot}`});
+    sv(svg, 'polyline', {class: 'series rib-' + cls, points: pts.join(' '), 'stroke-dasharray': cls === 'aqi' ? '2 3' : null});
+    for (const l of lines) {
+      sv(svg, 'line', {x1: L, x2: R, y1: ys(l.v), y2: ys(l.v), class: 'thr'});
+      sv(svg, 'text', {x: R - 2, y: ys(l.v) - 4, class: 'rib-label', 'text-anchor': 'end'}, l.label);
+    }
+    [y0, y1].forEach(v => sv(svg, 'text', {x: L - 6, y: ys(v) + 4, class: 'tick', 'text-anchor': 'end'}, Math.round(v)));
+  };
+  if (u) for (const b of u.blocks) {
+    sv(svg, 'rect', {x: xr(b.start_slot), y: 18, width: xr(b.end_slot) - xr(b.start_slot), height: 238, class: 'work'});
+    sv(svg, 'text', {x: xr(b.start_slot) + 4, y: 252, class: 'rib-label'}, 'work plan');
+  }
+  lane(d.forecast.temp_f, 30, 125, [{v: t.heat_shade_f, label: `${t.heat_shade_f}°F shade needed`}, {v: t.heat_high_f, label: `${t.heat_high_f}°F high heat`}], 'temp', 'Temperature (°F)');
+  lane(d.forecast.aqi, 160, 240, [{v: t.aqi_sensitive, label: `AQI ${t.aqi_sensitive} sensitive groups`}, {v: t.aqi_smoke_rule, label: `AQI ${t.aqi_smoke_rule} smoke rule`}], 'aqi', 'Air quality (AQI)');
+  for (let h = 0; h <= 24; h += 6) sv(svg, 'text', {x: xr(h * 4), y: 278, class: 'tick', 'text-anchor': h === 0 ? 'start' : h === 24 ? 'end' : 'middle'}, h === 12 ? 'noon' : h === 0 || h === 24 ? 'midnight' : ((h % 12) || 12) + (h < 12 ? ' AM' : ' PM'));
+  $('ribbon-desc').textContent = `Forecast temperature (solid line) and AQI (dotted line) by hour. Dashed lines: ${t.heat_shade_f}°F shade trigger, ${t.heat_high_f}°F high-heat procedures, AQI ${t.aqi_sensitive} unhealthy for sensitive groups, AQI ${t.aqi_smoke_rule} wildfire-smoke rule.` +
+    (u ? ` Hatched band: the best work plan starting no earlier than first light (${blocksText(u.blocks)}).` : '');
+}
+// ---------- Places: real days carry their place in the label; synthetic days are grouped ----------
+function placeOf(d) {
+  if (!d || !d.id) return '';
+  if (d.provenance === 'synthetic') return 'Synthetic examples';
+  const m = /\(([^)]+)\)\s*$/.exec(d.label || '');
+  return m ? m[1] : d.id.split('-').slice(-1)[0];
+}
+function fillDays(place, prefer) {
+  const sel = $('day'), list = Object.values(state.days).filter(d => placeOf(d) === place);
+  sel.replaceChildren();
+  for (const d of list) { const o = el(sel, 'option', `${d.date}` + (d.provenance === 'synthetic' ? ` · ${d.label.replace(/^SYNTHETIC:\s*/, '')}` : '')); o.value = d.id; }
+  sel.value = prefer && list.some(d => d.id === prefer) ? prefer : (list[0] || {}).id;
 }
 function render() {
   const w = $('warnings'); w.replaceChildren();
@@ -476,14 +644,19 @@ function initTabs() {
 async function init() {
   initTabs();
   backtest();
-  const days = (await api('/api/days')).body, sel = $('day');
-  for (const d of days) {
-    state.days[d.id] = d;
-    const o = el(sel, 'option', `${d.date} · ${d.label}`); o.value = d.id;
-  }
-  const chosen = days.find(d => d.selected_by_rule);
-  if (chosen) sel.value = chosen.id;
+  const dr = await api('/api/days');
+  if (!dr.ok || !dr.body.length) { todayError(dr.ok ? 'No days are available yet.' : detailText(dr.body.detail)); return; }
+  const days = dr.body;
+  for (const d of days) state.days[d.id] = d;
+  const chosen = days.find(d => d.selected_by_rule) || days[0];
+  const places = [...new Set(days.map(placeOf))].sort((a, b) => (a === 'Synthetic examples') - (b === 'Synthetic examples') || a.localeCompare(b));
+  for (const p of places) { const o = el($('place'), 'option', p); o.value = p; }
+  $('place').value = placeOf(chosen);
+  fillDays(placeOf(chosen), chosen.id);
+  $('place').addEventListener('change', () => { fillDays($('place').value); schedule(); });
   ['day', 'paid', 'earliest', 'latest', 'oracle'].forEach(id => $(id).addEventListener('input', schedule));
+  $('make-sheet').addEventListener('click', () => { if (!state.snap) window.open('/crew-sheet?' + new URLSearchParams(params()).toString(), '_blank'); });
+  $('today-retry').addEventListener('click', plan);
   $('view-planned').addEventListener('change', () => { state.view = 'planned'; drawTable(); });
   $('view-observed').addEventListener('change', () => { state.view = 'observed'; drawTable(); });
   $('print').addEventListener('click', () => window.open('/crew-sheet?' + new URLSearchParams(params()).toString(), '_blank'));
