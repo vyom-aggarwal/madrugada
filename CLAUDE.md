@@ -95,6 +95,15 @@ madrugada/
   9/1/2/1. The oracle beats both B3 variants on 3 of 13 days; the optimizer on 0. Robust is scored on only
   6 days (fallback on the rest). All synthetic, so none of it is evidence.
 
+- Phase 6 REAL data (preregistered; 1,296 region-days on 509 dates, summers 2022 to 2025; keyless sources:
+  IEM ASOS airport weather + EPA AirData PM2.5): heat benefit vs B2 is -0.38 h/day at or above 95F (CI -0.43
+  to -0.33); no measurable smoke benefit (AQI>=101 difference -0.001, CI -0.007 to +0.005); the optimizer ties
+  b3_early on 1,292 of 1,296 days; the oracle improves AQI>=101 hours vs B2 by only 0.026 h/day.
+- POSITIONING RULE: describe the tool as a heat-first shift planner that displays smoke exposure. Never claim
+  it beats heat-only planning on smoke.
+- analysis/ holds EXPLORATORY, POST-HOC analyses (not preregistered, non-logic): they read results and reuse
+  functions, never edit hashed files, and label every number "EXPLORATORY, POST-HOC: not preregistered".
+
 ## Evaluation rules
 - PRIMARY outcome is physical dominance over a baseline: a win means no more hours >=95F and no more
   AQI>=101 hours AND strictly less on at least one; a loss is the reverse; otherwise "mixed", or "tie" when

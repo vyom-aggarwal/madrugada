@@ -82,9 +82,9 @@ td{{width:50%;vertical-align:top;border:1px solid #bbb;padding:8px}}
 <h1>Crew shift sheet · Hoja de turno</h1>
 <p class="prov{'' if synthetic else ' real'}">{prov_en} &nbsp;|&nbsp; {prov_es}</p>
 <table>{oracle_row}{body}
-<tr><td><b>Disclaimer</b><br>Advisory planning aid only; it reduces modeled exposure-hours. It does not replace
+<tr><td><b>Disclaimer</b><br>Advisory planning aid only; it aims to reduce modeled heat exposure-hours and shows smoke exposure. It does not replace
 the employer's written Cal/OSHA Heat Illness Prevention Plan. Water, shade and rest requirements still apply.</td>
-<td><b>Aviso</b><br>Solo es una herramienta de planificación orientativa; reduce las horas de exposición modeladas.
+<td><b>Aviso</b><br>Solo es una herramienta de planificación orientativa; busca reducir las horas de exposición al calor modeladas y muestra la exposición al humo.
 No reemplaza el plan escrito de prevención de enfermedades por calor de Cal/OSHA del empleador. Los requisitos de
 agua, sombra y descanso siguen vigentes.</td></tr>
 </table>

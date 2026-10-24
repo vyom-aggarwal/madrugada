@@ -42,7 +42,7 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
 <body>
 <header>
   <h1>Madrugada</h1>
-  <p class="sub">Heat + smoke crew shift planner. Reduces modeled exposure-hours while keeping paid hours.</p>
+  <p class="sub"><b>Heat-first shift planner with smoke exposure shown.</b> Plans work blocks to reduce modeled heat exposure-hours at the same paid hours, and shows smoke (AQI) exposure alongside.</p>
 </header>
 <main>
   <p id="snap-banner" class="badge snap" hidden>SNAPSHOT MODE: sliders disabled</p>
@@ -103,8 +103,11 @@ function sv(parent, tag, attrs, text) {
 const blocksText = bs => bs.map(b => b.start + '–' + b.end).join(', ');
 async function loadSnapshot() {
   if (!state.snap) {
-    state.snap = await (await fetch('snapshot.json')).json();
+    let r = await fetch('snapshot.json').catch(() => null);
+    if (!r || !r.ok) r = await fetch('demo_snapshot.json');  // small committed subset when the full snapshot is absent
+    state.snap = await r.json();
     $('snap-banner').hidden = false;
+    if (state.snap.note) $('snap-banner').textContent = 'SNAPSHOT MODE: sliders disabled (' + state.snap.note + ')';
     const p = state.snap.default_params;
     $('paid').value = p.paid_hours; $('paid-val').textContent = p.paid_hours; $('earliest').value = p.earliest; $('latest').value = p.latest; $('oracle').checked = p.oracle;
     ['paid', 'earliest', 'latest', 'oracle', 'print'].forEach(id => { $(id).disabled = true; });
@@ -113,6 +116,7 @@ async function loadSnapshot() {
 }
 // Live API first; on a network error or 5xx, switch to static/snapshot.json for the rest of the session.
 async function api(path, opts) {
+  if (!state.snap && /[?&]snapshot\b/.test(location.search)) await loadSnapshot();  // offline demo: ?snapshot
   if (!state.snap) {
     try {
       const r = await fetch(path, opts);
@@ -222,6 +226,17 @@ function table(parent, head, rows) {
   const wrap = el(parent, 'div'); wrap.className = 'scroll'; wrap.appendChild(t);
 }
 const wtl = x => `${x.win}/${x.tie}/${x.loss}/${x.mixed}`;
+// The supported claim, generated from results (never hardcoded).
+function claim(r) {
+  if (!r.n_days.real_cached) return 'Heat-first shift planner with smoke exposure shown. No real-data result yet: ' + r.real_status + '.';
+  const c = r.groups.real_cached.overall.comparisons, o = c.optimizer_vs_B2, orc = c.oracle_vs_B2, e = c.optimizer_vs_b3_early;
+  const n = (v, d) => (v > 0 ? '+' : '') + v.toFixed(d);
+  const f = (x, k, d = 2) => `${n(x.mean_diff[k], d)} h/day` + (x.ci95 ? ` (95% CI ${n(x.ci95[k][0], d)} to ${n(x.ci95[k][1], d)})` : '');
+  return `Heat-first shift planner with smoke exposure shown. Real data (${o.n} region-days on ${o.n_dates} dates): vs the fixed early shift B2, ` +
+    `${f(o, 'hours_ge_95f')} at ≥95°F; no measurable smoke benefit (AQI≥101 ${f(o, 'hours_aqi_ge_101', 3)}). ` +
+    `It matches heat-only planning (ties b3_early on ${e.physical.tie} of ${e.n} days) and does not beat it on smoke. ` +
+    `Even the oracle changes AQI≥101 hours vs B2 by only ${n(orc.mean_diff.hours_aqi_ge_101, 3)} h/day. Oracle diagnosis: ${r.oracle_diagnosis.real_cached.physical.sentence}`;
+}
 const ci = (c, k) => c.mean_diff[k] === undefined ? '–' : `${c.mean_diff[k] > 0 ? '+' : ''}${c.mean_diff[k]}` + (c.ci95 ? ` [${c.ci95[k].join(', ')}]` : '');
 function realExtras(g, r) {
   const inv = r.real_inventory;
@@ -247,6 +262,7 @@ async function backtest() {
   g.replaceChildren(); box.replaceChildren();
   if (!r.available) { $('bt-banner').textContent = 'Backtest not available: ' + r.reason; return; }
   $('bt-banner').textContent = r.provenance_statement;
+  el(box, 'li', claim(r)).style.fontWeight = '600';
   for (const s of r.summary_box) el(box, 'li', s);
   for (const prov of ['synthetic', 'real_cached']) {
     el(g, 'h2', `${prov}: ${r.group_labels[prov]} (n=${r.n_days[prov]})`);

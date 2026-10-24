@@ -1,0 +1,863 @@
+{
+ "label": "EXPLORATORY, POST-HOC: not preregistered",
+ "n_days": 1296,
+ "n_dates": 509,
+ "strata_inventory": {
+  "by_stratum": {
+   "heat_only": {
+    "days": 630,
+    "dates": 296
+   },
+   "smoke_only": {
+    "days": 38,
+    "dates": 30
+   },
+   "co_occurring": {
+    "days": 71,
+    "dates": 60
+   },
+   "mild": {
+    "days": 557,
+    "dates": 236
+   }
+  },
+  "by_region": {
+   "bakersfield": {
+    "heat_only": 176,
+    "co_occurring": 37,
+    "mild": 184,
+    "smoke_only": 18
+   },
+   "fresno": {
+    "heat_only": 249,
+    "mild": 201,
+    "smoke_only": 5,
+    "co_occurring": 7
+   },
+   "tulare": {
+    "heat_only": 205,
+    "mild": 172,
+    "smoke_only": 15,
+    "co_occurring": 27
+   }
+  },
+  "by_year": {
+   "2022": {
+    "heat_only": 157,
+    "co_occurring": 13,
+    "mild": 112,
+    "smoke_only": 14
+   },
+   "2023": {
+    "mild": 193,
+    "smoke_only": 10,
+    "heat_only": 118,
+    "co_occurring": 15
+   },
+   "2024": {
+    "mild": 120,
+    "heat_only": 193,
+    "co_occurring": 27,
+    "smoke_only": 2
+   },
+   "2025": {
+    "mild": 132,
+    "smoke_only": 12,
+    "heat_only": 162,
+    "co_occurring": 16
+   }
+  },
+  "days_any_aqi101": 109,
+  "days_any_aqi151": 29,
+  "total_hours_aqi101": 187.0,
+  "total_hours_aqi151": 41.0
+ },
+ "effect_by_stratum": {
+  "optimizer_vs_B2|overall": {
+   "n": 1296,
+   "dates": 509,
+   "hours_ge_95f": {
+    "mean": -0.3769,
+    "ci95": [
+     -0.4268,
+     -0.3275
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -1.2151,
+    "ci95": [
+     -1.2603,
+     -1.1671
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": -0.0008,
+    "ci95": [
+     -0.007,
+     0.0053
+    ]
+   }
+  },
+  "optimizer_vs_B2|heat_only": {
+   "n": 630,
+   "dates": 296,
+   "hours_ge_95f": {
+    "mean": -0.6611,
+    "ci95": [
+     -0.7361,
+     -0.5889
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -1.3659,
+    "ci95": [
+     -1.4013,
+     -1.3271
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "optimizer_vs_B2|smoke_only": {
+   "n": 38,
+   "dates": 30,
+   "hours_ge_95f": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -1.0066,
+    "ci95": [
+     -1.2195,
+     -0.7643
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0921,
+    "ci95": [
+     0.0,
+     0.2083
+    ]
+   }
+  },
+  "optimizer_vs_B2|co_occurring": {
+   "n": 71,
+   "dates": 60,
+   "hours_ge_95f": {
+    "mean": -1.0141,
+    "ci95": [
+     -1.1575,
+     -0.8603
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -1.1479,
+    "ci95": [
+     -1.2877,
+     -1.0068
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": -0.0634,
+    "ci95": [
+     -0.162,
+     0.0286
+    ]
+   }
+  },
+  "optimizer_vs_B2|mild": {
+   "n": 557,
+   "dates": 236,
+   "hours_ge_95f": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -1.0673,
+    "ci95": [
+     -1.1531,
+     -0.9773
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "optimizer_vs_b3_late|overall": {
+   "n": 1296,
+   "dates": 509,
+   "hours_ge_95f": {
+    "mean": 0.0017,
+    "ci95": [
+     -0.0008,
+     0.0051
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -0.0791,
+    "ci95": [
+     -0.116,
+     -0.048
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0008,
+    "ci95": [
+     0.0,
+     0.0024
+    ]
+   }
+  },
+  "optimizer_vs_b3_late|heat_only": {
+   "n": 630,
+   "dates": 296,
+   "hours_ge_95f": {
+    "mean": 0.0044,
+    "ci95": [
+     -0.0004,
+     0.0112
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": 0.0028,
+    "ci95": [
+     -0.0041,
+     0.0124
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "optimizer_vs_b3_late|smoke_only": {
+   "n": 38,
+   "dates": 30,
+   "hours_ge_95f": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -0.1645,
+    "ci95": [
+     -0.4079,
+     -0.0069
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0263,
+    "ci95": [
+     0.0,
+     0.0811
+    ]
+   }
+  },
+  "optimizer_vs_b3_late|co_occurring": {
+   "n": 71,
+   "dates": 60,
+   "hours_ge_95f": {
+    "mean": -0.007,
+    "ci95": [
+     -0.0224,
+     0.0
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "optimizer_vs_b3_late|mild": {
+   "n": 557,
+   "dates": 236,
+   "hours_ge_95f": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "hours_ge_80f": {
+    "mean": -0.1759,
+    "ci95": [
+     -0.2509,
+     -0.1121
+    ]
+   },
+   "hours_aqi_ge_101": {
+    "mean": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  }
+ },
+ "mixed_anatomy": {
+  "overall": {
+   "mixed_days": 751,
+   "heat_down_smoke_up": 4,
+   "heat_up_smoke_down": 0,
+   "95F_and_AQI101_unchanged_other_metric_differs": 747,
+   "heat_down_smoke_up_change_h95": {
+    "median": 1.5,
+    "p90": 1.5
+   },
+   "heat_down_smoke_up_change_h101": {
+    "median": 0.5,
+    "p90": 0.5
+   },
+   "heat_up_smoke_down_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "unchanged_case_change_h80": {
+    "median": -1.5,
+    "p10": -1.5,
+    "p90": -1.5
+   }
+  },
+  "heat_only": {
+   "mixed_days": 279,
+   "heat_down_smoke_up": 0,
+   "heat_up_smoke_down": 0,
+   "95F_and_AQI101_unchanged_other_metric_differs": 279,
+   "heat_down_smoke_up_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_down_smoke_up_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "unchanged_case_change_h80": {
+    "median": -1.5,
+    "p10": -1.5,
+    "p90": -1.5
+   }
+  },
+  "smoke_only": {
+   "mixed_days": 28,
+   "heat_down_smoke_up": 0,
+   "heat_up_smoke_down": 0,
+   "95F_and_AQI101_unchanged_other_metric_differs": 28,
+   "heat_down_smoke_up_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_down_smoke_up_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "unchanged_case_change_h80": {
+    "median": -1.5,
+    "p10": -1.5,
+    "p90": -0.75
+   }
+  },
+  "co_occurring": {
+   "mixed_days": 13,
+   "heat_down_smoke_up": 4,
+   "heat_up_smoke_down": 0,
+   "95F_and_AQI101_unchanged_other_metric_differs": 9,
+   "heat_down_smoke_up_change_h95": {
+    "median": 1.5,
+    "p90": 1.5
+   },
+   "heat_down_smoke_up_change_h101": {
+    "median": 0.5,
+    "p90": 0.5
+   },
+   "heat_up_smoke_down_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "unchanged_case_change_h80": {
+    "median": -1.5,
+    "p10": -1.5,
+    "p90": -1.5
+   }
+  },
+  "mild": {
+   "mixed_days": 431,
+   "heat_down_smoke_up": 0,
+   "heat_up_smoke_down": 0,
+   "95F_and_AQI101_unchanged_other_metric_differs": 431,
+   "heat_down_smoke_up_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_down_smoke_up_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h95": {
+    "median": null,
+    "p90": null
+   },
+   "heat_up_smoke_down_change_h101": {
+    "median": null,
+    "p90": null
+   },
+   "unchanged_case_change_h80": {
+    "median": -1.5,
+    "p10": -1.5,
+    "p90": -1.0
+   }
+  }
+ },
+ "smoke_movability": {
+  "smoke_days": 109,
+  "oracle_removed_h101_vs_B2": {
+   "total": 33.25,
+   "mean": 0.305,
+   "median": 0.0,
+   "days_any_removed": 26
+  },
+  "oracle_added_h95_vs_B2": {
+   "total": -61.75,
+   "mean": -0.567
+  },
+  "smoke_hours_inside_heat_optimal_window": 82.0,
+  "smoke_hours_outside_window_in_allowed_hours": 32.0,
+  "smoke_hours_outside_allowed_hours": 73.0,
+  "days_by_location_within_allowed_hours": {
+   "none in shift hours": 38,
+   "all inside": 45,
+   "all outside": 14,
+   "split": 12
+  }
+ },
+ "time_of_day": {
+  "overall": {
+   "n": 1296,
+   "mean_aqi_by_hour": [
+    47.2,
+    48.3,
+    46.0,
+    45.0,
+    45.5,
+    46.7,
+    49.2,
+    51.3,
+    52.0,
+    52.6,
+    51.7,
+    50.3,
+    48.5,
+    46.6,
+    45.2,
+    43.8,
+    43.1,
+    42.6,
+    42.9,
+    44.6,
+    47.4,
+    49.4,
+    49.1,
+    48.2
+   ],
+   "mean_temp_by_hour": [
+    76.5,
+    74.5,
+    72.6,
+    70.9,
+    69.5,
+    68.3,
+    67.6,
+    68.9,
+    72.3,
+    76.1,
+    79.8,
+    83.3,
+    86.6,
+    89.4,
+    91.6,
+    93.3,
+    94.3,
+    94.4,
+    93.5,
+    91.1,
+    87.2,
+    83.8,
+    81.3,
+    78.8
+   ],
+   "cleanest_hours": [
+    17,
+    18,
+    16
+   ],
+   "coolest_hours": [
+    6,
+    5,
+    7
+   ],
+   "dirtiest_hours": [
+    9,
+    8,
+    10
+   ],
+   "hottest_hours": [
+    17,
+    16,
+    18
+   ]
+  },
+  "heat_only": {
+   "n": 630,
+   "mean_aqi_by_hour": [
+    49.8,
+    50.7,
+    49.2,
+    48.0,
+    49.2,
+    50.4,
+    53.0,
+    55.5,
+    55.7,
+    56.7,
+    55.6,
+    53.7,
+    52.1,
+    50.3,
+    49.1,
+    46.9,
+    45.2,
+    44.7,
+    44.4,
+    46.1,
+    49.0,
+    50.3,
+    49.8,
+    49.0
+   ],
+   "mean_temp_by_hour": [
+    80.5,
+    78.3,
+    76.3,
+    74.6,
+    73.0,
+    71.7,
+    71.0,
+    72.5,
+    76.2,
+    80.4,
+    84.3,
+    88.1,
+    91.6,
+    94.6,
+    97.0,
+    98.8,
+    99.8,
+    100.0,
+    99.1,
+    96.5,
+    92.2,
+    88.3,
+    85.5,
+    82.9
+   ],
+   "cleanest_hours": [
+    18,
+    17,
+    16
+   ],
+   "coolest_hours": [
+    6,
+    5,
+    7
+   ],
+   "dirtiest_hours": [
+    9,
+    8,
+    10
+   ],
+   "hottest_hours": [
+    17,
+    16,
+    18
+   ]
+  },
+  "smoke_only": {
+   "n": 38,
+   "mean_aqi_by_hour": [
+    64.5,
+    67.8,
+    54.6,
+    54.9,
+    55.7,
+    54.8,
+    61.4,
+    60.7,
+    65.4,
+    63.3,
+    64.2,
+    57.3,
+    54.3,
+    52.5,
+    54.1,
+    57.2,
+    55.9,
+    51.9,
+    50.8,
+    51.9,
+    55.9,
+    76.5,
+    78.0,
+    68.1
+   ],
+   "mean_temp_by_hour": [
+    71.8,
+    70.0,
+    68.3,
+    67.0,
+    65.7,
+    64.4,
+    63.7,
+    64.7,
+    67.5,
+    70.8,
+    74.0,
+    77.1,
+    80.2,
+    82.9,
+    85.0,
+    86.6,
+    87.5,
+    87.4,
+    86.5,
+    84.2,
+    81.2,
+    78.6,
+    76.5,
+    74.2
+   ],
+   "cleanest_hours": [
+    18,
+    17,
+    19
+   ],
+   "coolest_hours": [
+    6,
+    5,
+    7
+   ],
+   "dirtiest_hours": [
+    22,
+    21,
+    23
+   ],
+   "hottest_hours": [
+    16,
+    17,
+    15
+   ]
+  },
+  "co_occurring": {
+   "n": 71,
+   "mean_aqi_by_hour": [
+    61.6,
+    63.9,
+    62.0,
+    60.3,
+    61.7,
+    68.1,
+    74.8,
+    71.4,
+    76.7,
+    70.9,
+    66.0,
+    69.5,
+    64.6,
+    62.3,
+    58.0,
+    55.9,
+    53.4,
+    53.8,
+    58.8,
+    58.2,
+    62.0,
+    68.5,
+    69.0,
+    64.9
+   ],
+   "mean_temp_by_hour": [
+    82.4,
+    80.5,
+    78.6,
+    76.8,
+    75.1,
+    74.1,
+    73.6,
+    75.3,
+    79.3,
+    83.2,
+    87.0,
+    90.7,
+    94.1,
+    97.1,
+    99.5,
+    101.1,
+    102.3,
+    102.2,
+    101.0,
+    98.0,
+    93.3,
+    89.3,
+    86.7,
+    84.2
+   ],
+   "cleanest_hours": [
+    16,
+    17,
+    15
+   ],
+   "coolest_hours": [
+    6,
+    5,
+    4
+   ],
+   "dirtiest_hours": [
+    8,
+    6,
+    7
+   ],
+   "hottest_hours": [
+    16,
+    17,
+    15
+   ]
+  },
+  "mild": {
+   "n": 557,
+   "mean_aqi_by_hour": [
+    41.2,
+    42.3,
+    39.7,
+    39.0,
+    38.6,
+    39.2,
+    40.9,
+    43.3,
+    43.8,
+    45.0,
+    44.7,
+    43.4,
+    42.0,
+    40.0,
+    38.6,
+    37.8,
+    38.5,
+    38.1,
+    38.7,
+    40.6,
+    43.0,
+    44.2,
+    43.7,
+    43.7
+   ],
+   "mean_temp_by_hour": [
+    71.6,
+    69.6,
+    67.9,
+    66.4,
+    65.1,
+    64.0,
+    63.3,
+    64.4,
+    67.3,
+    70.7,
+    74.1,
+    77.4,
+    80.4,
+    82.9,
+    85.0,
+    86.5,
+    87.5,
+    87.6,
+    86.7,
+    84.5,
+    81.3,
+    78.4,
+    76.1,
+    73.8
+   ],
+   "cleanest_hours": [
+    15,
+    17,
+    16
+   ],
+   "coolest_hours": [
+    6,
+    5,
+    7
+   ],
+   "dirtiest_hours": [
+    9,
+    10,
+    21
+   ],
+   "hottest_hours": [
+    17,
+    16,
+    18
+   ]
+  }
+ }
+}

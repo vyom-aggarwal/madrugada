@@ -1,6 +1,6 @@
 """Stdlib-only task runner mirroring the Makefile (for machines without make).
 
-Usage: python tasks.py {setup|test|eval|demo|snapshot|real}
+Usage: python tasks.py {setup|test|eval|demo|snapshot|demo_snapshot|real}
 """
 import os
 import subprocess
@@ -37,13 +37,17 @@ def snapshot() -> int:
     return run(PY, "-m", "app.snapshot")
 
 
+def demo_snapshot() -> int:
+    """Write the small committed static/demo_snapshot.json (24 real days selected for illustration)."""
+    return run(PY, "-m", "app.snapshot", "demo")
+
+
 def demo() -> int:
-    """Run the eval, build the snapshot, then serve the UI."""
-    for step in (eval_, snapshot):
-        rc = step()
-        if rc:
-            return rc
-    print("Madrugada demo: open http://127.0.0.1:8000/  (Ctrl+C to stop)", flush=True)
+    """Fast, offline demo: serve the UI from committed results; no eval or full snapshot rebuild.
+    Without a local real-data cache, the ?snapshot URL runs the UI from static/demo_snapshot.json."""
+    has_real = any((ROOT / "data" / "cache").glob("real-*.json"))
+    url = "http://127.0.0.1:8000/" + ("" if has_real else "static/index.html?snapshot")
+    print(f"Madrugada demo: open {url}  (Ctrl+C to stop)", flush=True)
     return run(PY, "-m", "uvicorn", "app.main:app", "--port", "8000")
 
 
@@ -55,7 +59,8 @@ def real() -> int:
     return run(PY, "-m", "data.real_job")
 
 
-TASKS = {"setup": setup, "test": test, "eval": eval_, "demo": demo, "snapshot": snapshot, "real": real}
+TASKS = {"setup": setup, "test": test, "eval": eval_, "demo": demo, "snapshot": snapshot,
+         "demo_snapshot": demo_snapshot, "real": real}
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or sys.argv[1] not in TASKS:
