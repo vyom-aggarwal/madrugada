@@ -293,12 +293,82 @@ svg.mark{width:38px;height:38px;flex:none;display:block;border-radius:22%;box-sh
 .loading .skel,.skel.loading{color:transparent!important;background:linear-gradient(90deg,var(--surface-2) 0%,var(--line) 50%,var(--surface-2) 100%);background-size:200% 100%;animation:shimmer 1.2s linear infinite;border-radius:8px;min-height:1em}
 .hero.loading .skel{background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.18),rgba(255,255,255,.08));background-size:200% 100%}
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+/* ============ Components (style 3) ============ */
+/* Buttons: primary (sun gradient), secondary (default), ghost; pressed and focus states */
+.btn.cta,.btn.primary{background:var(--grad-sun);color:#1d1404;border:0;box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 8px 20px -8px rgba(236,107,78,.6)}
+.btn.cta:hover,.btn.primary:hover{filter:brightness(1.05) saturate(1.05);background:var(--grad-sun)}
+.btn.cta:active,.btn.primary:active{filter:brightness(.96);box-shadow:0 1px 0 rgba(255,255,255,.25) inset,0 3px 10px -6px rgba(236,107,78,.6)}
+.btn.ghost,#intro-skip{background:transparent;border-color:transparent;color:var(--mute)}
+.btn.ghost:hover{background:var(--surface-2)}
+.icon-btn{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.18)}
+/* Tabs: animated gradient indicator */
+.tab::after{content:"";position:absolute;left:28%;right:28%;top:3px;height:3px;border-radius:3px;background:var(--grad-sun);transform:scaleX(0);transition:transform 220ms cubic-bezier(.2,.7,.2,1)}
+.tab[aria-selected="true"]::after{transform:scaleX(1)}
+.tab{transition:color var(--ease),background var(--ease)}
+@media (min-width:768px){.tab::after{top:auto;bottom:3px;left:22%;right:22%;height:2px}.tab[aria-selected="true"]{background:rgba(255,255,255,.12)}}
+/* Cards and hover */
+@media (hover:hover){.card,.tile{transition:box-shadow var(--ease),transform var(--ease),border-color var(--ease)}
+  .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-3)}}
+/* Pills */
+.badge{padding:5px 12px;border-width:1px;box-shadow:var(--shadow-1)}
+.badge.real::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.badge.replay::before{content:"\21BB";font-weight:800}
+.badge.syn{background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--amber) 20%,transparent) 0 6px,color-mix(in srgb,var(--amber) 9%,transparent) 6px 12px)}
+.badge.oracle::before,.badge.snap::before{content:"\25B2";font-size:9px}
+/* Form controls */
+select{-webkit-appearance:none;appearance:none;padding-right:40px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a8fa8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center/18px;cursor:pointer;transition:border-color var(--ease),box-shadow var(--ease)}
+select:hover,input[type=time]:hover{border-color:var(--mute)}
+select:focus-visible,input[type=time]:focus-visible{box-shadow:0 0 0 4px color-mix(in srgb,var(--focus) 22%,transparent)}
+input[type=range]{-webkit-appearance:none;appearance:none;height:30px;background:linear-gradient(90deg,var(--amber),var(--coral)) left center/var(--pct,65%) 8px no-repeat,
+  linear-gradient(var(--surface-3),var(--surface-3)) center/100% 8px no-repeat;border-radius:var(--r-pill);cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--surface);border:3px solid var(--coral);box-shadow:var(--shadow);transition:transform var(--ease)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--surface);border:3px solid var(--coral);box-shadow:var(--shadow)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12)}
+.readout{background:var(--surface-2);border:1px solid var(--line)}
+.seg{background:var(--surface-2);border-color:var(--line)}
+.seg label:has(input:checked){background:var(--surface);box-shadow:var(--shadow-1)}
+/* Tables: zebra and hover */
+tbody tr:nth-child(even) td{background:color-mix(in srgb,var(--surface-2) 55%,transparent)}
+tbody tr{transition:background var(--ease)}
+@media (hover:hover){tbody tr:hover td{background:var(--surface-2)}}
+/* Accordion chevron */
+details.acc>summary::before{content:"";width:10px;height:10px;margin-right:6px;border-right:2.5px solid var(--accent-ink);border-bottom:2.5px solid var(--accent-ink);
+  transform:rotate(-45deg);transition:transform 200ms cubic-bezier(.2,.7,.2,1);align-self:center}
+details.acc[open]>summary::before{content:"";transform:rotate(45deg)}
+details.acc>summary:hover h2{color:var(--accent-ink)}
+/* Hero: dawn backdrop, glow and a faint field-rows motif */
+.hero{background:radial-gradient(90% 120% at 85% 120%,rgba(236,107,78,.42) 0%,rgba(217,80,122,.18) 32%,rgba(20,26,61,0) 62%),var(--grad-dawn);box-shadow:var(--shadow-3)}
+.hero::before{content:"";position:absolute;left:0;right:0;bottom:0;height:46%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120' preserveAspectRatio='none'%3E%3Cg fill='none' stroke='%23f2a33a' stroke-opacity='.16' stroke-width='1.5'%3E%3Cpath d='M200 0-60 120M200 0 40 120M200 0 140 120M200 0 200 120M200 0 260 120M200 0 360 120M200 0 460 120'/%3E%3C/g%3E%3C/svg%3E") center bottom/100% 100% no-repeat;pointer-events:none}
+.hero p.hero-time{background:linear-gradient(180deg,#ffd27a,#f7904d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-aside{background:rgba(10,15,38,.35);border-color:rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+@supports ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){.hero-aside{-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}}
+/* Tiles with line icons */
+.tile{border-top-width:1px;position:relative;overflow:hidden}
+.tile::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--line)}
+.tile.heat::before{background:linear-gradient(90deg,var(--amber),var(--coral))}.tile.smoke::before{background:linear-gradient(90deg,var(--smoke-soft),var(--smoke))}
+.tile.unfix::before{background:var(--grad-sun)}
+.tile-icon{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+.tile-icon svg{width:22px;height:22px;padding:5px;box-sizing:content-box;border-radius:10px;background:var(--surface-2);fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.tile-num{font-size:44px;font-weight:700}
+/* Charts: tooltip and cursor */
+.tip{position:absolute;z-index:5;pointer-events:none;left:0;top:0;padding:6px 10px;border-radius:10px;background:var(--navy);color:var(--on-navy);font-size:13px;
+  font-weight:600;white-space:nowrap;box-shadow:var(--shadow-3);opacity:0;transform:translateY(4px);transition:opacity 120ms ease-out,transform 120ms ease-out}
+.tip.on{opacity:1;transform:none}
+.cursor{stroke:var(--ink);stroke-width:1;stroke-dasharray:2 3;opacity:0;pointer-events:none}
+.rib-area-temp{fill:url(#g-heat);opacity:1}.rib-area-aqi{fill:url(#g-smoke);opacity:1}
+.area-heat{fill:url(#g-heat)}.area-smoke{fill:url(#g-smoke)}
+.lane-title{font-family:var(--font);letter-spacing:.02em}
+#ribbon-svg,#temp-svg,#aqi-svg{touch-action:pan-y;cursor:crosshair}
+/* States */
+#today-error{border-color:color-mix(in srgb,var(--err) 40%,var(--line));background:color-mix(in srgb,var(--err) 6%,var(--surface))}
+#today-error h3::before{content:"\26A0  ";color:var(--err)}
+.loading .skel,.skel.loading{background:linear-gradient(100deg,var(--surface-2) 20%,var(--surface-3) 40%,var(--surface-2) 60%);background-size:220% 100%;animation-duration:1.1s}
 </style>
 </head>
 <body>
 <div class="splash" id="splash" aria-hidden="true"><div class="splash-inner"><svg class="mark" viewBox="0 0 64 64"><use href="#mark"/></svg><p class="splash-word">Madrugada</p><p class="splash-tag">Same hours. Smarter dawn.</p></div></div>
 <svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
-  <defs><linearGradient id="mk-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141a3d"/><stop offset="1" stop-color="#2f2c6b"/></linearGradient><linearGradient id="mk-sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf6a"/><stop offset=".55" stop-color="#f7904d"/><stop offset="1" stop-color="#e5584d"/></linearGradient><linearGradient id="mk-haze" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a996f5" stop-opacity="0"/><stop offset=".18" stop-color="#a996f5" stop-opacity=".9"/><stop offset=".82" stop-color="#a996f5" stop-opacity=".9"/><stop offset="1" stop-color="#a996f5" stop-opacity="0"/></linearGradient><linearGradient id="mk-field" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1f4a"/><stop offset="1" stop-color="#0d1030"/></linearGradient><linearGradient id="mk-rows" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3a53f" stop-opacity="0"/><stop offset=".35" stop-color="#f3a53f" stop-opacity=".55"/><stop offset="1" stop-color="#f6b25a"/></linearGradient><clipPath id="mk-clip"><rect width="64" height="64" rx="14"/></clipPath><symbol id="mark" viewBox="0 0 64 64"><g clip-path="url(#mk-clip)"><rect width="64" height="64" fill="url(#mk-sky)"/><path d="M13 41a19 19 0 0 1 38 0z" fill="url(#mk-sun)"/><rect y="36.5" width="64" height="5.5" fill="url(#mk-haze)"/><rect y="42" width="64" height="22" fill="url(#mk-field)"/><path d="M32 42-12 64H-1ZM32 42 9 64H18ZM32 42 27.5 64H36.5ZM32 42 46 64H55ZM32 42 65 64H76Z" fill="url(#mk-rows)"/><path d="M0 42.2h64" stroke="#ffd8a0" stroke-width="1" opacity=".45"/></g></symbol><pattern id="hatch-work" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+  <defs><linearGradient id="mk-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141a3d"/><stop offset="1" stop-color="#2f2c6b"/></linearGradient><linearGradient id="mk-sun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffcf6a"/><stop offset=".55" stop-color="#f7904d"/><stop offset="1" stop-color="#e5584d"/></linearGradient><linearGradient id="mk-haze" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a996f5" stop-opacity="0"/><stop offset=".18" stop-color="#a996f5" stop-opacity=".9"/><stop offset=".82" stop-color="#a996f5" stop-opacity=".9"/><stop offset="1" stop-color="#a996f5" stop-opacity="0"/></linearGradient><linearGradient id="mk-field" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1f4a"/><stop offset="1" stop-color="#0d1030"/></linearGradient><linearGradient id="mk-rows" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3a53f" stop-opacity="0"/><stop offset=".35" stop-color="#f3a53f" stop-opacity=".55"/><stop offset="1" stop-color="#f6b25a"/></linearGradient><clipPath id="mk-clip"><rect width="64" height="64" rx="14"/></clipPath><symbol id="mark" viewBox="0 0 64 64"><g clip-path="url(#mk-clip)"><rect width="64" height="64" fill="url(#mk-sky)"/><path d="M13 41a19 19 0 0 1 38 0z" fill="url(#mk-sun)"/><rect y="36.5" width="64" height="5.5" fill="url(#mk-haze)"/><rect y="42" width="64" height="22" fill="url(#mk-field)"/><path d="M32 42-12 64H-1ZM32 42 9 64H18ZM32 42 27.5 64H36.5ZM32 42 46 64H55ZM32 42 65 64H76Z" fill="url(#mk-rows)"/><path d="M0 42.2h64" stroke="#ffd8a0" stroke-width="1" opacity=".45"/></g></symbol><linearGradient id="g-heat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ec6b4e" stop-opacity=".42"/><stop offset="1" stop-color="#f2a33a" stop-opacity=".02"/></linearGradient><linearGradient id="g-smoke" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f7fe3" stop-opacity=".45"/><stop offset="1" stop-color="#8f7fe3" stop-opacity=".02"/></linearGradient><pattern id="hatch-work" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
     <rect width="8" height="8" fill="var(--opt)" opacity=".10"/><line x1="0" y1="0" x2="0" y2="8" stroke="var(--opt)" stroke-width="2" opacity=".35"/></pattern></defs>
 </svg>
 <header class="topbar">
@@ -370,9 +440,9 @@ svg.mark{width:38px;height:38px;flex:none;display:block;border-radius:22%;box-sh
       </ul>
     </div>
     <div class="tiles" id="today-tiles">
-      <div class="tile heat loading" id="tile-heat"><p class="tile-icon">Heat</p><p class="tile-label" id="tile-heat-label">Forecast hours at or above the high-heat level</p><p class="tile-num skel" id="tile-heat-num">–</p><p class="tile-sub">Whole day · forecast-based estimate</p></div>
-      <div class="tile smoke loading" id="tile-smoke"><p class="tile-icon">Smoke</p><p class="tile-label" id="tile-smoke-label">Forecast smoke hours</p><p class="tile-num skel" id="tile-smoke-num">–</p><p class="tile-sub">Whole day · forecast-based estimate</p></div>
-      <div class="tile unfix loading" id="tile-unfix"><p class="tile-icon">Plan</p><p class="tile-label">Hours scheduling can't fix</p><p class="tile-num skel" id="tile-unfix-num">–</p><p class="tile-sub" id="tile-unfix-sub">These hours need shade, rest or crew changes, not a different start time.</p></div>
+      <div class="tile heat loading" id="tile-heat"><p class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 14.8V4.5a2 2 0 0 0-4 0v10.3a4 4 0 1 0 4 0z"/><path d="M12 9v7"/></svg>Heat</p><p class="tile-label" id="tile-heat-label">Forecast hours at or above the high-heat level</p><p class="tile-num skel" id="tile-heat-num">–</p><p class="tile-sub">Whole day · forecast-based estimate</p></div>
+      <div class="tile smoke loading" id="tile-smoke"><p class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h16a3 3 0 1 1-3 3"/><path d="M3 16h7"/></svg>Smoke</p><p class="tile-label" id="tile-smoke-label">Forecast smoke hours</p><p class="tile-num skel" id="tile-smoke-num">–</p><p class="tile-sub">Whole day · forecast-based estimate</p></div>
+      <div class="tile unfix loading" id="tile-unfix"><p class="tile-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Plan</p><p class="tile-label">Hours scheduling can't fix</p><p class="tile-num skel" id="tile-unfix-num">–</p><p class="tile-sub" id="tile-unfix-sub">These hours need shade, rest or crew changes, not a different start time.</p></div>
     </div>
     </div>
   </section>
@@ -465,7 +535,7 @@ svg.mark{width:38px;height:38px;flex:none;display:block;border-radius:22%;box-sh
 
 <dialog class="sheet" id="about" aria-labelledby="about-title">
   <div class="sheet-body">
-    <div class="sheet-head"><div class="lockup"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#mark"/></svg><div><h2 id="about-title">About Madrugada</h2><p class="tagline">Same hours. Smarter dawn.</p></div></div><button id="about-close" type="button">Close</button></div>
+    <div class="sheet-head"><div class="lockup"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#mark"/></svg><div><h2 id="about-title">About Madrugada</h2><p class="tagline">Same hours. Smarter dawn.</p></div></div><button id="about-close" class="btn ghost" type="button">Close</button></div>
     <p>An advisory day briefing for field crews: forecast temperature and air quality for a replayed day, a work plan that starts no earlier than first light, and the hours scheduling can't fix. Numbers are modeled exposure-hours and forecast-based estimates.</p>
     <p>It does not replace the employer's written Cal/OSHA Heat Illness Prevention Plan. Water, shade and rest requirements still apply.</p>
     <h3>Limitations</h3>
@@ -484,7 +554,7 @@ svg.mark{width:38px;height:38px;flex:none;display:block;border-radius:22%;box-sh
     <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
     <div class="intro-nav">
       <a href="#" id="intro-skip">Skip</a>
-      <div class="row" style="gap:8px"><button id="intro-back" type="button">Back</button><button id="intro-next" class="btn primary" type="button">Next</button></div>
+      <div class="row" style="gap:8px"><button id="intro-back" class="btn ghost" type="button">Back</button><button id="intro-next" class="btn primary" type="button">Next</button></div>
     </div>
   </div>
 </div>
@@ -512,7 +582,7 @@ async function loadSnapshot() {
     $('snap-banner').hidden = false;
     if (state.snap.note) $('snap-banner').textContent = 'SNAPSHOT MODE: sliders disabled (' + state.snap.note + ')';
     const p = state.snap.default_params;
-    $('paid').value = p.paid_hours; $('paid-val').textContent = p.paid_hours; $('earliest').value = p.earliest; $('latest').value = p.latest; $('oracle').checked = p.oracle;
+    $('paid').value = p.paid_hours; sliderFill(); $('paid-val').textContent = p.paid_hours; $('earliest').value = p.earliest; $('latest').value = p.latest; $('oracle').checked = p.oracle;
     ['paid', 'earliest', 'latest', 'oracle', 'print', 'make-sheet'].forEach(id => { $(id).disabled = true; });
   }
   return state.snap;
@@ -551,7 +621,7 @@ function badges() {
   $('rule-note').textContent = d && d.selected_by_rule ? d.selected_by_rule : '';
 }
 let timer = null;
-function schedule() { $('paid-val').textContent = $('paid').value; badges(); clearTimeout(timer); timer = setTimeout(plan, 250); }
+function schedule() { sliderFill(); $('paid-val').textContent = $('paid').value; badges(); clearTimeout(timer); timer = setTimeout(plan, 250); }
 const detailText = d => Array.isArray(d) ? d.map(e => e.msg).join('; ') : d;
 async function plan() {
   badges();
@@ -668,6 +738,7 @@ function ribbon(d, u) {
   lane(d.forecast.aqi, 160, 240, [{v: t.aqi_sensitive, label: `AQI ${t.aqi_sensitive} sensitive groups`}, {v: t.aqi_smoke_rule, label: `AQI ${t.aqi_smoke_rule} smoke rule`}], 'aqi', 'Air quality (AQI)');
   const step = W > 700 ? 3 : 6;
   for (let h = 0; h <= 24; h += step) sv(svg, 'text', {x: xr(h * 4), y: 278, class: 'tick', 'text-anchor': h === 0 ? 'start' : h === 24 ? 'end' : 'middle'}, hourLabel(h));
+  svg._x = {L, R}; svg._cur = sv(svg, 'line', {x1: L, x2: L, y1: 18, y2: 258, class: 'cursor'}); attachTip(svg);
   $('ribbon-desc').textContent = `Forecast temperature (solid line) and AQI (dotted line) by hour. Dashed lines: ${t.heat_shade_f}°F shade trigger, ${t.heat_high_f}°F high-heat procedures, AQI ${t.aqi_sensitive} unhealthy for sensitive groups, AQI ${t.aqi_smoke_rule} wildfire-smoke rule.` +
     (u ? ` Hatched band: the best work plan starting no earlier than first light (${blocksText(u.blocks)}).` : '');
 }
@@ -703,9 +774,11 @@ function panel(svg, vals, lines, color, title, axis) {
     sv(svg, 'line', {x1: X0, x2: X1, y1: ys(l.v), y2: ys(l.v), class: 'thr'});
     sv(svg, 'text', {x: X1 - 2, y: ys(l.v) - 4, class: 'rib-label', 'text-anchor': 'end'}, l.label);
   }
+  sv(svg, 'polygon', {class: axis ? 'area-smoke' : 'area-heat', points: `${xs(0.5)},${bot} ` + vals.map((v, i) => xs(i + 0.5).toFixed(1) + ',' + ys(v).toFixed(1)).join(' ') + ` ${xs(95.5)},${bot}`});
   sv(svg, 'polyline', {class: 'series', stroke: color, points: vals.map((v, i) => xs(i + 0.5).toFixed(1) + ',' + ys(v).toFixed(1)).join(' ')});
   [y0, (y0 + y1) / 2, y1].forEach(v => sv(svg, 'text', {x: X0 - 6, y: ys(v) + 4, class: 'tick', 'text-anchor': 'end'}, Math.round(v)));
   sv(svg, 'text', {x: X0 + 4, y: top + 12, class: 'axis'}, title);
+  svg._x = {L: X0, R: X1}; svg._cur = sv(svg, 'line', {x1: X0, x2: X0, y1: top, y2: bot, class: 'cursor'}); attachTip(svg);
   if (!axis) return;
   const p = state.data.plans;
   [['B1', 186, 'var(--b1)'], ['B2', 199, 'var(--b2)']].forEach(([k, y, c]) => {
@@ -924,6 +997,29 @@ function renderEval(g, r) {
     el(g, 'p', `Oracle diagnosis (cost losses to B2): ${od.cost.sentence}`).className = 'note';
   }
 }
+// Chart tooltips: hover or touch shows the clock time and forecast values under the pointer.
+function attachTip(svg) {
+  if (svg._tipped) return;
+  svg._tipped = true;
+  const box = svg.parentNode, tip = document.createElement('div');
+  box.style.position = 'relative'; tip.className = 'tip'; tip.setAttribute('aria-hidden', 'true'); box.appendChild(tip);
+  const hide = () => { tip.classList.remove('on'); if (svg._cur) svg._cur.style.opacity = 0; };
+  const move = e => {
+    if (!svg._x || !state.data) return;
+    const r = svg.getBoundingClientRect(), x = (e.clientX - r.left) * svg.viewBox.baseVal.width / r.width, {L, R} = svg._x;
+    if (x < L || x > R) return hide();
+    const i = Math.min(95, Math.max(0, Math.floor((x - L) / (R - L) * 96))), f = state.data.forecast;
+    tip.textContent = `${clock12(i)} · ${Math.round(f.temp_f[i])}°F · AQI ${f.aqi[i]} (forecast)`;
+    tip.classList.add('on');
+    const bx = box.getBoundingClientRect();
+    tip.style.left = Math.max(4, Math.min(bx.width - tip.offsetWidth - 4, e.clientX - bx.left + 12)) + 'px';
+    tip.style.top = (r.top - bx.top + 8) + 'px';
+    svg._cur.setAttribute('x1', x); svg._cur.setAttribute('x2', x); svg._cur.style.opacity = .7;
+  };
+  svg.addEventListener('pointermove', move); svg.addEventListener('pointerdown', move); svg.addEventListener('pointerleave', hide);
+}
+// Range slider fill follows the value (the fill is decorative; the number is shown in the readout).
+function sliderFill() { const r = $('paid'); r.style.setProperty('--pct', ((r.value - r.min) / (r.max - r.min) * 100) + '%'); }
 // Tabs: Today (default), Planner, Evidence. Arrow keys move between tabs; the hash remembers the view.
 const VIEWS = ['today', 'planner', 'evidence'];
 function showView(v, focus) {
@@ -1003,6 +1099,7 @@ function initIntro() {
   setTimeout(() => sp.remove(), 600);
 })();
 async function init() {
+  sliderFill();
   initTabs();
   initAbout();
   initIntro();
