@@ -128,6 +128,47 @@ footer{color:var(--mute);font-size:13px;padding:var(--sp2) var(--sp2) var(--sp4)
 .legend li{display:flex;align-items:center;gap:6px}
 .key{display:inline-block;width:22px;height:0;border-top:3px solid currentColor}
 .key.dash{border-top-style:dashed}.key.hatch{height:12px;border:1px solid var(--opt);background:repeating-linear-gradient(45deg,transparent 0 3px,var(--opt) 3px 5px);opacity:.6}
+/* Planner */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.controls{display:grid;gap:var(--sp2);grid-template-columns:1fr;margin-bottom:var(--sp2)}
+@media (min-width:768px){.controls{grid-template-columns:2fr 1fr 1fr}.controls .toggle{grid-column:1/-1}}
+.field{display:grid;gap:6px}
+.field>label{font-size:14px;color:var(--mute)}
+.field input[type=time]{width:100%;font-size:17px}
+.slider-row{display:flex;align-items:center;gap:var(--sp2)}
+.slider-row input{flex:1}
+.readout{min-width:72px;text-align:center;font-size:22px;font-weight:800;padding:4px 10px;border-radius:var(--r-sm);background:var(--surface-2);font-variant-numeric:tabular-nums}
+.readout::after{content:" h";font-size:14px;font-weight:600;color:var(--mute)}
+.toggle label{color:var(--ink)!important}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;border:1px solid var(--line);border-radius:999px;padding:4px;margin:0}
+.seg label{padding:0 12px;min-height:36px;border-radius:999px;font-size:14px}
+.seg label:has(input:checked){background:var(--surface-2)}
+.ba{display:grid;grid-template-columns:1fr;gap:var(--sp2)}
+@media (min-width:600px){.ba{grid-template-columns:1fr 1fr}}
+.ba-col{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 16px;background:var(--surface-2)}
+.ba-col.after{border:2px solid var(--opt)}
+.ba-col h3{font-size:15px}.ba-col .when{margin:2px 0 8px;color:var(--mute);font-size:14px}
+.ba-col dl{display:grid;grid-template-columns:1fr auto;gap:4px 12px;margin:0}
+.ba-col dt{color:var(--mute);font-size:14px}.ba-col dd{margin:0;font-weight:800;font-variant-numeric:tabular-nums}
+.delta{font-size:13px;font-weight:700;color:var(--mute)}
+.unfix-card{border-left:6px solid var(--accent)}
+@media (max-width:640px){
+  table.cards-on-mobile thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  table.cards-on-mobile,table.cards-on-mobile tbody,table.cards-on-mobile tr,table.cards-on-mobile td{display:block;width:100%}
+  table.cards-on-mobile tr{border:1px solid var(--line);border-radius:var(--r-sm);margin:0 0 12px;padding:8px 12px;background:var(--surface-2)}
+  table.cards-on-mobile td{display:flex;justify-content:space-between;gap:12px;border:0;padding:4px 0;text-align:right;white-space:normal}
+  table.cards-on-mobile td::before{content:attr(data-label);color:var(--mute);font-weight:600;text-align:left}
+  table.cards-on-mobile td:first-child{font-weight:800;font-size:16px}
+  table.cards-on-mobile td:first-child::before{content:none}}
+/* Evidence accordion */
+details.acc{padding:0}
+details.acc>summary{list-style:none;cursor:pointer;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:var(--sp2);min-height:var(--tap);border-radius:var(--r)}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary::before{content:"+";font-weight:800;font-size:20px;width:20px;color:var(--accent-ink)}
+details.acc[open]>summary::before{content:"−"}
+details.acc>summary h2{font-size:18px}
+details.acc>:not(summary){margin-left:var(--sp2);margin-right:var(--sp2)}
+details.acc>:last-child{margin-bottom:var(--sp2)}
 /* Loading skeletons */
 .loading .skel,.skel.loading{color:transparent!important;background:linear-gradient(90deg,var(--surface-2) 0%,var(--line) 50%,var(--surface-2) 100%);background-size:200% 100%;animation:shimmer 1.2s linear infinite;border-radius:8px;min-height:1em}
 .hero.loading .skel{background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.18),rgba(255,255,255,.08));background-size:200% 100%}
@@ -198,55 +239,84 @@ footer{color:var(--mute);font-size:13px;padding:var(--sp2) var(--sp2) var(--sp4)
   </section>
 
   <section class="view" id="view-planner" role="tabpanel" aria-labelledby="tab-planner" hidden>
-  <section class="card row">
-    <label>Paid hours <input id="paid" type="range" min="2" max="12" step="0.25" value="8.5"> <output id="paid-val">8.5</output></label>
-    <label>Earliest <input id="earliest" type="time" step="900" value="04:00"></label>
-    <label>Latest <input id="latest" type="time" step="900" value="19:00"></label>
-    <label><input id="oracle" type="checkbox"> ORACLE (uses the day's actual data)</label>
-    <button id="print" type="button">Print crew sheet</button>
-    <div style="flex-basis:100%"><div id="error"></div><ul id="warnings"></ul></div>
-  </section>
-  <section class="card">
-    <h2 id="chart-note">Plan</h2>
-    <svg id="temp-svg" viewBox="0 0 960 180" role="img" aria-label="Temperature"></svg>
-    <svg id="aqi-svg" viewBox="0 0 960 240" role="img" aria-label="AQI"></svg>
-  </section>
-  <section class="card" aria-live="polite">
-    <h2>Hours scheduling can't fix</h2>
-    <p id="unfix-text"></p>
-    <p id="unfix-note" class="note"></p>
-  </section>
-  <section class="card">
-    <div class="row"><h2 style="margin:0">Comparison</h2>
-      <label><input type="radio" name="view" id="view-planned" checked> planned (forecast)</label>
-      <label><input type="radio" name="view" id="view-observed"> observed (what happened)</label>
-    </div>
-    <div class="scroll"><table>
-      <thead><tr><th>Plan</th><th>h ≥80°F</th><th>h ≥95°F</th><th>h AQI≥101</th><th>h AQI≥151</th><th>dual-hazard h</th><th>paid h</th><th>blocks</th></tr></thead>
-      <tbody id="cmp-body"></tbody>
-    </table></div>
-  </section>
-  <section class="card">
-    <h2>Trade-offs (Pareto, planned)</h2>
-    <svg id="pareto-svg" viewBox="0 0 520 300" style="max-width:620px" role="img" aria-label="Pareto scatter"></svg>
-  </section>
+    <section class="card" aria-labelledby="ctl-title">
+      <h2 id="ctl-title">Shift settings</h2>
+      <div class="controls">
+        <div class="field">
+          <label for="paid">Paid hours</label>
+          <div class="slider-row"><input id="paid" type="range" min="2" max="12" step="0.25" value="8.5" aria-describedby="paid-help"><output id="paid-val" for="paid" class="readout">8.5</output></div>
+          <p class="note" id="paid-help">Paid hours stay the same in every plan.</p>
+        </div>
+        <div class="field">
+          <label for="earliest">Earliest start</label>
+          <input id="earliest" type="time" step="900" value="04:00">
+        </div>
+        <div class="field">
+          <label for="latest">Latest end</label>
+          <input id="latest" type="time" step="900" value="19:00">
+        </div>
+        <div class="field toggle">
+          <label for="oracle"><input id="oracle" type="checkbox"> ORACLE (uses the day's actual data)</label>
+          <p class="note">An upper bound for comparison, not a forecast.</p>
+        </div>
+      </div>
+      <div class="row"><button id="print" class="btn" type="button">Print crew sheet</button></div>
+      <div role="status" aria-live="polite"><div id="error"></div><ul id="warnings"></ul></div>
+    </section>
+    <section class="card" aria-labelledby="ba-title">
+      <h2 id="ba-title">Before and after</h2>
+      <div id="before-after" class="ba" aria-live="polite"></div>
+      <p class="note" id="ba-note"></p>
+    </section>
+    <section class="card">
+      <h2 id="chart-note">Plan</h2>
+      <svg id="temp-svg" viewBox="0 0 960 180" role="img" aria-label="Temperature"></svg>
+      <svg id="aqi-svg" viewBox="0 0 960 240" role="img" aria-label="AQI"></svg>
+    </section>
+    <section class="card unfix-card" aria-live="polite">
+      <h2>Hours scheduling can't fix</h2>
+      <p id="unfix-text"></p>
+      <p id="unfix-note" class="note"></p>
+    </section>
+    <section class="card">
+      <div class="row"><h2 style="margin:0">Comparison</h2>
+        <fieldset class="seg"><legend class="sr-only">Show numbers</legend>
+          <label><input type="radio" name="view" id="view-planned" checked> planned (forecast)</label>
+          <label><input type="radio" name="view" id="view-observed"> observed (what happened)</label>
+        </fieldset>
+      </div>
+      <div class="scroll"><table id="cmp-table" class="cards-on-mobile">
+        <thead><tr><th>Plan</th><th>h ≥80°F</th><th>h ≥95°F</th><th>h AQI≥101</th><th>h AQI≥151</th><th>dual-hazard h</th><th>paid h</th><th>blocks</th></tr></thead>
+        <tbody id="cmp-body"></tbody>
+      </table></div>
+    </section>
+    <section class="card">
+      <h2>Trade-offs (Pareto, planned)</h2>
+      <svg id="pareto-svg" viewBox="0 0 520 300" style="max-width:620px" role="img" aria-label="Pareto scatter"></svg>
+    </section>
   </section>
 
   <section class="view" id="view-evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
     <div class="card"><p class="eyebrow">What we found</p>
       <p class="sub" id="headline" aria-live="polite"><b>We tested whether shifting hours reduces heat exposure.</b> <span id="headline-detail">Loading the results…</span></p></div>
-  <section class="card">
-    <h2>Backtest</h2>
-    <p id="bt-banner" class="badge syn"></p>
-    <div class="box"><h3>What this does and does not show</h3><ul id="bt-box"></ul></div>
-    <h2>WINDOW 1: summers 2022 to 2025 (preregistered)</h2>
-    <div id="bt-groups"></div>
-    <h2>WINDOW 2: summers 2018 to 2021 (preregistered separately, never pooled)</h2>
-    <p id="bt2-banner" class="badge real"></p>
-    <div id="bt-w2"></div>
-    <h2>Start-time sensitivity (EXPLORATORY, POST-HOC: not preregistered)</h2>
-    <div id="bt-start"></div>
-  </section>
+    <details class="card acc" open>
+      <summary><h2>Headline finding</h2><span class="note">Both windows, start time, smoke</span></summary>
+      <p id="bt-banner" class="badge syn"></p>
+      <div class="box"><h3>What this does and does not show</h3><ul id="bt-box"></ul></div>
+    </details>
+    <details class="card acc">
+      <summary><h2>Window 1 details</h2><span class="note">Summers 2022 to 2025 · preregistered</span></summary>
+      <div id="bt-groups"></div>
+    </details>
+    <details class="card acc">
+      <summary><h2>Window 2 details</h2><span class="note">Summers 2018 to 2021 · preregistered separately, never pooled</span></summary>
+      <p id="bt2-banner" class="badge real"></p>
+      <div id="bt-w2"></div>
+    </details>
+    <details class="card acc">
+      <summary><h2>Start-time sensitivity</h2><span class="note">EXPLORATORY, POST-HOC: not preregistered</span></summary>
+      <div id="bt-start"></div>
+    </details>
   </section>
 </main>
 <footer class="wrap">Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
@@ -472,20 +542,44 @@ function drawCharts() {
   panel($('temp-svg'), d.forecast.temp_f, [{v: t.heat_shade_f, label: t.heat_shade_f + '°F shade trigger'}, {v: t.heat_high_f, label: t.heat_high_f + '°F high-heat procedures'}], 'var(--heat)', 'Temperature °F', false);
   panel($('aqi-svg'), d.forecast.aqi, [{v: t.aqi_sensitive, label: 'AQI ' + t.aqi_sensitive + ' unhealthy (sensitive)'}, {v: t.aqi_smoke_rule, label: 'AQI ' + t.aqi_smoke_rule + ' smoke rule'}], 'var(--smoke)', 'AQI (PM2.5)', true);
 }
+const COL_LABELS = ['Plan', 'h ≥80°F', 'h ≥95°F', 'h AQI≥101', 'h AQI≥151', 'dual-hazard h', 'paid h', 'blocks'];
 function drawTable() {
   const tb = $('cmp-body'); tb.replaceChildren();
   for (const [k, name] of ROWS) {
     const tr = document.createElement('tr'), m = state.data.metrics[k][state.view];
-    for (const c of [name, ...COLS.map(c => m[c].toFixed(2)), blocksText(state.data.plans[k].blocks)]) { const td = document.createElement('td'); td.textContent = c; tr.appendChild(td); }
+    [name, ...COLS.map(c => m[c].toFixed(2)), blocksText(state.data.plans[k].blocks)].forEach((c, i) => {
+      const td = document.createElement('td'); td.textContent = c; td.dataset.label = COL_LABELS[i]; tr.appendChild(td);
+    });
     tb.appendChild(tr);
   }
+  beforeAfter();
+}
+// Before/after: the fixed early shift (B2) next to the recommended plan, same numbers as the table.
+function beforeAfter() {
+  const d = state.data, t = d.thresholds, box = $('before-after'), v = state.view;
+  box.replaceChildren();
+  const rows = [['hours_ge_95f', `Hours at or above ${t.heat_high_f}°F`], ['hours_ge_80f', `Hours at or above ${t.heat_shade_f}°F`], ['hours_aqi_ge_101', `Hours at AQI ${t.aqi_sensitive} or higher`]];
+  for (const [k, title, after] of [['B2', 'Before: fixed early shift (B2)', false], ['optimizer', 'After: recommended plan', true]]) {
+    const col = el(box, 'div'); col.className = 'ba-col' + (after ? ' after' : '');
+    el(col, 'h3', title); el(col, 'p', blocksText(d.plans[k].blocks)).className = 'when';
+    const dl = el(col, 'dl');
+    for (const [m, label] of rows) {
+      el(dl, 'dt', label);
+      const dd = el(dl, 'dd', d.metrics[k][v][m].toFixed(2) + ' h');
+      if (after) {
+        const diff = d.metrics.optimizer[v][m] - d.metrics.B2[v][m];
+        el(dd, 'span', ` (${diff > 0 ? '+' : ''}${diff.toFixed(2)})`).className = 'delta';
+      }
+    }
+  }
+  $('ba-note').textContent = `${v === 'planned' ? 'Planned on the forecast (forecast-based estimate).' : 'Observed: what happened on this replayed day.'} Modeled exposure-hours; paid hours are the same in both. Earliest start ${$('earliest').value}.`;
 }
 function drawPareto() {
   const svg = $('pareto-svg'), pts = state.data.pareto; svg.replaceChildren();
   const L = 52, R = 500, T = 12, B = 250;
   const mx = Math.max(1, ...pts.map(p => p.heat_hours)) + 0.5, my = Math.max(1, ...pts.map(p => p.smoke_hours)) + 0.5;
   const px = v => L + (R - L) * v / mx, py = v => B - (B - T) * v / my;
-  sv(svg, 'line', {x1: L, x2: R, y1: B, y2: B, stroke: '#9ca3af'}); sv(svg, 'line', {x1: L, x2: L, y1: T, y2: B, stroke: '#9ca3af'});
+  sv(svg, 'line', {x1: L, x2: R, y1: B, y2: B, class: 'grid'}); sv(svg, 'line', {x1: L, x2: L, y1: T, y2: B, class: 'grid'});
   for (let v = 0; v <= mx; v += Math.max(1, Math.round(mx / 6))) sv(svg, 'text', {x: px(v), y: B + 14, class: 'tick', 'text-anchor': 'middle'}, v);
   for (let v = 0; v <= my; v += Math.max(1, Math.round(my / 6))) sv(svg, 'text', {x: L - 6, y: py(v) + 4, class: 'tick', 'text-anchor': 'end'}, v);
   sv(svg, 'text', {x: (L + R) / 2, y: B + 32, class: 'axis', 'text-anchor': 'middle'}, 'hours ≥80°F (planned)');
@@ -493,11 +587,13 @@ function drawPareto() {
   const paid = pts.map(p => p.paid_hours), lo = Math.min(...paid), hi = Math.max(...paid);
   const mix = f => `rgb(${[[198, 8], [219, 48], [239, 107]].map(([a, b]) => Math.round(a + (b - a) * f)).join(',')})`;
   pts.forEach((p, i) => {
-    const c = sv(svg, 'circle', {cx: px(p.heat_hours), cy: py(p.smoke_hours), r: 7, fill: mix(hi > lo ? (p.paid_hours - lo) / (hi - lo) : 1), class: 'pt' + (state.shown.idx === i ? ' sel' : '')});
+    const f = hi > lo ? (p.paid_hours - lo) / (hi - lo) : 1;  // paid hours: colour AND size, so colour is not the only signal
+    const c = sv(svg, 'circle', {cx: px(p.heat_hours), cy: py(p.smoke_hours), r: (5 + 5 * f).toFixed(1), fill: mix(f), class: 'pt' + (state.shown.idx === i ? ' sel' : ''), tabindex: 0, role: 'button', 'aria-label': `Show the plan with ${p.paid_hours} paid hours`});
+    c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); c.dispatchEvent(new Event('click')); } });
     sv(c, 'title', {}, `${p.paid_hours} paid h · ${p.heat_hours} h ≥80°F · ${p.smoke_hours} h AQI≥101 · heat/smoke weight ${p.heat_smoke_ratio} · ${blocksText(p.blocks)}`);
     c.addEventListener('click', () => { state.shown = {label: `Pareto plan (${p.paid_hours} paid h)`, blocks: p.blocks, idx: i}; drawCharts(); drawPareto(); });
   });
-  sv(svg, 'text', {x: R, y: T + 10, class: 'axis', 'text-anchor': 'end'}, `colour = paid hours: light ${lo} h … dark ${hi} h · click a point to show it`);
+  sv(svg, 'text', {x: R, y: T + 10, class: 'axis', 'text-anchor': 'end'}, `colour and size = paid hours: small/light ${lo} h … large/dark ${hi} h · click a point to show it`);
 }
 function el(parent, tag, text) { const e = document.createElement(tag); if (text != null) e.textContent = text; parent.appendChild(e); return e; }
 function table(parent, head, rows) {
@@ -553,6 +649,8 @@ async function backtest() {
   el(box, 'li', 'Window 1: ' + claim(r)).style.fontWeight = '600';
   if (r2.available && r2.n_days.real_cached) el(box, 'li', 'Window 2 (separate, preregistered): ' + claim(r2)).style.fontWeight = '600';
   if (st.window1) el(box, 'li', startClaim(st.window1));
+  if (r.effective_sample_size_note) el(box, 'li', 'Window 1 sample: ' + r.effective_sample_size_note);
+  if (r2.available && r2.effective_sample_size_note) el(box, 'li', 'Window 2 sample: ' + r2.effective_sample_size_note);
   for (const s of r.summary_box) el(box, 'li', s);
   renderEval(g, r);
   const g2 = $('bt-w2'); g2.replaceChildren();
