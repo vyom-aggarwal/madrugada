@@ -25,7 +25,7 @@ def _hours(x: float) -> str:
     return f"{x:g}"
 
 
-def render(plan: dict) -> str:
+def render(plan: dict, unfix: dict | None = None) -> str:
     day, req, th = plan["day"], plan["request"], plan["thresholds"]
     m = plan["metrics"]["optimizer"]["planned"]
     temp, aqi = np.asarray(plan["forecast"]["temp_f"]), np.asarray(plan["forecast"]["aqi"])
@@ -66,6 +66,15 @@ def render(plan: dict) -> str:
         ("Hazard summary (forecast-based estimate)", summary_en,
          "Resumen de riesgos (estimación basada en el pronóstico)", summary_es),
     ]
+    if unfix:
+        h = _e(_hours(unfix["hours_ge_95f"]["planned"]))
+        fl_en, fl_es = _e(_clock(unfix["first_light_start"])), _e(_clock(unfix["first_light_start"], True))
+        rows.append(("Hours scheduling can't fix (forecast-based estimate)",
+                     f"Starting no earlier than first light ({fl_en}), the best plan still has about {h} h at or above "
+                     f"{t['heat_high_f']}&deg;F. {_e(unfix['line'])}",
+                     "Horas que el horario no puede evitar (estimación basada en el pronóstico)",
+                     f"Empezando no antes del amanecer ({fl_es}), el mejor plan aún tiene unas {h} h a "
+                     f"{t['heat_high_f']}&deg;F o más. {_e(unfix['line_es'])}"))
     body = "".join(f"<tr><td><b>{a}</b><br>{b}</td><td><b>{c}</b><br>{d}</td></tr>" for a, b, c, d in rows)
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">

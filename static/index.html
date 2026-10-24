@@ -42,7 +42,7 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
 <body>
 <header>
   <h1>Madrugada</h1>
-  <p class="sub"><b>Heat-first shift planner with smoke exposure shown.</b> Plans work blocks to reduce modeled heat exposure-hours at the same paid hours, and shows smoke (AQI) exposure alongside.</p>
+  <p class="sub" id="headline" aria-live="polite"><b>We tested whether shifting hours reduces heat exposure.</b> <span id="headline-detail">Loading the results…</span></p>
 </header>
 <main>
   <p id="snap-banner" class="badge snap" hidden>SNAPSHOT MODE: sliders disabled</p>
@@ -65,6 +65,11 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
     <h2 id="chart-note">Plan</h2>
     <svg id="temp-svg" viewBox="0 0 960 180" role="img" aria-label="Temperature"></svg>
     <svg id="aqi-svg" viewBox="0 0 960 240" role="img" aria-label="AQI"></svg>
+  </section>
+  <section class="card" aria-live="polite">
+    <h2>Hours scheduling can't fix</h2>
+    <p id="unfix-text"></p>
+    <p id="unfix-note" class="note"></p>
   </section>
   <section class="card">
     <div class="row"><h2 style="margin:0">Comparison</h2>
@@ -134,6 +139,10 @@ async function api(path, opts) {
   if (path === '/api/eval') return {ok: true, body: s.eval};
   if (path === '/api/eval_w2') return {ok: true, body: s.eval_w2 || {available: false, reason: 'not in snapshot'}};
   if (path === '/api/start_sensitivity') return {ok: true, body: s.start_sensitivity || {}};
+  if (path.startsWith('/api/unfixable')) {
+    const u = (s.unfixable || {})[new URLSearchParams(path.split('?')[1]).get('day_id')];
+    return u && !u.error ? {ok: true, body: u} : {ok: false, body: {detail: u ? u.error : 'Not in snapshot.'}};
+  }
   const p = s.plans[JSON.parse(opts.body).day_id];
   return p && !p.error ? {ok: true, body: p} : {ok: false, body: {detail: p ? p.error : 'Day not found in snapshot.'}};
 }
@@ -163,6 +172,17 @@ async function plan() {
   state.data = r.body;
   state.shown = {label: 'Optimizer plan', blocks: r.body.plans.optimizer.blocks, idx: -1};
   render();
+  unfixable();
+}
+// "Hours scheduling can't fix": best plan starting no earlier than first light, computed per request.
+async function unfixable() {
+  const p = params(), t = state.data.thresholds;
+  const u = await api('/api/unfixable?' + new URLSearchParams({day_id: p.day_id, paid_hours: p.paid_hours, latest: p.latest}).toString());
+  if (!u.ok) { $('unfix-text').textContent = 'Not available: ' + (Array.isArray(u.body.detail) ? u.body.detail.map(e => e.msg).join('; ') : u.body.detail); $('unfix-note').textContent = ''; return; }
+  const b = u.body, h = b.hours_ge_95f;
+  $('unfix-text').textContent = `Starting no earlier than first light (${b.first_light_start}; sunrise about ${b.sunrise_approx}), the best plan (${blocksText(b.blocks)}) ` +
+    `still has ${h.planned} modeled exposure-hours at or above ${t.heat_high_f}°F (forecast-based estimate; observed on this replayed day: ${h.observed} h). ${b.line}`;
+  $('unfix-note').textContent = b.note;
 }
 function render() {
   const w = $('warnings'); w.replaceChildren();
@@ -273,8 +293,11 @@ async function backtest() {
   g.replaceChildren(); box.replaceChildren();
   if (!r.available) { $('bt-banner').textContent = 'Backtest not available: ' + r.reason; return; }
   $('bt-banner').textContent = r.provenance_statement;
-  el(box, 'li', 'Window 1: ' + claim(r)).style.fontWeight = '600';
   const r2 = (await api('/api/eval_w2')).body, st = (await api('/api/start_sensitivity')).body;
+  const s = story(r, r2, st);
+  $('headline-detail').textContent = s;
+  el(box, 'li', 'We tested whether shifting hours reduces heat exposure. ' + s).style.fontWeight = '700';
+  el(box, 'li', 'Window 1: ' + claim(r)).style.fontWeight = '600';
   if (r2.available && r2.n_days.real_cached) el(box, 'li', 'Window 2 (separate, preregistered): ' + claim(r2)).style.fontWeight = '600';
   if (st.window1) el(box, 'li', startClaim(st.window1));
   for (const s of r.summary_box) el(box, 'li', s);
@@ -286,6 +309,23 @@ async function backtest() {
 }
 const sgn = (v, d = 3) => (v > 0 ? '+' : '') + v.toFixed(d);
 const ciTxt = (c, k = 'hours_ge_95f') => c.mean_diff[k] == null ? '–' : sgn(c.mean_diff[k]) + (c.ci95 ? ` [${sgn(c.ci95[k][0])}, ${sgn(c.ci95[k][1])}]` : '');
+// The headline story, generated from the result files; each window keeps its own CI (never pooled).
+function story(r1, r2, st) {
+  const below = (c, k) => c && c.ci95 && c.ci95[k][1] < 0, h = 'hours_ge_95f', a = 'hours_aqi_ge_101';
+  const ov = r => r && r.available && r.n_days.real_cached ? r.groups.real_cached.overall.comparisons : null;
+  const c1 = ov(r1), c2 = ov(r2), sw = w => w ? w.settings : null, s1 = sw(st.window1), s2 = sw(st.window2);
+  if (!c1 || !s1) return 'Real-data results are not available.';
+  const at = (s, k) => s ? s[k].groups.overall.optimizer_vs_B2 : null;
+  const w = (c, k = h) => c ? `${ciTxt(c, k)} h/day` : 'n/a';
+  const only04 = below(c1.optimizer_vs_B2, h) && !below(at(s1, '05:30'), h) && !below(at(s1, 'sunrise'), h);
+  const heat = only04 ? 'It does only if crews can start before dawn (04:00)' : 'The heat result depends on the earliest start allowed';
+  const smokeW2 = c2 && below(c2.optimizer_vs_B2, a) ? `small reduction vs the early fixed shift in window 2 (${w(c2.optimizer_vs_B2, a)})` : `no clear reduction vs the early fixed shift in window 2 (${w(c2 && c2.optimizer_vs_B2, a)})`;
+  const vsB3 = [c1, c2].some(c => c && below(c.optimizer_vs_b3_early, a)) ? 'some vs heat-only planning' : 'none vs heat-only planning';
+  return `${heat}: vs the fixed 05:30 shift, ${w(c1.optimizer_vs_B2)} at or above 95°F in window 1` + (c2 ? ` and ${w(c2.optimizer_vs_B2)} in window 2` : '') + '. ' +
+    `At 05:30 or a sunrise-aligned start the benefit disappears (window 1: 05:30 ${w(at(s1, '05:30'))}, sunrise ${w(at(s1, 'sunrise'))}` +
+    (s2 ? `; window 2: 05:30 ${w(at(s2, '05:30'))}, sunrise ${w(at(s2, 'sunrise'))}` : '') + '; EXPLORATORY). ' +
+    `Smoke: ${smokeW2}, ${vsB3} (window 1 ${w(c1.optimizer_vs_b3_early, a)}` + (c2 ? `, window 2 ${w(c2.optimizer_vs_b3_early, a)}` : '') + '). All numbers are modeled exposure-hours.';
+}
 function startClaim(w) {
   const s = w.settings, a = s['04:00'].groups.overall.optimizer_vs_B2, b = s['05:30'].groups.overall.optimizer_vs_B2, c = s.sunrise.groups.overall.optimizer_vs_B2;
   return `EXPLORATORY, POST-HOC: the heat benefit rests on the 04:00 earliest start. Optimizer vs B2 at ≥95°F: 04:00 ${ciTxt(a)} h/day; ` +

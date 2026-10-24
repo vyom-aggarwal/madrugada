@@ -10,6 +10,7 @@ from pydantic import ValidationError
 from app.crew_sheet import render
 from app.models import PlanRequest
 from app.planning import RULE_LABEL, NoHistory, UnknownDay, day_summary, load_days, plan_for, rule_selected_day
+from app.unfixable import WindowTooShort, for_day
 
 STATIC_DIR = Path(__file__).resolve().parent.parent / "static"
 EVAL_RESULTS = Path(__file__).resolve().parent.parent / "eval" / "results.json"
@@ -82,13 +83,40 @@ def api_start_sensitivity() -> dict:
     return out
 
 
+def _unfixable(req: PlanRequest) -> dict:
+    try:
+        return for_day(req.day_id, req.paid_hours, req.latest)
+    except UnknownDay:
+        raise HTTPException(status_code=404, detail="Day not found: no day with that day_id. "
+                                                    "GET /api/days lists the available days.")
+    except WindowTooShort as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=f"no forecast history for this day: {e}")
+
+
+@app.get("/api/unfixable")
+def api_unfixable(request: Request) -> dict:
+    """Hours at or above 95F left in the best plan that starts no earlier than first light (per request)."""
+    try:
+        req = PlanRequest(**dict(request.query_params))
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=[err["msg"] for err in e.errors()])
+    return _unfixable(req)
+
+
 @app.get("/crew-sheet", response_class=HTMLResponse)
 def crew_sheet(request: Request) -> HTMLResponse:
     try:
         req = PlanRequest(**dict(request.query_params))
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=[err["msg"] for err in e.errors()])
-    return HTMLResponse(render(_plan(req)))
+    plan = _plan(req)
+    try:
+        unfix = _unfixable(req)
+    except HTTPException:
+        unfix = None  # e.g. first light to latest end cannot hold the hours: sheet omits the line
+    return HTMLResponse(render(plan, unfix))
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR, html=True), name="static")

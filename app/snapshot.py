@@ -13,7 +13,7 @@ import numpy as np
 from fastapi import HTTPException
 
 from app.exposure import day_arrays, exposure
-from app.main import STATIC_DIR, _plan, api_days, api_eval, api_eval_w2, api_start_sensitivity
+from app.main import STATIC_DIR, _plan, _unfixable, api_days, api_eval, api_eval_w2, api_start_sensitivity
 from app.models import PlanRequest
 from app.planning import get_day, rule_selected_day
 
@@ -27,6 +27,16 @@ DEMO_RULE = ("Selected for illustration; the evaluation uses all days. From the 
              "Days already picked are skipped.")
 
 
+def _unfix_all(ids) -> dict:
+    out = {}
+    for i in ids:
+        try:
+            out[i] = _unfixable(PlanRequest(day_id=i))
+        except HTTPException as e:
+            out[i] = {"error": e.detail, "status": e.status_code}
+    return out
+
+
 def build() -> dict:
     days = api_days()
     plans = {}
@@ -38,7 +48,7 @@ def build() -> dict:
     return {"generated_by": "tasks.py snapshot",
             "default_params": PlanRequest(day_id="-").model_dump(exclude={"day_id"}),
             "days": days, "eval": api_eval(), "eval_w2": api_eval_w2(), "start_sensitivity": api_start_sensitivity(),
-            "plans": plans}
+            "plans": plans, "unfixable": _unfix_all([d["id"] for d in days if "error" not in plans[d["id"]]])}
 
 
 def _demo_days(evaluated: list[dict]) -> list[str]:
@@ -75,7 +85,7 @@ def build_demo() -> dict:
             "default_params": PlanRequest(day_id="-").model_dump(exclude={"day_id"}), "days": days,
             "eval": {k: v for k, v in ev.items() if k != "days"}, "eval_w2": api_eval_w2(),
             "start_sensitivity": api_start_sensitivity(),
-            "plans": {i: _plan(PlanRequest(day_id=i)) for i in ids}}
+            "plans": {i: _plan(PlanRequest(day_id=i)) for i in ids}, "unfixable": _unfix_all(ids)}
 
 
 def main(path: Path = SNAPSHOT_PATH) -> Path:
