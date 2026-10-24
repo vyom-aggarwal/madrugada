@@ -409,6 +409,48 @@ body.cine-on{overflow:hidden}
 .cine.static .cine-ui{opacity:1}
 .cine-h{font:600 clamp(28px,5.4vw,62px)/1.1 var(--font-display);letter-spacing:-.015em;margin:0 auto;max-width:20ch;text-shadow:0 2px 28px rgba(3,5,13,.7)}
 .cine .w{display:inline-block;will-change:transform,opacity}
+.cine-type{position:relative;margin:0 auto;max-width:22ch;text-align:left;font:500 clamp(24px,4.6vw,50px)/1.28 var(--font-display);letter-spacing:-.01em;text-shadow:0 2px 20px rgba(3,5,13,.85)}
+.cine-type .ghost{visibility:hidden}.cine-type .typed{position:absolute;inset:0}
+.cine-type .caret{display:inline-block;width:.07em;height:.95em;margin-left:.06em;vertical-align:-.1em;background:#f6b65c}
+.cine-h-sm{font-size:clamp(24px,4.2vw,46px);max-width:24ch}
+.cine-sub{margin:14px auto 0;max-width:44ch;font-size:clamp(16px,2.1vw,21px);line-height:1.5;color:#ece6f5;text-shadow:0 1px 14px rgba(3,5,13,.9)}
+.cine-eyebrow{margin:0 0 12px;font-size:12.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#f6b65c}
+.cine-note{margin:14px auto 0;max-width:62ch;font-size:13px;line-height:1.5;color:#d4cde4;text-shadow:0 1px 10px rgba(3,5,13,.9)}
+.cine-static-only{display:none}.cine.static .cine-static-only{display:block}
+.cine-chart{display:block;width:100%;height:auto;margin:4px 0 10px;overflow:visible}
+.cine-chart text,.cine-dial text{font:600 15px var(--font);fill:#f7f2ea;paint-order:stroke;stroke:rgba(3,5,13,.85);stroke-width:4px;stroke-linejoin:round}
+.cine-line{fill:none;stroke-width:3;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.cine-thr{fill:none;stroke-width:1.6;stroke-dasharray:1;stroke-dashoffset:1}
+.cine svg.cine-mark{width:clamp(72px,12vw,112px);height:auto;margin:0 auto 14px;display:block;border-radius:22%;box-shadow:0 10px 40px rgba(236,107,78,.35)}
+.cine-word{margin:0;font:600 clamp(40px,8vw,88px)/1.05 var(--font-display);white-space:nowrap}
+.cine-shift{margin:22px auto 0;max-width:640px}
+.cine-track{position:relative;height:30px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
+.cine-block{position:absolute;top:3px;bottom:3px;border-radius:6px;background:linear-gradient(90deg,#f7b44c,#ea6a52);box-shadow:0 0 18px rgba(240,138,75,.45)}
+.cine-axis{position:relative;height:18px;margin-top:5px;font-size:12px;color:#d4cde4}
+.cine-axis span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.cine-shift-lab{margin:12px 0 0;font-size:15px;color:#ece6f5}
+.cine-paid{margin:6px 0 0;font:600 clamp(20px,3vw,28px) var(--font-display);color:#ffd27a}
+.cine svg.cine-dial{display:block;width:min(420px,90%);height:auto;margin:4px auto 0;overflow:visible}
+.cine-num{margin:0;font:600 clamp(52px,11vw,112px)/1 var(--font-display);letter-spacing:-.02em;color:#ffd27a;text-shadow:0 4px 30px rgba(3,5,13,.75)}
+.cine-unit{font-size:.36em;margin-left:.15em;color:#ece6f5}
+.cine-ci{position:relative;width:min(420px,90%);height:24px;margin:12px auto 0}
+.cine-ci i{position:absolute}
+.cine-ci .axis{left:0;right:0;top:11px;height:2px;background:rgba(255,255,255,.25)}
+.cine-ci .zero{top:2px;width:2px;height:20px;background:#f7f2ea}
+.cine-ci .band{top:7px;height:10px;border-radius:5px;background:rgba(255,190,110,.6);transition:left .3s ease-out,width .3s ease-out}
+.cine-ci .dot{top:5px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#ffd27a;box-shadow:0 0 0 3px rgba(3,5,13,.6);transition:left .3s ease-out}
+.cine-flip{display:inline-block;transition:opacity .25s ease-out,transform .25s ease-out}
+.cine-beat{margin:0 auto 18px;max-width:42ch;transition:opacity .3s ease-out}
+.cine-beat h3{margin:0;font:600 clamp(21px,3.4vw,36px)/1.2 var(--font-display);text-shadow:0 2px 20px rgba(3,5,13,.85)}
+.cine-beat p{margin:8px 0 0;font-size:clamp(14px,1.8vw,17px);line-height:1.5;color:#e2dcef}
+.cine-meter{position:relative;height:22px;max-width:560px;margin:18px auto 6px;border-radius:11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);overflow:hidden}
+.cine-meter span{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);background:repeating-linear-gradient(135deg,#ec6b4e 0 10px,#f08a4b 10px 20px)}
+.cine-meter-lab{display:flex;justify-content:space-between;max-width:560px;margin:0 auto;font-size:13px;color:#d4cde4}
+.cine-quiet{margin:0 auto 12px;max-width:34ch;font:500 clamp(20px,3.2vw,32px)/1.35 var(--font-display);color:#f3eee6;text-shadow:0 2px 18px rgba(3,5,13,.85)}
+.cine .cine-enter{margin-top:18px;min-height:52px;padding:0 30px;border:0;border-radius:999px;background:linear-gradient(135deg,#f7b44c,#f08a4b 55%,#ea6a52);color:#1d1404;font-weight:800;font-size:17px;box-shadow:0 10px 30px -10px rgba(236,107,78,.7)}
+.cine-chip{display:inline-block;margin:10px 0 0;padding:4px 10px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.04em;color:#ece6f5;background:rgba(3,5,13,.4)}
+@media (max-height:560px){.cine-stage{padding-top:10px;padding-bottom:84px}.cine svg.cine-dial{width:min(240px,50%)}.cine-num{font-size:44px}
+  .cine svg.cine-mark{width:52px;margin-bottom:6px}.cine-chart{max-height:40vh}.cine-beat{margin-bottom:8px}.cine-sub{margin-top:6px}.cine-note{margin-top:6px}}
 </style>
 </head>
 <body>
@@ -1352,7 +1394,291 @@ $('replay-intro').addEventListener('click', () => startCinema(cineReduced() ? 's
 $('about-replay').addEventListener('click', () => { const d = $('about'); if (d.close) d.close(); else d.removeAttribute('open'); startCinema(cineReduced() ? 'static' : 'motion'); });
 if (CINE.mode === 'off') initIntro();  // first-visit coach tips only when the opening sequence is skipped by ?intro=0
 else { const sp = document.getElementById('splash'); if (sp) sp.remove(); }
-// @scenes
+// ---------- Intro scenes: every number is read at runtime from results the app has already loaded ----------
+const CINE_COLD = '4:00 AM. A crew boss in the Central Valley has to decide when tomorrow\u2019s shift starts.';
+const cineHex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const cineMix = (a, b, k) => { const x = cineHex(a), y = cineHex(b); return `rgb(${x.map((v, i) => Math.round(v + (y[i] - v) * k)).join(',')})`; };
+function cineRand(seed) { return () => (seed = seed * 16807 % 2147483647) / 2147483647; }
+const CINE_STARS = (r => Array.from({length: 140}, () => ({x: r(), y: r(), r: .4 + r() * 1.1, ph: r() * 6.28})))(cineRand(7));
+const CINE_DUST = (r => Array.from({length: 60}, () => ({x: r(), y: r(), v: .3 + r(), r: .6 + r() * 1.3, ph: r() * 6.28})))(cineRand(11));
+const cineDay = () => state.days[$('day').value] || null;
+const cineProv = d => !d ? '' : d.provenance === 'synthetic' ? 'SYNTHETIC: ILLUSTRATION ONLY' : 'REAL (cached) · REPLAY: recorded data, not live';
+const cineHiF = () => state.data ? state.data.thresholds.heat_high_f + '°F' : 'the high-heat line';
+const cineMins = x => { const [h, m] = x.split(':').map(Number); return h * 60 + m; };
+const cineBlocks = bs => bs.map(b => `${hhmm12(b.start)}–${hhmm12(b.end)}`).join(' + ');
+function cineKin(parent, tag, cls, text, at, gap = .07) {
+  const e = el(parent, tag); e.className = cls;
+  text.split(' ').forEach((w, k) => { const sp = el(e, 'span', w); sp.className = 'w'; sp.dataset.at = (at + k * gap).toFixed(2); e.appendChild(document.createTextNode(' ')); });
+  return e;
+}
+function cineP(parent, cls, text, at) { const e = el(parent, 'p', text); e.className = cls; if (at != null) e.dataset.at = at; return e; }
+// Words and blocks rise and fade in at their cue (seconds into the scene); a paused frame always shows settled text.
+function cineRise(box) {
+  const ns = [...box.querySelectorAll('[data-at]')];
+  return (local, still) => {
+    for (const n of ns) {
+      const v = still ? 1 : rise(local, +n.dataset.at);
+      n.style.opacity = v; n.style.visibility = v <= 0 ? 'hidden' : '';
+      n.style.transform = v >= 1 ? '' : `translateY(${((1 - v) * 18).toFixed(1)}px)`;
+    }
+  };
+}
+CINE.bg = (ctx, W, H, t, S) => {
+  const hz = H * .62, dawn = easeInOut((t - 1) / 11), glow = clamp01((t - 2) / 3), iris = S.iris || 0;
+  let g = ctx.createLinearGradient(0, 0, 0, hz);
+  g.addColorStop(0, cineMix('#010208', '#121839', clamp01(t / 2.5)));
+  g.addColorStop(.62, cineMix('#04061a', '#2a2a66', dawn));
+  g.addColorStop(1, cineMix('#070a22', '#8e4a63', dawn));
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, hz + 1);
+  const sa = clamp01(t / 1.5) * (1 - .85 * dawn);  // stars: the slowest parallax layer, fading as the sky lightens
+  if (sa > .01) {
+    ctx.fillStyle = '#fff';
+    for (const st of CINE_STARS) {
+      ctx.globalAlpha = sa * (.55 + .45 * Math.sin(t * 1.7 + st.ph));
+      ctx.beginPath(); ctx.arc(((st.x * W - t * 2) % W + W) % W, st.y * hz * .92, st.r, 0, 6.283); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+  const sx = W / 2, R = Math.min(W, H) * .11 * (1 + iris * 2);
+  if (glow > 0) {
+    g = ctx.createRadialGradient(sx, hz, 0, sx, hz, Math.max(W, H) * .75);
+    g.addColorStop(0, `rgba(240,130,80,${.5 * glow})`); g.addColorStop(.35, `rgba(200,80,110,${.2 * glow})`); g.addColorStop(1, 'rgba(20,26,61,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, hz);
+  }
+  const sy = hz + R * 1.05 - easeOut((t - 4.5) / 8) * R * 1.75;  // the sun rises from behind the horizon
+  g = ctx.createRadialGradient(sx, sy, R * .8, sx, sy, R * 3.2);
+  g.addColorStop(0, 'rgba(255,190,110,.42)'); g.addColorStop(1, 'rgba(255,150,90,0)');
+  ctx.fillStyle = g; ctx.fillRect(sx - R * 3.2, sy - R * 3.2, R * 6.4, R * 6.4);
+  g = ctx.createLinearGradient(0, sy - R, 0, sy + R);
+  g.addColorStop(0, '#ffcf6a'); g.addColorStop(.55, '#f7904d'); g.addColorStop(1, '#e5584d');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, R, 0, 6.283); ctx.fill();
+  S.sun = {x: sx, y: sy, r: R};
+  const sh = clamp01((t - 6) / 1.5) * clamp01((12.5 - t) / 1.5);  // heat shimmer in the problem scene
+  if (sh > 0) {
+    ctx.strokeStyle = `rgba(255,214,160,${.12 * sh})`; ctx.lineWidth = 1.2;
+    for (let k = 0; k < 6; k++) {
+      const y = hz - 14 - k * 16; ctx.beginPath();
+      for (let x = 0; x <= W; x += 16) ctx.lineTo(x, y + Math.sin(x * .025 + t * 3.2 + k) * 3);
+      ctx.stroke();
+    }
+  }
+  const ha = .3 + .35 * clamp01((t - 8) / 1.2) * clamp01((12.5 - t) / 1);  // violet haze, thicker while the smoke line slides in
+  for (let k = 0; k < 3; k++) {
+    g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, 'rgba(169,150,245,0)'); g.addColorStop(.2, `rgba(169,150,245,${ha / (k + 1.5)})`);
+    g.addColorStop(.8, `rgba(169,150,245,${ha / (k + 1.5)})`); g.addColorStop(1, 'rgba(169,150,245,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, hz - H * (.012 + k * .012), W, H * (.012 + k * .012));
+  }
+  g = ctx.createLinearGradient(0, hz, 0, H); g.addColorStop(0, '#1d1f4a'); g.addColorStop(1, '#070920');
+  ctx.fillStyle = g; ctx.fillRect(0, hz, W, H - hz);
+  const rp = easeOut((t - 2.2) / 2.8);  // field rows draw in toward the horizon, with a slow push-in
+  if (rp > 0) {
+    const vx = W / 2 + Math.sin(t * .12) * W * .012, sp = W * .15 * (1 + t * .004), wd = sp * .16, y1 = hz + (H - hz) * rp;
+    g = ctx.createLinearGradient(0, hz, 0, H);
+    g.addColorStop(0, 'rgba(243,165,63,0)'); g.addColorStop(.35, 'rgba(243,165,63,.3)'); g.addColorStop(1, 'rgba(246,178,90,.7)');
+    ctx.fillStyle = g;
+    for (let k = -9; k <= 9; k++) {
+      const bx = vx + k * sp;
+      ctx.beginPath(); ctx.moveTo(vx, hz); ctx.lineTo(vx + (bx - wd - vx) * rp, y1); ctx.lineTo(vx + (bx + wd - vx) * rp, y1); ctx.fill();
+    }
+  }
+  ctx.fillStyle = 'rgba(255,216,160,.35)'; ctx.fillRect(0, hz, W, 1);
+  ctx.fillStyle = '#ffd9a6';
+  for (const d of CINE_DUST) {  // dust motes: the fastest parallax layer
+    ctx.globalAlpha = .28 * dawn * (.5 + .5 * Math.sin(t * 1.3 + d.ph));
+    ctx.beginPath(); ctx.arc(((d.x * W + t * d.v * 14) % W + W) % W, hz - d.y * H * .35 + Math.sin(t * .8 + d.ph) * 6, d.r, 0, 6.283); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+};
+CINE.build.cold = box => {
+  const p = el(box, 'p'); p.className = 'cine-type';
+  el(p, 'span', CINE_COLD).className = 'ghost';  // reserves the final size: no layout shift while typing
+  const ty = el(p, 'span'); ty.className = 'typed';
+  const tx = el(ty, 'span'), caret = el(ty, 'span'); caret.className = 'caret';
+  return {frame(local, still) {
+    const k = still ? 1 : clamp01((local - .5) / 3.3);
+    tx.textContent = cineType(CINE_COLD, k);
+    caret.style.opacity = k < 1 || Math.floor(local * 2.2) % 2 ? 1 : 0;
+  }};
+};
+CINE.build.problem = box => {
+  const d = state.data, day = cineDay();
+  cineP(box, 'cine-note cine-static-only', CINE_COLD);
+  const parts = {};
+  if (d) {
+    const t = d.thresholds, T = d.forecast.temp_f, A = d.forecast.aqi, W = Math.max(340, Math.min(1000, innerWidth - 40)), H = Math.max(250, Math.round(W * .4));
+    const X = i => 12 + (W - 24) * i / 95, tB = H * .56, aT = H * .68, aB = H - 8;
+    const lo = Math.min(...T, t.heat_shade_f) - 4, hi = Math.max(...T, t.heat_high_f) + 4, yT = v => 10 + (tB - 10) * (hi - v) / (hi - lo);
+    const aHi = Math.max(...A, t.aqi_smoke_rule) * 1.12, yA = v => aB - (aB - aT) * v / aHi;
+    const svg = sv(box, 'svg', {viewBox: `0 0 ${W} ${H}`, class: 'cine-chart', role: 'img', 'aria-label': 'Forecast temperature and air quality for the day, with the rule thresholds'});
+    const line = (vals, y) => 'M' + vals.map((v, i) => X(i).toFixed(1) + ' ' + y(v).toFixed(1)).join('L');
+    const thr = (y, label, color, parent) => {
+      const g = sv(parent, 'g');
+      const l = sv(g, 'path', {d: `M12 ${y.toFixed(1)}H${W - 12}`, class: 'cine-thr', stroke: color, pathLength: 1});
+      const x = sv(g, 'text', {x: W - 14, y: (y - 7).toFixed(1), 'text-anchor': 'end'}, label);
+      return {l, x};
+    };
+    parts.temp = sv(svg, 'path', {d: line(T, yT), class: 'cine-line', stroke: '#ffb36b', pathLength: 1});
+    parts.t80 = thr(yT(t.heat_shade_f), `${t.heat_shade_f}°F · shade required`, '#ffd8a0', svg);
+    parts.t95 = thr(yT(t.heat_high_f), `${t.heat_high_f}°F · high-heat procedures`, '#ff9a80', svg);
+    parts.lab = sv(svg, 'text', {x: 14, y: 22}, 'Temperature (°F), forecast');
+    parts.aqi = sv(svg, 'g');
+    sv(parts.aqi, 'rect', {x: 0, y: aT - 14, width: W, height: aB - aT + 22, rx: 10, fill: 'rgba(169,150,245,.16)'});
+    sv(parts.aqi, 'path', {d: line(A, yA), fill: 'none', stroke: '#c3b5ff', 'stroke-width': 2.5, 'stroke-linejoin': 'round'});
+    const sm = thr(yA(t.aqi_smoke_rule), `AQI ${t.aqi_smoke_rule} · wildfire smoke rule`, '#cbbcff', parts.aqi);
+    sm.l.style.strokeDashoffset = 0;
+    sv(parts.aqi, 'text', {x: 14, y: aT + 4}, 'Air quality (AQI), forecast');
+  }
+  cineKin(box, 'h2', 'cine-h cine-h-sm', 'Heat and smoke rules trigger at thresholds.', .3);
+  cineKin(box, 'p', 'cine-sub', 'They don\u2019t help rebuild the shift.', 4.2);
+  if (d && day) { const c = cineP(box, 'cine-chip', `${day.label} · ${cineProv(day)}`, 1.2); c.style.display = 'inline-block'; }
+  const rz = cineRise(box);
+  return {partial: !d, frame(local, still) {
+    rz(local, still);
+    if (!d) return;
+    const f = (a, dur) => still ? 1 : easeOut((local - a) / dur);
+    parts.temp.style.strokeDashoffset = 1 - (still ? 1 : easeInOut((local - .2) / 3));
+    parts.t80.l.style.strokeDashoffset = 1 - f(1.2, .9); parts.t80.x.style.opacity = f(1.7, .5);
+    parts.t95.l.style.strokeDashoffset = 1 - f(2, .9); parts.t95.x.style.opacity = f(2.5, .5);
+    const a = f(3, 1.2);
+    parts.aqi.setAttribute('transform', `translate(${((1 - a) * 140).toFixed(1)} 0)`); parts.aqi.style.opacity = a;
+  }};
+};
+CINE.build.idea = box => {
+  const d = state.data;
+  const m = sv(box, 'svg', {viewBox: '0 0 64 64', class: 'cine-mark', 'aria-hidden': 'true'});
+  m.innerHTML = '<defs><clipPath id="cine-clip"><rect width="64" height="64" rx="14"/></clipPath></defs><g clip-path="url(#cine-clip)">' +
+    '<rect class="m-sky" width="64" height="64" fill="url(#mk-sky)"/><path class="m-sun" d="M13 41a19 19 0 0 1 38 0z" fill="url(#mk-sun)"/>' +
+    '<rect class="m-haze" y="36.5" width="64" height="5.5" fill="url(#mk-haze)"/><rect y="42" width="64" height="22" fill="url(#mk-field)"/>' +
+    '<path class="m-rows" d="M32 42-12 64H-1ZM32 42 9 64H18ZM32 42 27.5 64H36.5ZM32 42 46 64H55ZM32 42 65 64H76Z" fill="url(#mk-rows)"/></g>';
+  const [sky, sun, haze, rows] = ['.m-sky', '.m-sun', '.m-haze', '.m-rows'].map(c => m.querySelector(c));
+  const word = el(box, 'h2'); word.className = 'cine-word'; word.setAttribute('aria-label', 'Madrugada');
+  [...'Madrugada'].forEach((c, k) => { const sp = el(word, 'span', c); sp.className = 'w'; sp.dataset.at = (1 + k * .06).toFixed(2); sp.setAttribute('aria-hidden', 'true'); });
+  cineP(box, 'cine-sub', 'Same hours. Smarter dawn.', 1.9);
+  const parts = {};
+  if (d) {
+    const B = d.plans.B1.blocks, O = d.plans.optimizer.blocks, all = [...B, ...O].flatMap(b => [cineMins(b.start), cineMins(b.end)]);
+    const a0 = Math.floor(Math.min(...all) / 60 - 1) * 60, a1 = Math.ceil(Math.max(...all) / 60 + 1) * 60, pct = x => 100 * (x - a0) / (a1 - a0);
+    const wrap = el(box, 'div'); wrap.className = 'cine-shift'; wrap.dataset.at = 2.6;
+    const track = el(wrap, 'div'); track.className = 'cine-track';
+    const axis = el(wrap, 'div'); axis.className = 'cine-axis';
+    for (let h = a0 / 60; h <= a1 / 60; h += 2) { const sp = el(axis, 'span', hourLabel(h)); sp.style.left = pct(h * 60) + '%'; }
+    const span = b => [cineMins(b.start), cineMins(b.end)];
+    parts.blocks = Array.from({length: Math.max(B.length, O.length)}, (_, k) => {
+      const to = O[k] ? span(O[k]) : [span(B[k])[1], span(B[k])[1]], from = B[k] ? span(B[k]) : [to[0], to[0]];
+      const b = el(track, 'div'); b.className = 'cine-block'; return {b, from, to};
+    });
+    parts.pct = pct;
+    parts.lab = el(wrap, 'p'); parts.lab.className = 'cine-shift-lab';
+    parts.text = [`Fixed shift ${cineBlocks(B)}`, `Planned from the forecast: ${cineBlocks(O)}`];
+    const paid = O.reduce((n, b) => n + (cineMins(b.end) - cineMins(b.start)) / 60, 0);
+    cineP(wrap, 'cine-paid', `${+paid.toFixed(2)} paid hours · same paid hours, different clock`);
+  }
+  const rz = cineRise(box);
+  return {partial: !d, frame(local, still) {
+    rz(local, still);
+    const f = (a, dur) => still ? 1 : easeOut((local - a) / dur);
+    sky.style.opacity = f(0, .5); sun.setAttribute('transform', `translate(0 ${((1 - f(.2, .9)) * 16).toFixed(2)})`);
+    haze.style.opacity = f(.6, .5); rows.setAttribute('transform', `translate(0 42) scale(1 ${Math.max(.001, f(.5, .8)).toFixed(3)}) translate(0 -42)`);
+    word.style.letterSpacing = (.06 + (1 - f(1, 1.2)) * .4).toFixed(3) + 'em';
+    if (!d) return;
+    const k = still ? 1 : easeInOut((local - 3.3) / 1.6);
+    for (const {b, from, to} of parts.blocks) {
+      const x0 = from[0] + (to[0] - from[0]) * k, x1 = from[1] + (to[1] - from[1]) * k;
+      b.style.left = parts.pct(x0) + '%'; b.style.width = Math.max(0, parts.pct(x1) - parts.pct(x0)) + '%';
+    }
+    parts.lab.textContent = parts.text[k < .5 ? 0 : 1];
+  }};
+};
+CINE.build.test = box => {
+  const ev = state.ev, w1 = ev && ev.st && ev.st.window1, d = state.data, H95 = 'hours_ge_95f';
+  cineP(box, 'cine-eyebrow', 'The test', .1);
+  cineKin(box, 'h2', 'cine-h cine-h-sm', 'Move the earliest start later. Watch the benefit.', .2, .05);
+  if (!w1 || !ev.r1 || !ev.r1.available) { cineP(box, 'cine-sub', 'Real-data results are not available.', .8); return {partial: true, frame: cineRise(box)}; }
+  const keys = Object.keys(w1.settings).filter(k => /^\d\d:\d\d$/.test(k)), C = keys.map(k => w1.settings[k].groups.overall.optimizer_vs_B2), n = keys.length;
+  const dial = sv(box, 'svg', {viewBox: '0 0 400 214', class: 'cine-dial', role: 'img', 'aria-label': 'Earliest start time, moving later across a sunrise arc'});
+  sv(dial, 'path', {d: 'M40 196A160 160 0 0 1 360 196', fill: 'none', stroke: 'rgba(255,255,255,.28)', 'stroke-width': 3});
+  const pt = (j, r = 160) => { const a = Math.PI * (1 - j / (n - 1)); return [200 + r * Math.cos(a), 196 - r * Math.sin(a)]; };
+  keys.forEach((k, j) => {
+    const [x, y] = pt(j), [lx, ly] = pt(j, 184);
+    sv(dial, 'circle', {cx: x, cy: y, r: 4, fill: '#f7f2ea'});
+    sv(dial, 'text', {x: lx, y: ly + 5, 'text-anchor': 'middle'}, hhmm12(k).replace(':00', ''));
+  });
+  const sun = sv(dial, 'circle', {r: 13, fill: '#ffb35c', stroke: '#ffe2b0', 'stroke-width': 2});
+  const startLab = cineP(box, 'cine-eyebrow', '', .6);
+  const num = el(box, 'p'); num.className = 'cine-num'; num.dataset.at = .8;
+  const val = el(num, 'span'); val.className = 'cine-flip'; el(num, 'span', 'h/day').className = 'cine-unit';
+  const lo = Math.min(0, ...C.map(c => c.ci95[H95][0])), hi = Math.max(0, ...C.map(c => c.ci95[H95][1])), pad = (hi - lo) * .12;
+  const xp = v => 100 * (v - lo + pad) / (hi - lo + 2 * pad);
+  const ci = el(box, 'div'); ci.className = 'cine-ci'; ci.dataset.at = 1;
+  el(ci, 'i').className = 'axis'; const z = el(ci, 'i'); z.className = 'zero'; z.style.left = xp(0) + '%';
+  const band = el(ci, 'i'); band.className = 'band'; const dot = el(ci, 'i'); dot.className = 'dot';
+  const ciLab = cineP(box, 'cine-note', '', 1);
+  const b2 = d ? hhmm12(d.plans.B2.blocks[0].start) : 'early';
+  cineP(box, 'cine-note', `Change in hours at or above ${cineHiF()} per day, optimizer vs the fixed ${b2} shift · window 1 · exploratory, post-hoc`, 1.2);
+  const verdict = cineP(box, 'cine-sub', `Earliest start ${hhmm12(keys[n - 1])}: ${startVerdict(C[n - 1])}.`, 6.5);
+  verdict.style.color = '#ffd27a';
+  const r2 = ev.r2 && ev.r2.available && ev.r2.n_days.real_cached ? ev.r2.n_days.real_cached : 0, fmt = v => v.toLocaleString('en-US');
+  cineP(box, 'cine-chip', r2 ? `Real data. Two preregistered windows. ${fmt(ev.r1.n_days.real_cached)} and ${fmt(r2)} region-days.`
+    : `Real data. One preregistered window. ${fmt(ev.r1.n_days.real_cached)} region-days.`, 1.4).style.display = 'inline-block';
+  const rz = cineRise(box);
+  let shown = -1;
+  return {partial: !d, frame(local, still) {
+    rz(local, still);
+    const pos = still ? n - 1 : clamp01((local - 1) / 5) * (n - 1), j = Math.min(n - 1, Math.floor(pos + 1e-6));
+    const [x, y] = pt(pos); sun.setAttribute('cx', x.toFixed(1)); sun.setAttribute('cy', y.toFixed(1));
+    if (j !== shown) {  // numbers snap to real settings (never in-between values); the flip is only visual
+      shown = j; const c = C[j];
+      val.textContent = sgn(c.mean_diff[H95], 2) + ' ';
+      startLab.textContent = `Earliest start ${hhmm12(keys[j])}`;
+      band.style.left = xp(c.ci95[H95][0]) + '%'; band.style.width = (xp(c.ci95[H95][1]) - xp(c.ci95[H95][0])) + '%'; dot.style.left = xp(c.mean_diff[H95]) + '%';
+      ciLab.textContent = `95% CI ${sgn(c.ci95[H95][0], 3)} to ${sgn(c.ci95[H95][1], 3)} h/day (zero marked)`;
+      if (!still) { val.style.opacity = 0; val.style.transform = 'translateY(10px)'; requestAnimationFrame(() => { val.style.opacity = 1; val.style.transform = ''; }); }
+    }
+  }};
+};
+CINE.build.honest = box => {
+  const ev = state.ev, P = ev && storyParts(ev.r1, ev.r2, ev.st), hi = cineHiF();
+  cineP(box, 'cine-eyebrow', 'The honest part · does shifting hours reduce heat exposure?', .1);
+  if (!P) { cineP(box, 'cine-sub', 'Real-data results are not available.', .6); return {partial: !ev, frame: cineRise(box)}; }
+  const b2 = state.data ? `the fixed ${hhmm12(state.data.plans.B2.blocks[0].start)} shift` : 'the fixed early shift';
+  const beats = [
+    [P.heat + '.', `At or above ${hi}, vs ${b2}, window 1: ${P.w(P.c1.optimizer_vs_B2)}.`],
+    [P.replicated ? 'Replicated in both preregistered windows.' : P.c2 ? 'Window 2 does not replicate it.' : 'Window 2 is not available.',
+      P.c2 ? `Window 2: ${P.w(P.c2.optimizer_vs_B2)}. Each window keeps its own 95% CI; never pooled.` : ''],
+    [`Smoke: ${P.vsB3}.`, `Window 2 shows a ${P.smokeW2.replace(/ vs the early fixed shift in window 2/, ' vs the early fixed shift')}.`.replace('shows a no clear', 'shows no clear')],
+  ].map(([h, p], k) => { const b = el(box, 'div'); b.className = 'cine-beat'; b.dataset.at = (.4 + k * 2.2).toFixed(1); el(b, 'h3', h); if (p) el(b, 'p', p); return b; });
+  cineP(box, 'cine-note', 'Modeled exposure-hours. Earliest-start results are exploratory.', 6);
+  const rz = cineRise(box);
+  return {frame(local, still) {
+    rz(local, still);
+    beats.forEach((b, k) => { if (!still && k < beats.length - 1 && local > .4 + (k + 1) * 2.2) b.style.opacity = Math.min(+b.style.opacity, .62); });
+  }};
+};
+CINE.build.cantfix = box => {
+  const u = state.unfix, day = cineDay(), hi = cineHiF();
+  cineKin(box, 'h2', 'cine-h cine-h-sm', 'What scheduling can\u2019t fix', .1);
+  if (!u || u.error) { cineP(box, 'cine-sub', 'Not available for this day' + (u && u.error ? ': ' + u.error : '.'), .6); return {partial: !u, frame: cineRise(box)}; }
+  const h = u.hours_ge_95f.planned, frac = u.paid_hours ? Math.min(1, h / u.paid_hours) : 0;
+  const meter = el(box, 'div'); meter.className = 'cine-meter'; meter.dataset.at = .4; meter.setAttribute('role', 'img');
+  meter.setAttribute('aria-label', `${h} of ${u.paid_hours} paid hours at or above ${hi}`);
+  const fill = el(meter, 'span');
+  const lab = el(box, 'div'); lab.className = 'cine-meter-lab'; lab.dataset.at = .4; el(lab, 'span', '0 h'); el(lab, 'span', `${u.paid_hours} paid hours`);
+  const num = el(box, 'p'); num.className = 'cine-num'; num.dataset.at = 2; el(num, 'span', String(h)); el(num, 'span', 'h').className = 'cine-unit';
+  cineP(box, 'cine-note', `Modeled exposure-hours at or above ${hi} left in the best plan starting no earlier than first light (${hhmm12(u.first_light_start)})` +
+    (day ? ` · ${day.label}` : '') + ' · forecast-based estimate', 2.2);
+  cineKin(box, 'p', 'cine-sub', u.line, 2.8, .05).style.color = '#ffd27a';
+  const rz = cineRise(box);
+  return {frame(local, still) { rz(local, still); fill.style.transform = `scaleX(${((still ? 1 : easeInOut((local - .6) / 1.4)) * frac).toFixed(4)})`; }};
+};
+CINE.build.limits = box => {
+  const m = sv(box, 'svg', {viewBox: '0 0 64 64', class: 'cine-mark', 'aria-hidden': 'true'}); sv(m, 'use', {href: '#mark'}); m.dataset.at = .1;
+  cineP(box, 'cine-quiet', 'Modeled exposure-hours. Airport weather, nearby monitors, no worker input yet.', .3);
+  cineP(box, 'cine-quiet', 'Advisory aid; does not replace the written Cal/OSHA plan.', 1.2);
+  cineP(box, 'cine-note', 'Data: IEM ASOS airport weather and U.S. EPA AirData PM2.5.', 1.9);
+  const go = el(box, 'button', 'Enter Madrugada'); go.type = 'button'; go.className = 'cine-enter'; go.dataset.a = 'skip'; go.dataset.at = 3;
+  return {frame: cineRise(box)};
+};
 // @leave
 startCinema(CINE.mode);
 </script>
