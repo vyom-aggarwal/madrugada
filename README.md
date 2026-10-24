@@ -13,10 +13,11 @@ employer's written Cal/OSHA Heat Illness Prevention Plan. Water, shade and rest 
 python tasks.py setup      # install requirements (+ httpx for tests)
 python tasks.py test       # pytest -x -q
 python tasks.py demo       # eval -> snapshot -> server at http://127.0.0.1:8000/
-python tasks.py real       # real CIMIS + AirNow job; needs CIMIS_APPKEY and AIRNOW_KEY
+python tasks.py real       # CIMIS + AirNow if both keys are set, else keyless IEM ASOS + EPA AirData
 ```
 `python tasks.py eval` and `python tasks.py snapshot` run those steps alone. If an API call fails in
-the browser, the page falls back to `static/snapshot.json` ("SNAPSHOT MODE: sliders disabled").
+the browser, the page falls back to the generated `static/snapshot.json` ("SNAPSHOT MODE: sliders disabled").
+The real eval runs only if `eval/PREREGISTRATION.md` hashes match the code and config.
 
 ## Provenance rules
 - Every day is `synthetic` or `real_cached`, shown as a badge on every view. All days are replays
@@ -27,6 +28,7 @@ the browser, the page falls back to `static/snapshot.json` ("SNAPSHOT MODE: slid
 
 ## Limitations
 - Station-level data, not field microclimate. Direct sun load adds heat that air temperature misses.
+  The keyless path uses airport (ASOS) temperature and a PM2.5 monitor that may be miles away.
 - Outputs are modeled exposure-hours only, not health outcomes.
 - The forecast is a simple proxy: 0.5 x yesterday + 0.5 x the mean of the prior 7 days.
 - The PurpleAir PM2.5 correction underestimates above about 250 ug/m3. PurpleAir is not used in the evaluation.

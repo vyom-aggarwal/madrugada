@@ -4,3 +4,4 @@ __pycache__/
 .venv/
 data/cache/*
 !data/cache/.gitkeep
+static/snapshot.json

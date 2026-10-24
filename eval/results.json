@@ -4,6 +4,8 @@
   "synthetic": 13,
   "real_cached": 0
  },
+ "real_status": "insufficient real days (0 < 20); not evaluated",
+ "n_real_available": 0,
  "real_days_sufficient": false,
  "group_labels": {
   "synthetic": "SYNTHETIC, NOT EVIDENCE",
@@ -21,7 +23,9 @@
   "primary_outcome": "physical dominance: win = no more hours >=95F and no more AQI>=101 hours and strictly less on at least one; loss = the reverse; tie = all physical metrics within 0.125 h; otherwise mixed",
   "secondary_outcome": "uses the optimizer's own cost: win/loss by observed weighted cost; tie also needs cost within 1e-06; mixed = equal cost, different physical metrics",
   "difference": "challenger minus baseline; negative = fewer modeled exposure-hours or lower cost",
-  "robust": "compared only on days where it did not fall back; fallback days listed separately",
+  "robust": "compared only on days where it did not fall back, and with the optimizer on those same days",
+  "ci": "synthetic: paired bootstrap over days; real: cluster bootstrap over calendar dates",
+  "nowcast": "SECONDARY, observed only: hours at NowCast AQI >= 101 / 151 (unverified NowCast); planning uses hourly values",
   "strata": {
    "heat_temp_f": 95,
    "smoke_aqi": 101
@@ -44,9 +48,11 @@
   "synthetic": {
    "overall": {
     "n": 13,
+    "n_dates": 13,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 7,
        "tie": 1,
@@ -78,10 +84,12 @@
         -10.0769
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_B2": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 5,
        "tie": 1,
@@ -113,10 +121,12 @@
         -2.3077
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_early": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 0,
        "tie": 11,
@@ -148,10 +158,12 @@
         6.0
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_late": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 0,
        "tie": 11,
@@ -183,10 +195,12 @@
         6.0
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B1": {
       "n": 6,
+      "n_dates": 6,
       "physical": {
        "win": 3,
        "tie": 1,
@@ -205,10 +219,12 @@
        "observed_cost": -19.6667
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B2": {
       "n": 6,
+      "n_dates": 6,
       "physical": {
        "win": 2,
        "tie": 1,
@@ -227,10 +243,12 @@
        "observed_cost": -7.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_early": {
       "n": 6,
+      "n_dates": 6,
       "physical": {
        "win": 0,
        "tie": 4,
@@ -249,10 +267,12 @@
        "observed_cost": 3.3333
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_late": {
       "n": 6,
+      "n_dates": 6,
       "physical": {
        "win": 0,
        "tie": 4,
@@ -271,10 +291,12 @@
        "observed_cost": 3.3333
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B1": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 7,
        "tie": 1,
@@ -306,10 +328,12 @@
         -16.3077
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B2": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 8,
        "tie": 2,
@@ -341,10 +365,12 @@
         -8.6135
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_early": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 3,
        "tie": 9,
@@ -376,10 +402,12 @@
         -0.1538
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_late": {
       "n": 13,
+      "n_dates": 13,
       "physical": {
        "win": 3,
        "tie": 9,
@@ -411,15 +439,138 @@
         -0.1538
        ]
       },
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "paired bootstrap"
+     },
+     "robust_vs_optimizer": {
+      "n": 6,
+      "n_dates": 6,
+      "physical": {
+       "win": 1,
+       "tie": 5,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 1,
+       "tie": 5,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": -0.25,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -2.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 6,
+      "n_dates": 6,
+      "physical": {
+       "win": 3,
+       "tie": 1,
+       "loss": 1,
+       "mixed": 1
+      },
+      "cost": {
+       "win": 3,
+       "tie": 1,
+       "loss": 2,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": -0.5833,
+       "hours_aqi_ge_101": 0.3333,
+       "observed_cost": -17.6667
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 6,
+      "n_dates": 6,
+      "physical": {
+       "win": 1,
+       "tie": 1,
+       "loss": 3,
+       "mixed": 1
+      },
+      "cost": {
+       "win": 2,
+       "tie": 1,
+       "loss": 2,
+       "mixed": 1
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.1667,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -5.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 6,
+      "n_dates": 6,
+      "physical": {
+       "win": 0,
+       "tie": 4,
+       "loss": 2,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 4,
+       "loss": 2,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.6667,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 5.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 6,
+      "n_dates": 6,
+      "physical": {
+       "win": 0,
+       "tie": 4,
+       "loss": 2,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 4,
+       "loss": 2,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.6667,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 5.3333
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      }
     }
    },
    "heat_only": {
     "n": 4,
+    "n_dates": 4,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 3,
        "tie": 0,
@@ -438,10 +589,12 @@
        "observed_cost": -24.5
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_B2": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -460,10 +613,12 @@
        "observed_cost": -9.5
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_early": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -482,10 +637,12 @@
        "observed_cost": 4.5
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_late": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -504,10 +661,12 @@
        "observed_cost": 4.5
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B1": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 1,
        "tie": 0,
@@ -526,10 +685,12 @@
        "observed_cost": -30.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B2": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 1,
        "tie": 0,
@@ -548,10 +709,12 @@
        "observed_cost": -12.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_early": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -570,10 +733,12 @@
        "observed_cost": 6.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_late": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -592,10 +757,12 @@
        "observed_cost": 6.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B1": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 3,
        "tie": 0,
@@ -614,10 +781,12 @@
        "observed_cost": -29.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B2": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 3,
        "tie": 0,
@@ -636,10 +805,12 @@
        "observed_cost": -14.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_early": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 0,
        "tie": 4,
@@ -658,10 +829,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_late": {
       "n": 4,
+      "n_dates": 4,
       "physical": {
        "win": 0,
        "tie": 4,
@@ -680,15 +853,138 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "robust_vs_optimizer": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 1,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 1,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": -1.5,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -12.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 1,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 1,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": -0.75,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -18.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 1
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.75,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 2.25,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 18.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 2.25,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 18.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      }
     }
    },
    "smoke_only": {
     "n": 3,
+    "n_dates": 3,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -707,10 +1003,12 @@
        "observed_cost": -22.3333
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_B2": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -729,10 +1027,12 @@
        "observed_cost": -10.6667
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_early": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -751,10 +1051,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_late": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -773,10 +1075,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B1": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 1,
        "tie": 0,
@@ -795,10 +1099,12 @@
        "observed_cost": -10.5
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B2": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 1,
        "tie": 0,
@@ -817,10 +1123,12 @@
        "observed_cost": -4.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_early": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 0,
        "tie": 2,
@@ -839,10 +1147,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_late": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 0,
        "tie": 2,
@@ -861,10 +1171,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B1": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -883,10 +1195,12 @@
        "observed_cost": -38.3333
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B2": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 3,
        "tie": 0,
@@ -905,10 +1219,12 @@
        "observed_cost": -26.6667
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_early": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -927,10 +1243,12 @@
        "observed_cost": -16.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_late": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -949,15 +1267,138 @@
        "observed_cost": -16.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "robust_vs_optimizer": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 1,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 1,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.625,
+       "observed_cost": -10.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 1,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 1,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -4.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      }
     }
    },
    "co_occurring": {
     "n": 3,
+    "n_dates": 3,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -976,10 +1417,12 @@
        "observed_cost": -40.3333
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_B2": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 1,
        "tie": 0,
@@ -998,10 +1441,12 @@
        "observed_cost": -13.3333
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_early": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 2,
@@ -1020,10 +1465,12 @@
        "observed_cost": 4.6667
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_late": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 2,
@@ -1042,10 +1489,12 @@
        "observed_cost": 4.6667
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B1": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 1,
        "tie": 0,
@@ -1064,10 +1513,12 @@
        "observed_cost": -33.5
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B2": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1086,10 +1537,12 @@
        "observed_cost": -11.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_early": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1108,10 +1561,12 @@
        "observed_cost": 7.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_late": {
       "n": 2,
+      "n_dates": 2,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1130,10 +1585,12 @@
        "observed_cost": 7.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B1": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 0,
@@ -1152,10 +1609,12 @@
        "observed_cost": -49.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B2": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 2,
        "tie": 1,
@@ -1174,10 +1633,12 @@
        "observed_cost": -22.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_early": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 1,
        "tie": 2,
@@ -1196,10 +1657,12 @@
        "observed_cost": -4.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_late": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 1,
        "tie": 2,
@@ -1218,15 +1681,138 @@
        "observed_cost": -4.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "robust_vs_optimizer": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 2,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 1,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 1
+      },
+      "cost": {
+       "win": 1,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": -1.375,
+       "hours_aqi_ge_101": 0.375,
+       "observed_cost": -33.5
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 1
+      },
+      "cost": {
+       "win": 1,
+       "tie": 0,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.125,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": -11.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 0,
+       "tie": 1,
+       "loss": 1,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 1,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.875,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 7.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 2,
+      "n_dates": 2,
+      "physical": {
+       "win": 0,
+       "tie": 1,
+       "loss": 1,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 1,
+       "loss": 1,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.875,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 7.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      }
     }
    },
    "mild": {
     "n": 3,
+    "n_dates": 3,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1245,10 +1831,12 @@
        "observed_cost": -8.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_B2": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1267,10 +1855,12 @@
        "observed_cost": -4.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_early": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -1289,10 +1879,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "optimizer_vs_b3_late": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -1311,10 +1903,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B1": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1333,10 +1927,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_B2": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1355,10 +1951,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_early": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1377,10 +1975,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "robust_vs_b3_late": {
       "n": 1,
+      "n_dates": 1,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1399,10 +1999,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B1": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1421,10 +2023,12 @@
        "observed_cost": -8.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_B2": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 1,
@@ -1443,10 +2047,12 @@
        "observed_cost": -4.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_early": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -1465,10 +2071,12 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      },
      "oracle_vs_b3_late": {
       "n": 3,
+      "n_dates": 3,
       "physical": {
        "win": 0,
        "tie": 3,
@@ -1487,7 +2095,128 @@
        "observed_cost": 0.0
       },
       "ci95": null,
-      "ci_note": "n too small for CIs"
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "robust_vs_optimizer": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 1,
+      "n_dates": 1,
+      "physical": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 1,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {
+       "hours_ge_95f": 0.0,
+       "hours_aqi_ge_101": 0.0,
+       "observed_cost": 0.0
+      },
+      "ci95": null,
+      "ci_note": "n too small for CIs",
+      "ci_method": "paired bootstrap"
      }
     }
    }
@@ -1495,9 +2224,11 @@
   "real_cached": {
    "overall": {
     "n": 0,
+    "n_dates": 0,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1512,10 +2243,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1530,10 +2263,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1548,10 +2283,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1566,10 +2303,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1584,10 +2323,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1602,10 +2343,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1620,10 +2363,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1638,10 +2383,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1656,10 +2403,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1674,10 +2423,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1692,10 +2443,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1710,15 +2463,118 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "robust_vs_optimizer": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      }
     }
    },
    "heat_only": {
     "n": 0,
+    "n_dates": 0,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1733,10 +2589,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1751,10 +2609,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1769,10 +2629,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1787,10 +2649,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1805,10 +2669,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1823,10 +2689,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1841,10 +2709,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1859,10 +2729,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1877,10 +2749,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1895,10 +2769,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1913,10 +2789,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1931,15 +2809,118 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "robust_vs_optimizer": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      }
     }
    },
    "smoke_only": {
     "n": 0,
+    "n_dates": 0,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1954,10 +2935,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1972,10 +2955,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -1990,10 +2975,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2008,10 +2995,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2026,10 +3015,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2044,10 +3035,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2062,10 +3055,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2080,10 +3075,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2098,10 +3095,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2116,10 +3115,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2134,10 +3135,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2152,15 +3155,118 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "robust_vs_optimizer": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      }
     }
    },
    "co_occurring": {
     "n": 0,
+    "n_dates": 0,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2175,10 +3281,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2193,10 +3301,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2211,10 +3321,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2229,10 +3341,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2247,10 +3361,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2265,10 +3381,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2283,10 +3401,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2301,10 +3421,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2319,10 +3441,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2337,10 +3461,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2355,10 +3481,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2373,15 +3501,118 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "robust_vs_optimizer": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      }
     }
    },
    "mild": {
     "n": 0,
+    "n_dates": 0,
     "comparisons": {
      "optimizer_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2396,10 +3627,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2414,10 +3647,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2432,10 +3667,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "optimizer_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2450,10 +3687,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2468,10 +3707,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2486,10 +3727,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2504,10 +3747,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "robust_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2522,10 +3767,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B1": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2540,10 +3787,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_B2": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2558,10 +3807,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_early": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2576,10 +3827,12 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      },
      "oracle_vs_b3_late": {
       "n": 0,
+      "n_dates": 0,
       "physical": {
        "win": 0,
        "tie": 0,
@@ -2594,7 +3847,108 @@
       },
       "mean_diff": {},
       "ci95": null,
-      "ci_note": null
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "robust_vs_optimizer": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B1": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_B2": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_early": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
+     },
+     "optimizer_on_robust_days_vs_b3_late": {
+      "n": 0,
+      "n_dates": 0,
+      "physical": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "cost": {
+       "win": 0,
+       "tie": 0,
+       "loss": 0,
+       "mixed": 0
+      },
+      "mean_diff": {},
+      "ci95": null,
+      "ci_note": null,
+      "ci_method": "cluster bootstrap over dates"
      }
     }
    }
@@ -3157,17 +4511,527 @@
    }
   }
  },
+ "nowcast": {
+  "synthetic": {
+   "overall": {
+    "n": 13,
+    "optimizer": {
+     "hours_aqi_ge_101": 2.0,
+     "nowcast_hours_aqi_ge_101": 2.0385,
+     "hours_aqi_ge_151": 1.3846,
+     "nowcast_hours_aqi_ge_151": 1.2692
+    },
+    "robust": {
+     "hours_aqi_ge_101": 2.0,
+     "nowcast_hours_aqi_ge_101": 2.0385,
+     "hours_aqi_ge_151": 1.3846,
+     "nowcast_hours_aqi_ge_151": 1.2692
+    },
+    "oracle": {
+     "hours_aqi_ge_101": 1.4808,
+     "nowcast_hours_aqi_ge_101": 1.5962,
+     "hours_aqi_ge_151": 0.8462,
+     "nowcast_hours_aqi_ge_151": 0.8654
+    },
+    "B1": {
+     "hours_aqi_ge_101": 2.2308,
+     "nowcast_hours_aqi_ge_101": 2.3077,
+     "hours_aqi_ge_151": 1.5577,
+     "nowcast_hours_aqi_ge_151": 1.4615
+    },
+    "B2": {
+     "hours_aqi_ge_101": 2.1538,
+     "nowcast_hours_aqi_ge_101": 2.1538,
+     "hours_aqi_ge_151": 1.5,
+     "nowcast_hours_aqi_ge_151": 1.3846
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": 2.0,
+     "nowcast_hours_aqi_ge_101": 2.0385,
+     "hours_aqi_ge_151": 1.3846,
+     "nowcast_hours_aqi_ge_151": 1.2692
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": 2.0,
+     "nowcast_hours_aqi_ge_101": 2.0385,
+     "hours_aqi_ge_151": 1.3846,
+     "nowcast_hours_aqi_ge_151": 1.2692
+    }
+   },
+   "heat_only": {
+    "n": 4,
+    "optimizer": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "robust": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "oracle": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "B1": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "B2": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    }
+   },
+   "smoke_only": {
+    "n": 3,
+    "optimizer": {
+     "hours_aqi_ge_101": 4.9167,
+     "nowcast_hours_aqi_ge_101": 4.6667,
+     "hours_aqi_ge_151": 3.4167,
+     "nowcast_hours_aqi_ge_151": 2.6667
+    },
+    "robust": {
+     "hours_aqi_ge_101": 4.9167,
+     "nowcast_hours_aqi_ge_101": 4.6667,
+     "hours_aqi_ge_151": 3.4167,
+     "nowcast_hours_aqi_ge_151": 2.6667
+    },
+    "oracle": {
+     "hours_aqi_ge_101": 3.1667,
+     "nowcast_hours_aqi_ge_101": 3.25,
+     "hours_aqi_ge_151": 1.5833,
+     "nowcast_hours_aqi_ge_151": 1.4167
+    },
+    "B1": {
+     "hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_101": 5.6667,
+     "hours_aqi_ge_151": 4.1667,
+     "nowcast_hours_aqi_ge_151": 3.5
+    },
+    "B2": {
+     "hours_aqi_ge_101": 5.4167,
+     "nowcast_hours_aqi_ge_101": 5.1667,
+     "hours_aqi_ge_151": 3.9167,
+     "nowcast_hours_aqi_ge_151": 3.1667
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": 4.9167,
+     "nowcast_hours_aqi_ge_101": 4.6667,
+     "hours_aqi_ge_151": 3.4167,
+     "nowcast_hours_aqi_ge_151": 2.6667
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": 4.9167,
+     "nowcast_hours_aqi_ge_101": 4.6667,
+     "hours_aqi_ge_151": 3.4167,
+     "nowcast_hours_aqi_ge_151": 2.6667
+    }
+   },
+   "co_occurring": {
+    "n": 3,
+    "optimizer": {
+     "hours_aqi_ge_101": 3.75,
+     "nowcast_hours_aqi_ge_101": 4.1667,
+     "hours_aqi_ge_151": 2.5833,
+     "nowcast_hours_aqi_ge_151": 2.8333
+    },
+    "robust": {
+     "hours_aqi_ge_101": 3.75,
+     "nowcast_hours_aqi_ge_101": 4.1667,
+     "hours_aqi_ge_151": 2.5833,
+     "nowcast_hours_aqi_ge_151": 2.8333
+    },
+    "oracle": {
+     "hours_aqi_ge_101": 3.25,
+     "nowcast_hours_aqi_ge_101": 3.6667,
+     "hours_aqi_ge_151": 2.0833,
+     "nowcast_hours_aqi_ge_151": 2.3333
+    },
+    "B1": {
+     "hours_aqi_ge_101": 4.1667,
+     "nowcast_hours_aqi_ge_101": 4.3333,
+     "hours_aqi_ge_151": 2.5833,
+     "nowcast_hours_aqi_ge_151": 2.8333
+    },
+    "B2": {
+     "hours_aqi_ge_101": 3.9167,
+     "nowcast_hours_aqi_ge_101": 4.1667,
+     "hours_aqi_ge_151": 2.5833,
+     "nowcast_hours_aqi_ge_151": 2.8333
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": 3.75,
+     "nowcast_hours_aqi_ge_101": 4.1667,
+     "hours_aqi_ge_151": 2.5833,
+     "nowcast_hours_aqi_ge_151": 2.8333
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": 3.75,
+     "nowcast_hours_aqi_ge_101": 4.1667,
+     "hours_aqi_ge_151": 2.5833,
+     "nowcast_hours_aqi_ge_151": 2.8333
+    }
+   },
+   "mild": {
+    "n": 3,
+    "optimizer": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "robust": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "oracle": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "B1": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "B2": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "hours_aqi_ge_151": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
+    }
+   }
+  },
+  "real_cached": {
+   "overall": {
+    "n": 0,
+    "optimizer": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "robust": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "oracle": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B1": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B2": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    }
+   },
+   "heat_only": {
+    "n": 0,
+    "optimizer": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "robust": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "oracle": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B1": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B2": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    }
+   },
+   "smoke_only": {
+    "n": 0,
+    "optimizer": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "robust": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "oracle": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B1": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B2": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    }
+   },
+   "co_occurring": {
+    "n": 0,
+    "optimizer": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "robust": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "oracle": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B1": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B2": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    }
+   },
+   "mild": {
+    "n": 0,
+    "optimizer": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "robust": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "oracle": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B1": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "B2": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_early": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    },
+    "b3_late": {
+     "hours_aqi_ge_101": null,
+     "nowcast_hours_aqi_ge_101": null,
+     "hours_aqi_ge_151": null,
+     "nowcast_hours_aqi_ge_151": null
+    }
+   }
+  }
+ },
+ "physical_losses_vs_B2": {
+  "synthetic": [
+   {
+    "id": "syn-2025-08-01-heat_only",
+    "stratum": "heat_only",
+    "optimizer_hours_ge_95f": 3.5,
+    "optimizer_hours_aqi_ge_101": 0.0,
+    "optimizer_hours_ge_80f": 5.25,
+    "optimizer_hours_aqi_ge_151": 0.0,
+    "B2_hours_ge_95f": 2.75,
+    "B2_hours_aqi_ge_101": 0.0,
+    "B2_hours_ge_80f": 6.75,
+    "B2_hours_aqi_ge_151": 0.0
+   },
+   {
+    "id": "syn-2025-08-04-early_pm25_peak",
+    "stratum": "smoke_only",
+    "optimizer_hours_ge_95f": 0.0,
+    "optimizer_hours_aqi_ge_101": 3.25,
+    "optimizer_hours_ge_80f": 2.0,
+    "optimizer_hours_aqi_ge_151": 2.25,
+    "B2_hours_ge_95f": 0.0,
+    "B2_hours_aqi_ge_101": 1.75,
+    "B2_hours_ge_80f": 3.5,
+    "B2_hours_aqi_ge_151": 0.75
+   },
+   {
+    "id": "syn-2025-08-06-co_occurring_offset",
+    "stratum": "co_occurring",
+    "optimizer_hours_ge_95f": 0.0,
+    "optimizer_hours_aqi_ge_101": 5.0,
+    "optimizer_hours_ge_80f": 2.5,
+    "optimizer_hours_aqi_ge_151": 4.25,
+    "B2_hours_ge_95f": 0.0,
+    "B2_hours_aqi_ge_101": 3.5,
+    "B2_hours_ge_80f": 4.0,
+    "B2_hours_aqi_ge_151": 2.75
+   }
+  ],
+  "real_cached": []
+ },
+ "real_inventory": {
+  "path": null,
+  "years": {},
+  "sources": {},
+  "used_by_region_year": {},
+  "excluded_by_region_year": {},
+  "excluded_reasons": {},
+  "excluded": []
+ },
+ "effective_sample_size_note": null,
  "days": [
   {
    "id": "syn-2025-07-25-history",
    "date": "2025-07-25",
    "label": "SYNTHETIC: history day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "mild",
    "robust_flags": [
     "robust_fallback_insufficient_history"
    ],
    "robust_uncertainty": null,
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 3.0,
@@ -3179,7 +5043,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 3.0,
@@ -3191,7 +5057,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 3.0,
@@ -3203,7 +5071,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 6.0,
@@ -3215,7 +5085,9 @@
      "observed_cost": 24.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 4.5,
@@ -3227,7 +5099,9 @@
      "observed_cost": 18.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 3.0,
@@ -3239,7 +5113,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 3.0,
@@ -3251,7 +5127,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -3260,11 +5138,14 @@
    "date": "2025-07-26",
    "label": "SYNTHETIC: history day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "mild",
    "robust_flags": [
     "robust_fallback_insufficient_history"
    ],
    "robust_uncertainty": null,
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 2.0,
@@ -3276,7 +5157,9 @@
      "observed_cost": 8.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 2.0,
@@ -3288,7 +5171,9 @@
      "observed_cost": 8.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 2.0,
@@ -3300,7 +5185,9 @@
      "observed_cost": 8.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 5.0,
@@ -3312,7 +5199,9 @@
      "observed_cost": 20.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 3.5,
@@ -3324,7 +5213,9 @@
      "observed_cost": 14.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 2.0,
@@ -3336,7 +5227,9 @@
      "observed_cost": 8.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 2.0,
@@ -3348,7 +5241,9 @@
      "observed_cost": 8.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -3357,11 +5252,14 @@
    "date": "2025-07-27",
    "label": "SYNTHETIC: history day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "heat_only",
    "robust_flags": [
     "robust_fallback_insufficient_history"
    ],
    "robust_uncertainty": null,
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 3.25,
@@ -3373,7 +5271,9 @@
      "observed_cost": 13.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 3.25,
@@ -3385,7 +5285,9 @@
      "observed_cost": 13.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 3.25,
@@ -3397,7 +5299,9 @@
      "observed_cost": 13.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 6.25,
@@ -3409,7 +5313,9 @@
      "observed_cost": 45.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 4.75,
@@ -3421,7 +5327,9 @@
      "observed_cost": 27.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 3.25,
@@ -3433,7 +5341,9 @@
      "observed_cost": 13.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 3.25,
@@ -3445,7 +5355,9 @@
      "observed_cost": 13.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -3454,11 +5366,14 @@
    "date": "2025-07-28",
    "label": "SYNTHETIC: history day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "heat_only",
    "robust_flags": [
     "robust_fallback_insufficient_history"
    ],
    "robust_uncertainty": null,
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 2.5,
@@ -3470,7 +5385,9 @@
      "observed_cost": 10.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 2.5,
@@ -3482,7 +5399,9 @@
      "observed_cost": 10.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 2.5,
@@ -3494,7 +5413,9 @@
      "observed_cost": 10.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 5.5,
@@ -3506,7 +5427,9 @@
      "observed_cost": 22.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 4.0,
@@ -3518,7 +5441,9 @@
      "observed_cost": 16.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 2.5,
@@ -3530,7 +5455,9 @@
      "observed_cost": 10.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 2.5,
@@ -3542,7 +5469,9 @@
      "observed_cost": 10.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -3551,11 +5480,14 @@
    "date": "2025-07-29",
    "label": "SYNTHETIC: history day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "heat_only",
    "robust_flags": [
     "robust_fallback_insufficient_history"
    ],
    "robust_uncertainty": null,
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 4.5,
@@ -3567,7 +5499,9 @@
      "observed_cost": 18.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 4.5,
@@ -3579,7 +5513,9 @@
      "observed_cost": 18.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 4.5,
@@ -3591,7 +5527,9 @@
      "observed_cost": 18.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 7.5,
@@ -3603,7 +5541,9 @@
      "observed_cost": 54.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 6.0,
@@ -3615,7 +5555,9 @@
      "observed_cost": 36.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 4.5,
@@ -3627,7 +5569,9 @@
      "observed_cost": 18.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 4.5,
@@ -3639,7 +5583,9 @@
      "observed_cost": 18.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -3648,11 +5594,14 @@
    "date": "2025-07-30",
    "label": "SYNTHETIC: history day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "co_occurring",
    "robust_flags": [
     "robust_fallback_insufficient_history"
    ],
    "robust_uncertainty": null,
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 3.0,
@@ -3664,7 +5613,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 3.0,
@@ -3676,7 +5627,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 3.0,
@@ -3688,7 +5641,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 6.0,
@@ -3700,7 +5655,9 @@
      "observed_cost": 66.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.5,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 4.5,
@@ -3712,7 +5669,9 @@
      "observed_cost": 30.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 3.0,
@@ -3724,7 +5683,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 3.0,
@@ -3736,7 +5697,9 @@
      "observed_cost": 12.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -3745,11 +5708,14 @@
    "date": "2025-07-31",
    "label": "SYNTHETIC: history day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "smoke_only",
    "robust_flags": [
     "robust_fallback_insufficient_history"
    ],
    "robust_uncertainty": null,
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 1.25,
@@ -3761,7 +5727,9 @@
      "observed_cost": 48.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 3.5,
+     "nowcast_hours_aqi_ge_151": 1.5
     },
     "robust": {
      "hours_ge_80f": 1.25,
@@ -3773,7 +5741,9 @@
      "observed_cost": 48.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 3.5,
+     "nowcast_hours_aqi_ge_151": 1.5
     },
     "oracle": {
      "hours_ge_80f": 3.0,
@@ -3786,7 +5756,9 @@
      "blocks": [
       "04:00-09:30",
       "16:00-19:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 1.5,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 4.25,
@@ -3798,7 +5770,9 @@
      "observed_cost": 94.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 6.5,
+     "nowcast_hours_aqi_ge_151": 4.0
     },
     "B2": {
      "hours_ge_80f": 2.75,
@@ -3810,7 +5784,9 @@
      "observed_cost": 72.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.0,
+     "nowcast_hours_aqi_ge_151": 3.0
     },
     "b3_early": {
      "hours_ge_80f": 1.25,
@@ -3822,7 +5798,9 @@
      "observed_cost": 48.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 3.5,
+     "nowcast_hours_aqi_ge_151": 1.5
     },
     "b3_late": {
      "hours_ge_80f": 1.25,
@@ -3834,7 +5812,9 @@
      "observed_cost": 48.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 3.5,
+     "nowcast_hours_aqi_ge_151": 1.5
     }
    }
   },
@@ -3843,6 +5823,7 @@
    "date": "2025-08-01",
    "label": "SYNTHETIC: hot afternoon, clean air",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "heat_only",
    "robust_flags": [],
    "robust_uncertainty": {
@@ -3856,6 +5837,8 @@
      "p90": 2.5
     }
    },
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 5.25,
@@ -3868,7 +5851,9 @@
      "blocks": [
       "04:00-09:00",
       "14:45-18:15"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 5.25,
@@ -3881,7 +5866,9 @@
      "blocks": [
       "04:00-10:30",
       "17:00-19:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 5.25,
@@ -3893,7 +5880,9 @@
      "observed_cost": 31.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 8.25,
@@ -3905,7 +5894,9 @@
      "observed_cost": 67.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 6.75,
@@ -3917,7 +5908,9 @@
      "observed_cost": 49.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 5.25,
@@ -3929,7 +5922,9 @@
      "observed_cost": 31.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 5.25,
@@ -3941,7 +5936,9 @@
      "observed_cost": 31.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -3950,6 +5947,7 @@
    "date": "2025-08-02",
    "label": "SYNTHETIC: moderate temps, smoke event",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "smoke_only",
    "robust_flags": [],
    "robust_uncertainty": {
@@ -3963,6 +5961,8 @@
      "p90": 1.425
     }
    },
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 0.0,
@@ -3974,7 +5974,9 @@
      "observed_cost": 67.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 3.5
     },
     "robust": {
      "hours_ge_80f": 0.0,
@@ -3986,7 +5988,9 @@
      "observed_cost": 67.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 3.5
     },
     "oracle": {
      "hours_ge_80f": 0.25,
@@ -3999,7 +6003,9 @@
      "blocks": [
       "04:00-10:30",
       "17:00-19:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 3.5
     },
     "B1": {
      "hours_ge_80f": 2.0,
@@ -4011,7 +6017,9 @@
      "observed_cost": 106.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 8.5,
+     "nowcast_hours_aqi_ge_151": 6.5
     },
     "B2": {
      "hours_ge_80f": 0.5,
@@ -4023,7 +6031,9 @@
      "observed_cost": 87.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 7.0,
+     "nowcast_hours_aqi_ge_151": 5.0
     },
     "b3_early": {
      "hours_ge_80f": 0.0,
@@ -4035,7 +6045,9 @@
      "observed_cost": 67.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 3.5
     },
     "b3_late": {
      "hours_ge_80f": 0.0,
@@ -4047,7 +6059,9 @@
      "observed_cost": 67.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 3.5
     }
    }
   },
@@ -4056,6 +6070,7 @@
    "date": "2025-08-03",
    "label": "SYNTHETIC: hot afternoon with smoke",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "co_occurring",
    "robust_flags": [],
    "robust_uncertainty": {
@@ -4069,6 +6084,8 @@
      "p90": 6.7
     }
    },
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 4.5,
@@ -4081,7 +6098,9 @@
      "blocks": [
       "04:00-10:30",
       "17:00-19:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 2.5
     },
     "robust": {
      "hours_ge_80f": 4.5,
@@ -4094,7 +6113,9 @@
      "blocks": [
       "04:00-10:30",
       "17:00-19:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 2.5
     },
     "oracle": {
      "hours_ge_80f": 4.5,
@@ -4106,7 +6127,9 @@
      "observed_cost": 89.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 2.5
     },
     "B1": {
      "hours_ge_80f": 7.5,
@@ -4118,7 +6141,9 @@
      "observed_cost": 182.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 8.5,
+     "nowcast_hours_aqi_ge_151": 5.5
     },
     "B2": {
      "hours_ge_80f": 6.0,
@@ -4130,7 +6155,9 @@
      "observed_cost": 137.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 7.0,
+     "nowcast_hours_aqi_ge_151": 4.0
     },
     "b3_early": {
      "hours_ge_80f": 4.5,
@@ -4142,7 +6169,9 @@
      "observed_cost": 89.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 2.5
     },
     "b3_late": {
      "hours_ge_80f": 4.5,
@@ -4154,7 +6183,9 @@
      "observed_cost": 89.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 2.5
     }
    }
   },
@@ -4163,6 +6194,7 @@
    "date": "2025-08-04",
    "label": "SYNTHETIC: pre-dawn PM2.5 peak, clearing by day",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "smoke_only",
    "robust_flags": [],
    "robust_uncertainty": {
@@ -4176,6 +6208,8 @@
      "p90": 6.925
     }
    },
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 2.0,
@@ -4187,7 +6221,9 @@
      "observed_cost": 39.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.0,
+     "nowcast_hours_aqi_ge_151": 3.0
     },
     "robust": {
      "hours_ge_80f": 2.0,
@@ -4199,7 +6235,9 @@
      "observed_cost": 39.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.0,
+     "nowcast_hours_aqi_ge_151": 3.0
     },
     "oracle": {
      "hours_ge_80f": 4.25,
@@ -4211,7 +6249,9 @@
      "observed_cost": 21.0,
      "blocks": [
       "06:15-14:45"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 2.75,
+     "nowcast_hours_aqi_ge_151": 0.75
     },
     "B1": {
      "hours_ge_80f": 5.0,
@@ -4223,7 +6263,9 @@
      "observed_cost": 21.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 2.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 3.5,
@@ -4235,7 +6277,9 @@
      "observed_cost": 27.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 3.5,
+     "nowcast_hours_aqi_ge_151": 1.5
     },
     "b3_early": {
      "hours_ge_80f": 2.0,
@@ -4247,7 +6291,9 @@
      "observed_cost": 39.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.0,
+     "nowcast_hours_aqi_ge_151": 3.0
     },
     "b3_late": {
      "hours_ge_80f": 2.0,
@@ -4259,7 +6305,9 @@
      "observed_cost": 39.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.0,
+     "nowcast_hours_aqi_ge_151": 3.0
     }
    }
   },
@@ -4268,6 +6316,7 @@
    "date": "2025-08-05",
    "label": "SYNTHETIC: mild temps, clean air",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "mild",
    "robust_flags": [],
    "robust_uncertainty": {
@@ -4281,6 +6330,8 @@
      "p90": 8.5
     }
    },
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 0.0,
@@ -4292,7 +6343,9 @@
      "observed_cost": 0.0,
      "blocks": [
       "05:15-13:45"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "robust": {
      "hours_ge_80f": 0.0,
@@ -4304,7 +6357,9 @@
      "observed_cost": 0.0,
      "blocks": [
       "04:45-13:15"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "oracle": {
      "hours_ge_80f": 0.0,
@@ -4316,7 +6371,9 @@
      "observed_cost": 0.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B1": {
      "hours_ge_80f": 0.0,
@@ -4328,7 +6385,9 @@
      "observed_cost": 0.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "B2": {
      "hours_ge_80f": 0.0,
@@ -4340,7 +6399,9 @@
      "observed_cost": 0.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_early": {
      "hours_ge_80f": 0.0,
@@ -4352,7 +6413,9 @@
      "observed_cost": 0.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     },
     "b3_late": {
      "hours_ge_80f": 0.0,
@@ -4364,7 +6427,9 @@
      "observed_cost": 0.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 0.0,
+     "nowcast_hours_aqi_ge_151": 0.0
     }
    }
   },
@@ -4373,6 +6438,7 @@
    "date": "2025-08-06",
    "label": "SYNTHETIC: late-afternoon heat, early-morning smoke",
    "provenance": "synthetic",
+   "region": "fresno",
    "stratum": "co_occurring",
    "robust_flags": [],
    "robust_uncertainty": {
@@ -4386,6 +6452,8 @@
      "p90": 4.975
     }
    },
+   "sources": null,
+   "nowcast_valid_slots": 96,
    "plans": {
     "optimizer": {
      "hours_ge_80f": 2.5,
@@ -4397,7 +6465,9 @@
      "observed_cost": 64.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 7.0,
+     "nowcast_hours_aqi_ge_151": 6.0
     },
     "robust": {
      "hours_ge_80f": 2.5,
@@ -4409,7 +6479,9 @@
      "observed_cost": 64.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 7.0,
+     "nowcast_hours_aqi_ge_151": 6.0
     },
     "oracle": {
      "hours_ge_80f": 4.0,
@@ -4421,7 +6493,9 @@
      "observed_cost": 52.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 4.5
     },
     "B1": {
      "hours_ge_80f": 5.5,
@@ -4433,7 +6507,9 @@
      "observed_cost": 52.0,
      "blocks": [
       "07:00-15:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 4.0,
+     "nowcast_hours_aqi_ge_151": 3.0
     },
     "B2": {
      "hours_ge_80f": 4.0,
@@ -4445,7 +6521,9 @@
      "observed_cost": 52.0,
      "blocks": [
       "05:30-14:00"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 5.5,
+     "nowcast_hours_aqi_ge_151": 4.5
     },
     "b3_early": {
      "hours_ge_80f": 2.5,
@@ -4457,7 +6535,9 @@
      "observed_cost": 64.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 7.0,
+     "nowcast_hours_aqi_ge_151": 6.0
     },
     "b3_late": {
      "hours_ge_80f": 2.5,
@@ -4469,10 +6549,12 @@
      "observed_cost": 64.0,
      "blocks": [
       "04:00-12:30"
-     ]
+     ],
+     "nowcast_hours_aqi_ge_101": 7.0,
+     "nowcast_hours_aqi_ge_151": 6.0
     }
    }
   }
  ],
- "runtime_seconds": 3.32
+ "runtime_seconds": 3.74
 }

@@ -222,8 +222,23 @@ function table(parent, head, rows) {
   const wrap = el(parent, 'div'); wrap.className = 'scroll'; wrap.appendChild(t);
 }
 const wtl = x => `${x.win}/${x.tie}/${x.loss}/${x.mixed}`;
+const ci = (c, k) => c.mean_diff[k] === undefined ? '–' : `${c.mean_diff[k] > 0 ? '+' : ''}${c.mean_diff[k]}` + (c.ci95 ? ` [${c.ci95[k].join(', ')}]` : '');
+function realExtras(g, r) {
+  const inv = r.real_inventory;
+  el(g, 'p', r.effective_sample_size_note).className = 'note';
+  el(g, 'p', `Sources: ${inv.path}. Used by region/year: ${JSON.stringify(inv.used_by_region_year)}. Excluded reasons: ${JSON.stringify(inv.excluded_reasons)}.`).className = 'note';
+  el(g, 'h3', 'Mean difference vs baseline, overall (negative = fewer modeled exposure-hours; 95% CI resamples dates)');
+  const comps = r.groups.real_cached.overall.comparisons;
+  table(g, ['comparison', 'n', 'dates', 'Δ h ≥95°F [CI]', 'Δ h AQI≥101 [CI]'],
+    Object.keys(comps).filter(n => /_vs_(B2|b3_|optimizer$)/.test(n) && !n.includes('_on_robust_days')).map(n => [n.replace('_vs_', ' vs '), comps[n].n, comps[n].n_dates, ci(comps[n], 'hours_ge_95f'), ci(comps[n], 'hours_aqi_ge_101')]));
+  const nc = r.nowcast.real_cached.overall;
+  el(g, 'h3', 'Secondary: NowCast-based smoke hours (observed only, mean h/day)');
+  table(g, ['plan', 'AQI≥101 hourly', 'AQI≥101 NowCast', 'AQI≥151 hourly', 'AQI≥151 NowCast'],
+    Object.keys(nc).filter(k => k !== 'n').map(p => [p, nc[p].hours_aqi_ge_101, nc[p].nowcast_hours_aqi_ge_101, nc[p].hours_aqi_ge_151, nc[p].nowcast_hours_aqi_ge_151]));
+  el(g, 'p', `Days where the optimizer loses physically to B2: ${r.physical_losses_vs_B2.real_cached.length} (listed in eval/results.md).`).className = 'note';
+}
 function outcomes(parent, groups, kind) {
-  const strata = Object.keys(groups), names = Object.keys(groups.overall.comparisons).filter(n => /_vs_(B2|b3_)/.test(n));
+  const strata = Object.keys(groups), names = Object.keys(groups.overall.comparisons).filter(n => /_vs_(B2|b3_|optimizer$)/.test(n));
   table(parent, ['comparison (W/T/L/mixed)', ...strata.map(s => `${s} (n=${groups[s].n})`)],
     names.map(n => [n.replace('_vs_', ' vs '), ...strata.map(s => { const c = groups[s].comparisons[n]; return c.n ? `${wtl(c[kind])} (n=${c.n})` : '–'; })]));
 }
@@ -235,7 +250,9 @@ async function backtest() {
   for (const s of r.summary_box) el(box, 'li', s);
   for (const prov of ['synthetic', 'real_cached']) {
     el(g, 'h2', `${prov}: ${r.group_labels[prov]} (n=${r.n_days[prov]})`);
+    if (prov === 'real_cached' && r.real_status) el(g, 'p', 'Status: ' + r.real_status).className = 'note';
     if (!r.n_days[prov]) continue;
+    if (prov === 'real_cached') realExtras(g, r);
     el(g, 'h3', 'PRIMARY: physical dominance (no more hours ≥95°F and AQI≥101, strictly less on one)');
     outcomes(g, r.groups[prov], 'physical');
     const fb = r.robust_fallback_days[prov];

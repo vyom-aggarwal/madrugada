@@ -14,10 +14,11 @@ if str(ROOT) not in sys.path:
 from app.config import load_config  # noqa: E402
 from app.exposure import day_arrays  # noqa: E402
 from app.planning import load_days  # noqa: E402
-from eval import metrics, stats  # noqa: E402
+from eval import inventory, metrics, prereg, stats  # noqa: E402
 from eval.report import to_markdown  # noqa: E402
 
 OUT_DIR = ROOT / "eval"
+MANIFEST = ROOT / "data" / "cache" / "meta" / "manifest.json"
 PROVENANCES = ("synthetic", "real_cached")
 SYNTHETIC_STATEMENT = "SYNTHETIC DAYS INCLUDED: NOT EVIDENCE FOR THE DUAL-HAZARD CLAIM"
 
@@ -43,6 +44,8 @@ def summary_box(by_prov: dict, cfg: dict) -> list[str]:
     if len(real) < cfg["eval"]["min_real_days"]:
         lines.append(f"insufficient real days: {len(real)} real_cached, {cfg['eval']['min_real_days']} required for "
                      "any real-data conclusion. This page shows no real-data result.")
+    else:
+        lines.append(inventory.ess_note(real))
     lines.append("Heat-only planning is the closest baseline; see the B3 rows.")
     for prov, ds in (("synthetic", syn), ("real_cached", real)):
         if not ds:
@@ -59,28 +62,62 @@ def summary_box(by_prov: dict, cfg: dict) -> list[str]:
     return lines
 
 
-def run(pool=None, cfg: dict | None = None) -> dict:
+class PreregistrationError(RuntimeError):
+    pass
+
+
+def _pool_of(pool: list) -> callable:
+    """Per-day forecast pool: same provenance and region (real and synthetic never pooled)."""
+    groups: dict = {}
+    for d in pool:
+        groups.setdefault((d.provenance, d.region), []).append(d)
+    return lambda d: groups[(d.provenance, d.region)]
+
+
+def _evaluable(days: list, pool_of, cfg: dict) -> list:
+    """ALL days with a leakage-safe proxy forecast, in (date, region, id) order. None hand-picked."""
+    out = []
+    for d in sorted(days, key=lambda d: (d.date or "", d.region, d.id)):
+        try:
+            metrics.forecast(d, pool_of(d), cfg=cfg)
+            out.append(d)
+        except ValueError:
+            continue
+    return out
+
+
+def run(pool=None, cfg: dict | None = None, prereg_path: Path | None = None) -> dict:
     t0 = time.perf_counter()
     cfg = cfg or load_config()
     pool = list(pool if pool is not None else load_days())
-    days = metrics.evaluable(pool, cfg)
-    per_day = [metrics.evaluate_day(d, pool, cfg) for d in days]
+    pool_of, min_real = _pool_of(pool), cfg["eval"]["min_real_days"]
+    syn = _evaluable([d for d in pool if d.provenance == "synthetic"], pool_of, cfg)
+    real = _evaluable([d for d in pool if d.provenance == "real_cached"], pool_of, cfg)
+    n_real_available, real_status = len(real), "evaluated"
+    if len(real) < min_real:
+        real, real_status = [], f"insufficient real days ({n_real_available} < {min_real}); not evaluated"
+    else:
+        ok, problems = prereg.verify(prereg_path or prereg.PREREG_PATH)
+        if not ok:
+            raise PreregistrationError("refusing to evaluate real days: " + "; ".join(problems))
+    days = syn + real
+    per_day = [metrics.evaluate_day(d, pool_of(d), cfg) for d in days]
     by_prov = {p: [d for d in per_day if d["provenance"] == p] for p in PROVENANCES}
 
     sens_inputs = []
     for d, rec in zip(days, per_day):
-        ft, fa = metrics.forecast_arrays(d, pool, cfg)
+        ft, fa = metrics.forecast_arrays(d, pool_of(d), cfg)
         ot, oa = day_arrays(d)
         sens_inputs.append({"id": d.id, "stratum": rec["stratum"], "provenance": d.provenance,
                             "ft": ft, "fa": fa, "ot": ot, "oa": oa})
     weight_rows = metrics.weight_sensitivity(sens_inputs, cfg)
-    fc_rows = metrics.forecast_sensitivity(days, pool, cfg)
+    fc_rows = metrics.forecast_sensitivity(days, pool_of, cfg)
 
     n_syn, n_real = len(by_prov["synthetic"]), len(by_prov["real_cached"])
-    min_real = cfg["eval"]["min_real_days"]
     results = {
         "provenance_statement": provenance_statement(n_syn, n_real, min_real),
         "n_days": {"synthetic": n_syn, "real_cached": n_real},
+        "real_status": real_status, "n_real_available": n_real_available,
         "real_days_sufficient": n_real >= min_real,
         "group_labels": {"synthetic": "SYNTHETIC, NOT EVIDENCE",
                          "real_cached": "REAL (cached)" if n_real >= min_real else "insufficient real days"},
@@ -92,16 +129,23 @@ def run(pool=None, cfg: dict | None = None) -> dict:
             "secondary_outcome": f"{stats.COST_LABEL}: win/loss by observed weighted cost; tie also needs cost "
                                  f"within {cfg['eval']['tie_cost']}; mixed = equal cost, different physical metrics",
             "difference": "challenger minus baseline; negative = fewer modeled exposure-hours or lower cost",
-            "robust": "compared only on days where it did not fall back; fallback days listed separately",
+            "robust": "compared only on days where it did not fall back, and with the optimizer on those same days",
+            "ci": "synthetic: paired bootstrap over days; real: cluster bootstrap over calendar dates",
+            "nowcast": "SECONDARY, observed only: hours at NowCast AQI >= 101 / 151 (unverified NowCast); planning "
+                       "uses hourly values",
             "strata": cfg["eval"]["strata"],
             "weight_sensitivity": "headline = day-level fraction of (setting, day) pairs; stratum totals secondary",
         },
         "robust_fallback_days": {p: [d["id"] for d in by_prov[p] if d["robust_flags"]] for p in PROVENANCES},
-        "groups": {p: stats.group_summary(by_prov[p], cfg) for p in PROVENANCES},
+        "groups": {p: stats.group_summary(by_prov[p], cfg, cluster=(p == "real_cached")) for p in PROVENANCES},
         "oracle_diagnosis": {p: stats.oracle_diagnosis(by_prov[p], cfg) for p in PROVENANCES},
         "weight_sensitivity": {p: stats.weight_summary(weight_rows, p) for p in PROVENANCES},
         "forecast_sensitivity": {p: {name: stats.outcome_counts(rows, p) for name, rows in fc_rows.items()}
                                  for p in PROVENANCES},
+        "nowcast": {p: stats.nowcast_summary(by_prov[p]) for p in PROVENANCES},
+        "physical_losses_vs_B2": {p: stats.physical_losses_vs_b2(by_prov[p], cfg) for p in PROVENANCES},
+        "real_inventory": inventory.real_inventory(by_prov["real_cached"], MANIFEST),
+        "effective_sample_size_note": inventory.ess_note(by_prov["real_cached"]) if n_real else None,
         "days": per_day,
     }
     results["runtime_seconds"] = round(time.perf_counter() - t0, 2)
@@ -117,21 +161,28 @@ def write(results: dict, out_dir: Path = OUT_DIR) -> tuple[Path, Path]:
 
 
 def main() -> None:
-    results = run()
+    try:
+        results = run()
+    except PreregistrationError as e:
+        print(f"REFUSED: {e}")
+        raise SystemExit(4)
     j, m = write(results)
     print(results["provenance_statement"])
-    syn = results["groups"]["synthetic"]["overall"]["comparisons"]
-    for c in metrics.CHALLENGERS:
-        for b in ("B2", "b3_early", "b3_late"):
-            r = syn[f"{c}_vs_{b}"]
-            p, k = r["physical"], r["cost"]
-            print(f"synthetic {c} vs {b} (n={r['n']}): physical W{p['win']} T{p['tie']} L{p['loss']} M{p['mixed']}"
-                  f" | cost W{k['win']} T{k['tie']} L{k['loss']} M{k['mixed']}")
-    od = results["oracle_diagnosis"]["synthetic"]
-    print("oracle diagnosis (synthetic, physical):", od["physical"]["sentence"])
-    print("oracle diagnosis (synthetic, cost):", od["cost"]["sentence"])
-    ws = results["weight_sensitivity"]["synthetic"]
-    print("day-level weak dominance vs B2:", {g: v.get("day_level_weakly_dominates") for g, v in ws.items()})
+    print(f"real days: {results['real_status']}")
+    for prov in PROVENANCES:
+        if not results["n_days"][prov]:
+            continue
+        comps = results["groups"][prov]["overall"]["comparisons"]
+        for c in metrics.CHALLENGERS:
+            for b in ("B2", "b3_early", "b3_late"):
+                r = comps[f"{c}_vs_{b}"]
+                p, k = r["physical"], r["cost"]
+                print(f"{prov} {c} vs {b} (n={r['n']}): physical W{p['win']} T{p['tie']} L{p['loss']} M{p['mixed']}"
+                      f" | cost W{k['win']} T{k['tie']} L{k['loss']} M{k['mixed']}")
+        od = results["oracle_diagnosis"][prov]
+        print(f"oracle diagnosis ({prov}, physical):", od["physical"]["sentence"])
+        ws = results["weight_sensitivity"][prov]
+        print(f"day-level weak dominance vs B2 ({prov}):", {g: v.get("day_level_weakly_dominates") for g, v in ws.items()})
     print(f"wrote {j} and {m} in {results['runtime_seconds']} s")
 
 

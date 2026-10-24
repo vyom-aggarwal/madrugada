@@ -48,11 +48,10 @@ def demo() -> int:
 
 
 def real() -> int:
-    """Fetch real CIMIS + AirNow days (needs both keys), then eval + snapshot. See data/real_job.py."""
+    """Fetch real days (CIMIS + AirNow if both keys are set, else keyless IEM ASOS + EPA AirData), then the
+    preregistered eval + snapshot. See data/real_job.py."""
     missing = [k for k in KEYS if not os.environ.get(k)]
-    if missing:
-        print(f"real: missing API key env var(s): {', '.join(missing)}. Nothing fetched.")
-        return 0
+    print("real: " + (f"keys missing ({', '.join(missing)}); using the keyless path" if missing else "using CIMIS + AirNow"))
     return run(PY, "-m", "data.real_job")
 
 

@@ -67,7 +67,7 @@ def _record(name, label, d, prof) -> dict:
     rec = DayRecord(id=f"syn-{d.isoformat()}-{name}", label=label, region=REGION,
                     provenance="synthetic", date=d.isoformat(),
                     **{k: np.round(v, 2).tolist() for k, v in prof.items()})
-    return rec.model_dump()
+    return rec.model_dump(exclude={"meta"})  # synthetic days carry no source metadata
 
 
 def build() -> tuple[list[dict], list[dict]]:

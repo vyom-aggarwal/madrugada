@@ -60,6 +60,7 @@ madrugada/
 - After each phase: run tests, commit with message "phase N: <summary>", and print a status of 10 lines max.
 - No web browsing, no downloading datasets inside a phase unless the phase says so.
 - When the user says keys are set, run tasks.py real and report the results; do not ask them to run commands.
+  A keyless path exists (IEM ASOS + EPA AirData); use it when keys are missing.
 
 ## Phase 2 decisions
 - DayRecord slots are LOCAL CLOCK TIME (America/Los_Angeles, including daylight time). Every real-data
@@ -90,6 +91,9 @@ madrugada/
   Day-level weight sensitivity (optimizer weakly dominates B2) is 72% overall and 35% on co_occurring, while
   stratum totals show 100%. Seven of the 13 days are generated history days, so none of this is
   independent evidence.
+- Phase 5, 13 synthetic days vs B2: physical dominance optimizer 5/1/3/4 (W/T/L/Mixed) vs cost-based
+  9/1/2/1. The oracle beats both B3 variants on 3 of 13 days; the optimizer on 0. Robust is scored on only
+  6 days (fallback on the rest). All synthetic, so none of it is evidence.
 
 ## Evaluation rules
 - PRIMARY outcome is physical dominance over a baseline: a win means no more hours >=95F and no more
@@ -99,6 +103,11 @@ madrugada/
 - Headline sensitivity numbers are day-level (stratum totals are secondary).
 - Real-data conclusions need at least 20 real days.
 - Real days are never pooled with synthetic days.
+- Robust must be compared with the optimizer on the SAME days only.
+- Real-data days from different regions on the same date are correlated: confidence intervals use a cluster
+  bootstrap that resamples calendar dates (all regions of a date move together).
+- The n of region-days is not the effective sample size, and the report must say so.
+- The evaluation window and rules are frozen in eval/PREREGISTRATION.md BEFORE the first real eval runs.
 - Evaluate ALL days in the available range, never a hand-picked subset.
 - Strata are assigned by a rule on observed data, defined in config.yaml `eval.strata`: heat_only (max temp
   >= 95F and max AQI < 101), smoke_only (max temp < 95F and max AQI >= 101), co_occurring (both), mild (neither).

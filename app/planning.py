@@ -43,6 +43,12 @@ def load_days() -> tuple[DayRecord, ...]:
     return tuple(_read_list(FIXTURES / "days.json") + real + _read_list(FIXTURES / "history.json"))
 
 
+def pool_for(target: DayRecord) -> list[DayRecord]:
+    """Forecast/robust pool: same provenance and region only. Real and synthetic days are never pooled
+    (they share region names and can share dates)."""
+    return [d for d in load_days() if d.provenance == target.provenance and d.region == target.region]
+
+
 def get_day(day_id: str) -> DayRecord:
     for d in load_days():
         if d.id == day_id:
@@ -50,8 +56,8 @@ def get_day(day_id: str) -> DayRecord:
     raise UnknownDay(day_id)
 
 
-RULE_LABEL = ("selected for illustration by rule (highest observed dual-hazard hours); "
-              "the evaluation uses all days")
+RULE_LABEL = ("selected for illustration by rule; the evaluation uses all days "
+              "(rule: the real day with the most observed dual-hazard hours)")
 
 
 @lru_cache(maxsize=1)
@@ -111,15 +117,16 @@ def plan_for(day_id: str, paid_hours: float, earliest: str, latest: str, oracle:
     """Full plan response for one (day, params). Cached: repeated slider positions are instant."""
     cfg = load_config()
     target = get_day(day_id)
+    pool = pool_for(target)
     try:
-        fc = forecast(target, list(load_days()), oracle=oracle)
+        fc = forecast(target, pool, oracle=oracle)
     except ValueError as e:
         raise NoHistory(str(e)) from e
     ft, fa_res = np.asarray(fc.day.temp_f, dtype=float), pm25_to_aqi(fc.day.pm25_ugm3)
     ot, oa_res = np.asarray(target.temp_f, dtype=float), pm25_to_aqi(target.pm25_ugm3)
     fa, oa = fa_res.aqi, oa_res.aqi
     kw = {"paid_hours_target": paid_hours, "earliest_start": earliest, "latest_end": latest}
-    rob = robust_plan(target, list(load_days()), **kw)  # always proxy + residual scenarios, even in ORACLE mode
+    rob = robust_plan(target, pool, **kw)  # always proxy + residual scenarios, even in ORACLE mode
     plans = {"optimizer": optimize(ft, fa, **kw), "robust": rob.plan, "B1": b1(ft, fa), "B2": b2(ft, fa),
              "b3_early": b3_early(ft, fa, **kw), "b3_late": b3_late(ft, fa, **kw)}
     plans_out, metrics = {}, {}
@@ -131,6 +138,7 @@ def plan_for(day_id: str, paid_hours: float, earliest: str, latest: str, oracle:
                          "observed": obs.model_dump()}
     plans_out["robust"].update(uncertainty=rob.uncertainty, flags=rob.flags, residual_dates=rob.residual_dates)
     warnings = _warnings(target, fc.day, fa_res, oa_res, oracle, earliest, latest, cfg) + rob.flags
+    warnings += [f"data: {w}" for w in (target.meta or {}).get("warnings", [])]
     if oracle:
         warnings.append("robust plan uses the proxy forecast plus residual scenarios, not the day's actual data.")
     pts = [{"paid_fraction": q.paid_fraction, "heat_smoke_ratio": q.heat_smoke_ratio, "heat_hours": q.heat_hours,

@@ -94,3 +94,35 @@ def purpleair_correct(pm_cf1, rh, cfg: dict | None = None) -> CorrectionResult:
         warning = (f"{n} slot(s) above {p['warn_above_ugm3']} ug/m3 after PurpleAir correction; "
                    "the EPA US-wide formula underestimates at high smoke levels.")
     return CorrectionResult(values, flags, warning)
+
+
+def nowcast_pm25(pm25_hourly) -> np.ndarray:
+    """EPA NowCast for PM2.5 at each hour of an hourly series (oldest first; NaN = missing).
+
+    UNVERIFIED against EPA's technical document; implemented from the published description:
+    use the 12 most recent hours (c1 = current hour); require at least 2 of the 3 most recent hours
+    valid; weight factor w = 1 - (cmax - cmin) / cmax over valid hours, floored at 0.5 (w = 1 if cmax = 0);
+    NowCast = sum(w^(i-1) * c_i) / sum(w^(i-1)) over valid hours i = 1..12. Returns NaN where not computable.
+    """
+    c = np.asarray(pm25_hourly, dtype=float)
+    out = np.full(len(c), np.nan)
+    for t in range(len(c)):
+        window = c[max(0, t - 11): t + 1][::-1]  # c1 (current) first
+        if np.sum(~np.isnan(window[:3])) < 2:
+            continue
+        ok = ~np.isnan(window)
+        cmax, cmin = window[ok].max(), window[ok].min()
+        w = 1.0 if cmax <= 0 else max(0.5, 1 - (cmax - cmin) / cmax)
+        k = np.arange(len(window))[ok]
+        out[t] = float(np.sum(w ** k * window[ok]) / np.sum(w ** k))
+    return out
+
+
+def nowcast_aqi(pm25_hourly, breakpoints: np.ndarray | None = None) -> np.ndarray:
+    """NowCast AQI per hour (float; NaN where NowCast is not computable). Secondary, observed-only metric."""
+    nc = nowcast_pm25(pm25_hourly)
+    out = np.full(len(nc), np.nan)
+    ok = ~np.isnan(nc)
+    if ok.any():
+        out[ok] = pm25_to_aqi(nc[ok], breakpoints).aqi
+    return out

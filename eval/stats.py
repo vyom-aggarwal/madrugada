@@ -18,38 +18,59 @@ def paired_bootstrap_ci(diffs, resamples: int, seed: int) -> tuple[float, float]
     return round(float(lo), 4), round(float(hi), 4)
 
 
-def compare(days: list[dict], challenger: str, baseline: str, cfg: dict) -> dict:
-    """challenger - baseline over `days` (paired). Negative differences favour the challenger."""
+def cluster_bootstrap_ci(diffs, clusters, resamples: int, seed: int) -> tuple[float, float]:
+    """95% CI of the mean difference, resampling whole clusters (calendar dates) with replacement, so all
+    regions of a date move together. Deterministic for a fixed seed."""
+    d = np.asarray(diffs, dtype=float)
+    keys = sorted(set(clusters))
+    pos = {k: i for i, k in enumerate(keys)}
+    idx = np.array([pos[c] for c in clusters])
+    sums, counts = np.bincount(idx, weights=d, minlength=len(keys)), np.bincount(idx, minlength=len(keys))
+    pick = np.random.default_rng(seed).integers(0, len(keys), size=(resamples, len(keys)))
+    lo, hi = np.percentile(sums[pick].sum(axis=1) / counts[pick].sum(axis=1), [2.5, 97.5])
+    return round(float(lo), 4), round(float(hi), 4)
+
+
+def compare(days: list[dict], challenger: str, baseline: str, cfg: dict, cluster: bool = False) -> dict:
+    """challenger - baseline over `days` (paired). Negative differences favour the challenger.
+    cluster=True (real data): CIs resample calendar dates and need >= min_n distinct dates."""
     bs = cfg["eval"]["bootstrap"]
     phys, cost = {o: 0 for o in OUTCOMES}, {o: 0 for o in OUTCOMES}
     for d in days:
         a, b = d["plans"][challenger], d["plans"][baseline]
         phys[classify_physical(a, b, cfg)] += 1
         cost[classify(a, b, cfg)] += 1
-    out = {"n": len(days), "physical": phys, "cost": cost, "mean_diff": {}, "ci95": None, "ci_note": None}
+    dates = [d.get("date") for d in days]
+    out = {"n": len(days), "n_dates": len(set(dates)), "physical": phys, "cost": cost, "mean_diff": {},
+           "ci95": None, "ci_note": None, "ci_method": "cluster bootstrap over dates" if cluster else "paired bootstrap"}
     if not days:
         return out
     diffs = {k: [d["plans"][challenger][k] - d["plans"][baseline][k] for d in days] for k in DIFF_KEYS}
     out["mean_diff"] = {k: round(float(np.mean(v)), 4) for k, v in diffs.items()}
-    if len(days) < bs["min_n"]:
-        out["ci_note"] = CI_NOTE
+    if (out["n_dates"] if cluster else len(days)) < bs["min_n"]:
+        out["ci_note"] = CI_NOTE + (f" (fewer than {bs['min_n']} dates)" if cluster else "")
+    elif cluster:
+        out["ci95"] = {k: cluster_bootstrap_ci(v, dates, bs["resamples"], bs["seed"]) for k, v in diffs.items()}
     else:
         out["ci95"] = {k: paired_bootstrap_ci(v, bs["resamples"], bs["seed"]) for k, v in diffs.items()}
     return out
 
 
-def group_summary(days: list[dict], cfg: dict) -> dict:
+def group_summary(days: list[dict], cfg: dict, cluster: bool = False) -> dict:
     """By stratum and overall: every challenger vs every baseline. Robust is compared only on days where
-    it did not fall back (its n is shown per comparison)."""
+    it did not fall back, and against the optimizer on those SAME days (robust_vs_optimizer and
+    optimizer_on_robust_days_vs_*)."""
     groups = {"overall": days, **{s: [d for d in days if d["stratum"] == s] for s in STRATA}}
     out = {}
     for g, ds in groups.items():
-        comps = {}
+        comps, rds = {}, [d for d in ds if not d["robust_flags"]]
         for c in CHALLENGERS:
-            cds = [d for d in ds if not d["robust_flags"]] if c == "robust" else ds
             for b in BASELINES:
-                comps[f"{c}_vs_{b}"] = compare(cds, c, b, cfg)
-        out[g] = {"n": len(ds), "comparisons": comps}
+                comps[f"{c}_vs_{b}"] = compare(rds if c == "robust" else ds, c, b, cfg, cluster)
+        comps["robust_vs_optimizer"] = compare(rds, "robust", "optimizer", cfg, cluster)
+        for b in BASELINES:
+            comps[f"optimizer_on_robust_days_vs_{b}"] = compare(rds, "optimizer", b, cfg, cluster)
+        out[g] = {"n": len(ds), "n_dates": len({d.get("date") for d in ds}), "comparisons": comps}
     return out
 
 
@@ -118,3 +139,23 @@ def b3_smoke_wins(days: list[dict], cfg: dict) -> dict:
     th = cfg["eval"]["tie_hours"]
     return {b: sum(d["plans"][b]["hours_aqi_ge_101"] - d["plans"]["optimizer"]["hours_aqi_ge_101"] >= th
                    for d in days) for b in ("b3_early", "b3_late")}
+
+
+def nowcast_summary(days: list[dict]) -> dict:
+    """SECONDARY (observed only): mean hours per plan at AQI>=101/151, hourly-based vs NowCast-based."""
+    from eval.metrics import PLANS
+    keys = ("hours_aqi_ge_101", "nowcast_hours_aqi_ge_101", "hours_aqi_ge_151", "nowcast_hours_aqi_ge_151")
+    out = {}
+    for g in ("overall",) + STRATA:
+        ds = [d for d in days if g == "overall" or d["stratum"] == g]
+        out[g] = {"n": len(ds), **{p: {k: round(float(np.mean([d["plans"][p][k] for d in ds])), 4) if ds else None
+                                      for k in keys} for p in PLANS}}
+    return out
+
+
+def physical_losses_vs_b2(days: list[dict], cfg: dict) -> list[dict]:
+    """Every day where the optimizer loses physically to B2, with the observed numbers (no interpretation)."""
+    keys = ("hours_ge_95f", "hours_aqi_ge_101", "hours_ge_80f", "hours_aqi_ge_151")
+    return [{"id": d["id"], "stratum": d["stratum"],
+             **{f"{p}_{k}": d["plans"][p][k] for p in ("optimizer", "B2") for k in keys}}
+            for d in days if classify_physical(d["plans"]["optimizer"], d["plans"]["B2"], cfg) == "loss"]

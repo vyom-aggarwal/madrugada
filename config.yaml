@@ -142,3 +142,27 @@ real_job:
   usable_fraction: 0.9       # temp AND PM2.5 must have >= 90% of slots observed after short-gap filling
   max_gap_hours: 2           # interior gaps up to this long are linearly interpolated
   throttle: {min_interval_s: 1.0, max_retries: 4, backoff_base_s: 2.0}
+
+# Keyless real-data path (tasks.py real when CIMIS_APPKEY/AIRNOW_KEY are missing). ALL URLs, field names,
+# units and time conventions are UNVERIFIED here; docs/real_data_notes.md records what the live check found.
+keyless:
+  regions:                   # same region keys as real_job; ASOS ids as used by IEM (ICAO without the K)
+    bakersfield: {asos: BFL, icao: KBFL, label: Bakersfield}
+    fresno: {asos: FAT, icao: KFAT, label: Fresno}
+    tulare: {asos: VIS, icao: KVIS, label: Tulare/Visalia}
+  iem:
+    url: "https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py"   # unverified
+    tz: America/Los_Angeles  # requested time zone; 'valid' assumed local wall-clock time (unverified)
+    fields: {valid: valid, temp_f: tmpf, rh: relh, lat: lat, lon: lon}   # tmpf in F, relh in % (unverified)
+    max_gap_hours: 2         # interpolate between reports at most this far apart; longer gaps rejected
+  airdata:
+    url_template: "https://aqs.epa.gov/aqsweb/airdata/hourly_88101_{year}.zip"    # unverified
+    listing_url: "https://aqs.epa.gov/aqsweb/airdata/download_files.html"         # unverified
+    parameter_code: "88101"
+    state_code: "06"
+    columns: {state: State Code, county: County Code, site: Site Num, poc: POC, lat: Latitude, lon: Longitude,
+              date_local: Date Local, time_local: Time Local, date_gmt: Date GMT, time_gmt: Time GMT,
+              value: Sample Measurement, units: Units of Measure, param: Parameter Code}
+    expected_units: "Micrograms/cubic meter"
+    time_local_utc_offset_hours: -8   # assumed: Time Local is local STANDARD time year-round (checked live)
+    max_km: 25               # nearest active monitor within this distance of the ASOS station

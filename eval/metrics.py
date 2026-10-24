@@ -5,10 +5,11 @@ the global config returned by load_config() is never mutated.
 """
 import copy
 import itertools
+from datetime import date, timedelta
 
 import numpy as np
 
-from app.aqi import pm25_to_aqi
+from app.aqi import nowcast_aqi, pm25_to_aqi
 from app.baselines import b1, b2, b3_early, b3_late
 from app.config import load_config
 from app.exposure import day_arrays, exposure, plan_cost, slot_to_hhmm
@@ -50,10 +51,29 @@ def evaluable(pool: list[DayRecord], cfg: dict) -> list[DayRecord]:
     return out
 
 
-def score(blocks, ot, oa, cfg: dict) -> dict:
+def nowcast_slots(day: DayRecord, pool: list[DayRecord]) -> np.ndarray:
+    """SECONDARY, observed only: NowCast AQI per slot (hourly values = slot 0 of each hour; the previous
+    calendar day from `pool` warms up the 12-hour window when present). NaN where not computable."""
+    prev = (date.fromisoformat(day.date) - timedelta(days=1)).isoformat() if day.date else None
+    before = next((d for d in pool if d.date == prev and d.region == day.region), None)
+    head = np.asarray(before.pm25_ugm3, dtype=float)[::4] if before else np.full(24, np.nan)
+    series = np.concatenate([head, np.asarray(day.pm25_ugm3, dtype=float)[::4]])
+    return np.repeat(nowcast_aqi(series)[24:], len(day.pm25_ugm3) // 24)
+
+
+def score(blocks, ot, oa, cfg: dict, nc_aqi=None) -> dict:
     m = exposure(ot, oa, blocks, cfg=cfg).model_dump()
-    return {**{k: m[k] for k in PHYS}, "observed_cost": round(plan_cost(blocks, ot, oa, cfg=cfg), 6),
-            "blocks": [f"{slot_to_hhmm(b.start_slot)}-{slot_to_hhmm(b.end_slot)}" for b in blocks]}
+    out = {**{k: m[k] for k in PHYS}, "observed_cost": round(plan_cost(blocks, ot, oa, cfg=cfg), 6),
+           "blocks": [f"{slot_to_hhmm(b.start_slot)}-{slot_to_hhmm(b.end_slot)}" for b in blocks]}
+    if nc_aqi is not None:  # NowCast hours (NaN slots never count)
+        mask = np.zeros(len(ot), bool)
+        for b in blocks:
+            mask[b.start_slot:b.end_slot] = True
+        h = cfg["grid"]["slot_minutes"] / 60
+        for k, thr in (("nowcast_hours_aqi_ge_101", cfg["smoke"]["aqi_unhealthy_sensitive"]),
+                       ("nowcast_hours_aqi_ge_151", cfg["smoke"]["aqi_wildfire_rule"])):
+            out[k] = float(np.sum(mask & (np.nan_to_num(nc_aqi, nan=-1) >= thr)) * h)
+    return out
 
 
 def evaluate_day(day: DayRecord, pool: list[DayRecord], cfg: dict) -> dict:
@@ -64,9 +84,11 @@ def evaluate_day(day: DayRecord, pool: list[DayRecord], cfg: dict) -> dict:
              "oracle": optimize(ot, oa, cfg=cfg, name="oracle"),
              "B1": b1(ft, fa, cfg=cfg), "B2": b2(ft, fa, cfg=cfg),
              "b3_early": b3_early(ft, fa, cfg=cfg), "b3_late": b3_late(ft, fa, cfg=cfg)}
-    return {"id": day.id, "date": day.date, "label": day.label, "provenance": day.provenance,
+    nc = nowcast_slots(day, pool)
+    return {"id": day.id, "date": day.date, "label": day.label, "provenance": day.provenance, "region": day.region,
             "stratum": stratum(ot, oa, cfg), "robust_flags": rob.flags, "robust_uncertainty": rob.uncertainty,
-            "plans": {k: score(p.blocks, ot, oa, cfg) for k, p in plans.items()}}
+            "sources": (day.meta or {}).get("sources"), "nowcast_valid_slots": int(np.isfinite(nc).sum()),
+            "plans": {k: score(p.blocks, ot, oa, cfg, nc) for k, p in plans.items()}}
 
 
 def classify_physical(a: dict, b: dict, cfg: dict) -> str:
@@ -131,7 +153,7 @@ def weight_sensitivity(inputs: list[dict], cfg: dict) -> list[dict]:
     return rows
 
 
-def forecast_sensitivity(days: list[DayRecord], pool: list[DayRecord], cfg: dict) -> dict[str, list[dict]]:
+def forecast_sensitivity(days: list[DayRecord], pool, cfg: dict) -> dict[str, list[dict]]:
     """Optimizer vs B2 outcome per day under each proxy (prev-day only, 7-day mean only, default blend)."""
     proxies = {**cfg["eval"]["forecast_proxies"], "default_blend": {}}
     out = {}
@@ -140,7 +162,7 @@ def forecast_sensitivity(days: list[DayRecord], pool: list[DayRecord], cfg: dict
         c["forecast"].update(override)
         rows = []
         for d in days:
-            ft, fa = forecast_arrays(d, pool, c)
+            ft, fa = forecast_arrays(d, pool(d) if callable(pool) else pool, c)
             ot, oa = day_arrays(d)
             a = score(optimize(ft, fa, cfg=cfg).blocks, ot, oa, cfg)
             b = score(b2(ft, fa, cfg=cfg).blocks, ot, oa, cfg)
