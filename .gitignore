@@ -5,3 +5,4 @@ __pycache__/
 data/cache/*
 !data/cache/.gitkeep
 static/snapshot.json
+data/cache_w2/

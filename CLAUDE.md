@@ -101,6 +101,13 @@ madrugada/
   b3_early on 1,292 of 1,296 days; the oracle improves AQI>=101 hours vs B2 by only 0.026 h/day.
 - POSITIONING RULE: describe the tool as a heat-first shift planner that displays smoke exposure. Never claim
   it beats heat-only planning on smoke.
+- Phase 7 EXPLORATORY, POST-HOC findings on window 1 (summers 2022 to 2025): strata are 630 heat_only,
+  38 smoke_only, 71 co_occurring and 557 mild region-days. 109 days had any AQI>=101 hour (187 hours) and 29 any
+  AQI>=151 hour (41 hours). The effect on hours >=95F vs B2 is -0.66 (heat_only) and -1.01 (co_occurring).
+  747 of 751 "mixed" days differ only in hours >=80F. The oracle removes only 33 smoke hours vs B2. 73 of 187
+  smoke hours fall outside 04:00 to 19:00.
+- OPEN RISK: the heat benefit may depend on the assumed 04:00 earliest start (before dawn), which is a
+  tunable assumption, not a legal limit.
 - analysis/ holds EXPLORATORY, POST-HOC analyses (not preregistered, non-logic): they read results and reuse
   functions, never edit hashed files, and label every number "EXPLORATORY, POST-HOC: not preregistered".
 
