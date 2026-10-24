@@ -55,9 +55,10 @@ shift:
   max_blocks: 2
   min_block_hours: 2
   min_gap_hours: 1
-  default_paid_hours: 8.5
+  default_paid_hours: 8.5          # = B1 and B2 lengths, so comparisons are like for like
+  # Tunable assumptions, NOT legal limits:
   default_earliest_start: "04:00"
-  default_latest_end: "20:00"
+  default_latest_end: "19:00"
 
 pareto:
   paid_fraction_max: 1.0
@@ -68,7 +69,8 @@ pareto:
 baselines:
   B1: {label: "Fixed 07:00-15:30", start: "07:00", end: "15:30"}
   B2: {label: "Fixed early 05:30-14:00", start: "05:30", end: "14:00"}
-  B3: {label: "Heat-only optimizer", w_smoke: 0.0}
+  # Heat-only: blind to smoke, so the dual term (which needs AQI) is off too.
+  B3: {label: "Heat-only optimizer", w_smoke: 0.0, w_dual: 0.0}
 
 forecast:
   weight_prev_day: 0.5
@@ -79,8 +81,12 @@ forecast:
 # units are UNVERIFIED: check against current CIMIS and AirNow API docs before relying on them.
 real_data:
   region: fresno
-  max_missing_hours: 4       # per field; gaps are linearly interpolated
+  local_tz: America/Los_Angeles  # DayRecord slots are local clock time, including daylight time
+  max_missing_hours: 4       # per field; gaps (incl. the skipped spring-forward hour) are interpolated
   cimis:
+    # Time convention (UNVERIFIED): hour-ending timestamps in Pacific Standard Time year-round (no DST).
+    time_convention: hour_ending_fixed_offset
+    source_utc_offset_hours: -8
     url: "https://et.water.ca.gov/api/data"     # unverified
     station: "80"                               # Fresno State (unverified)
     units: "M"                                  # metric: C, %, W/m2 (unverified)
@@ -89,4 +95,7 @@ real_data:
   airnow:
     url: "https://www.airnowapi.org/aq/data/"   # unverified
     bbox: "-120.1,36.5,-119.5,37.0"             # lon_min,lat_min,lon_max,lat_max near Fresno (unverified)
-    utc_offset_hours: -7                        # PDT; use -8 outside daylight time
+    # Time convention (UNVERIFIED): hour-beginning. A "UTC" field is UTC; otherwise DateObserved +
+    # HourObserved are local to the zone named in LocalTimeZone, using these offsets.
+    time_convention: utc_or_local_fields
+    local_tz_offsets: {PST: -8, PDT: -7}

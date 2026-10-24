@@ -6,3 +6,4 @@ pandas
 pytest
 pyyaml
 requests
+tzdata  # IANA zones for zoneinfo on Windows (already a pandas dependency)

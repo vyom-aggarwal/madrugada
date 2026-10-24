@@ -58,3 +58,13 @@ madrugada/
 - Run tests with `pytest -x -q`. Never loop on a failing test more than 3 attempts, then report.
 - After each phase: run tests, commit with message "phase N: <summary>", and print a status of 10 lines max.
 - No web browsing, no downloading datasets inside a phase unless the phase says so.
+
+## Phase 2 decisions
+- DayRecord slots are LOCAL CLOCK TIME (America/Los_Angeles, including daylight time). Every real-data
+  adapter must convert to this before writing. (zoneinfo needs `tzdata` on Windows; it is a pandas
+  dependency and is listed in requirements.txt.)
+- Default paid_hours_target = 8.5, equal to the B1 and B2 baseline shift lengths, so comparisons are like
+  for like. The Pareto sweep may go down to 80% of the request.
+- Default earliest_start 04:00 and latest_end 19:00 (config.yaml). These are tunable assumptions, not legal limits.
+- Fixtures and any replayed data are illustrations. Only the real-data backtest counts as evidence for the
+  dual-hazard claim. Never tune fixtures or weights to make a test pass.

@@ -18,5 +18,11 @@ def test_days() -> list[DayRecord]:
 
 
 @pytest.fixture
+def scenarios(test_days) -> dict[str, DayRecord]:
+    """Test days keyed by scenario name (id 'syn-YYYY-MM-DD-<name>')."""
+    return {d.id.split("-", 4)[-1]: d for d in test_days}
+
+
+@pytest.fixture
 def history() -> list[DayRecord]:
     return [DayRecord(**d) for d in load_raw("history.json")]
