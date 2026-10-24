@@ -1,4 +1,4 @@
-# Madrugada: narrated demo script (4 presenters, about 2½ minutes)
+# Madrugada: narrated demo script (4 presenters, about 2¾ minutes)
 
 Replace **A–D** with your names. Every number is one the app shows on screen.
 
@@ -8,10 +8,10 @@ If anything breaks, open `?intro=0` and keep going.
 
 | Who | Scenes | Time |
 |---|---|---|
-| A | 1–2 · the problem | 0:00–0:30 |
-| B | 3–4 · the idea and the test | 0:30–1:10 |
-| C | 5–6 · what we found | 1:10–1:40 |
-| D | live app and close | 1:40–2:30 |
+| A | 1–2 · the problem | 0:00–0:35 |
+| B | 3–4 · the idea and the test | 0:35–1:20 |
+| C | 5–6 · what we found | 1:20–1:55 |
+| D | live app and close | 1:55–2:45 |
 
 ---
 

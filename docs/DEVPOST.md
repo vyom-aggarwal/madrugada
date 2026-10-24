@@ -91,7 +91,7 @@ Files are in the `submission/` folder:
 9. `09-crew-sheet.png`: the bilingual crew sheet
 
 ## Video demo link
-Record the narrated walkthrough in `docs/PITCH_SCRIPT.md` (4 presenters, about 2½ minutes):
+Record the narrated walkthrough in `docs/PITCH_SCRIPT.md` (4 presenters, about 2¾ minutes):
 1. Run `python tasks.py demo` and open `http://127.0.0.1:8000/static/index.html?present=1`, full screen (F11).
 2. Record the screen with audio (Windows: Win+Alt+R with the Xbox Game Bar, or OBS). Use `?intro=0` for retakes
    that start in the app.

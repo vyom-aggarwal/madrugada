@@ -685,8 +685,10 @@ body.cine-landing #ribbon-card,body.cine-landing #today-tiles{animation:cine-up 
 </div>
 <script id="intro-core">
 // ---------- Pure functions (no DOM): the intro timeline and the CI-driven wording shared with the Evidence view ----------
+// Scene cues are written in base seconds; CINE_PACE stretches every scene and animation evenly (1.25 = 25% slower).
+const CINE_PACE = 1.25;
 const CINE_SCENES = [{id: 'cold', dur: 4}, {id: 'problem', dur: 6}, {id: 'idea', dur: 5}, {id: 'test', dur: 8},
-  {id: 'cantfix', dur: 5}, {id: 'limits', dur: 4}];
+  {id: 'cantfix', dur: 5}, {id: 'limits', dur: 4}].map(sc => ({...sc, dur: sc.dur * CINE_PACE}));
 const CINE_STATIC = [1, 2, 3, 4, 5];  // reduced motion: five still slides (the cold-open line rides on the first)
 const CINE_SKIP_AT = 0.5;
 function cineTimeline(scenes) {
@@ -1362,7 +1364,7 @@ function startCinema(mode) {
       count.textContent = still ? `${S.slide + 1} / ${CINE_STATIC.length}` : `${i + 1} / ${CINE_SCENES.length}`;
       const sc = S.scenes[i];
       sc.box.style.opacity = still ? 1 : Math.min(clamp01(local / .45), last ? 1 : clamp01((dur - local) / .4));
-      sc.frame(local, still);
+      sc.frame(local / CINE_PACE, still);
       CINE.bg(ctx, S.W, S.H, S.t, S);
       fill.style.transform = `scaleX(${S.t / T.total})`;
       bar.setAttribute('aria-valuenow', Math.round(S.t));
