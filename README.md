@@ -5,10 +5,15 @@ temperature and PM2.5 it recommends one or two work blocks that keep paid hours 
 **modeled heat exposure-hours**, and shows smoke (AQI) exposure next to every plan. It compares the plan with
 fixed shifts (B1 07:00-15:30, B2 05:30-14:00) and a heat-only planner (B3).
 
-**Real-data result** (preregistered; summers 2022 to 2025, airport weather and nearby EPA monitors): fewer
-hours at >=95F than the fixed early shift, no measurable smoke benefit, and the same plans as heat-only
-planning. The numbers are in `eval/results.md`; post-hoc analyses are in `docs/exploratory_findings.md`.
-It does **not** beat heat-only planning on smoke.
+**Real-data results** (airport weather and nearby EPA monitors; modeled exposure-hours only):
+- Window 1 (summers 2022 to 2025, `eval/results.md`) and window 2 (summers 2018 to 2021, `docs/results_w2.md`)
+  were each preregistered before their data were evaluated, and are never pooled. Both show fewer hours at >=95F
+  than the fixed 05:30 shift, and nearly always the same plan as heat-only planning. Smoke: window 1 shows no
+  measurable change vs the fixed shift. Window 2 (smokier years) shows a small AQI>=101 reduction vs the fixed
+  shift but none vs heat-only planning. Only the robust variant shows a small one vs heat-only, at a small heat cost.
+- That heat benefit comes from the assumed **04:00 earliest start**, not from the planning. At 05:30 or a
+  sunrise-based earliest start it disappears, and a fixed shift at the earliest allowed time does as well
+  (`docs/start_sensitivity.md`, EXPLORATORY, POST-HOC). It does **not** beat heat-only planning on smoke.
 
 **It is not** a compliance tool, a health prediction, or a worker tracker. It does not replace the
 employer's written Cal/OSHA Heat Illness Prevention Plan. Water, shade and rest requirements still apply.
@@ -33,7 +38,9 @@ runs only if the `eval/PREREGISTRATION.md` hashes match the code and config.
 - Post-hoc analyses (`analysis/`) are labeled "EXPLORATORY, POST-HOC: not preregistered".
 
 ## Limitations
-- Airport (ASOS) air temperature, not field microclimate; no solar load. PM2.5 monitors are 4.4 to 7.3 km away.
+- The heat benefit assumes a 04:00 earliest start (a tunable assumption, not a legal limit).
+- Airport (ASOS) air temperature, not field microclimate; no solar load. PM2.5 monitors are several km away
+  (up to 22 km in window 2). Hourly PM2.5 is scored against 24-hour AQI breakpoints.
 - Outputs are modeled exposure-hours only, not health outcomes.
 - The forecast is a simple proxy (0.5 x yesterday + 0.5 x the prior 7-day mean). Cost weights are assumptions.
 - Smoke was rare in the window, and the cleanest hours are late afternoon, when it is hottest.

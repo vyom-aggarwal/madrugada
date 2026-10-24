@@ -13,7 +13,7 @@ import numpy as np
 from fastapi import HTTPException
 
 from app.exposure import day_arrays, exposure
-from app.main import STATIC_DIR, _plan, api_days, api_eval
+from app.main import STATIC_DIR, _plan, api_days, api_eval, api_eval_w2, api_start_sensitivity
 from app.models import PlanRequest
 from app.planning import get_day, rule_selected_day
 
@@ -37,7 +37,8 @@ def build() -> dict:
             plans[d["id"]] = {"error": e.detail, "status": e.status_code}
     return {"generated_by": "tasks.py snapshot",
             "default_params": PlanRequest(day_id="-").model_dump(exclude={"day_id"}),
-            "days": days, "eval": api_eval(), "plans": plans}
+            "days": days, "eval": api_eval(), "eval_w2": api_eval_w2(), "start_sensitivity": api_start_sensitivity(),
+            "plans": plans}
 
 
 def _demo_days(evaluated: list[dict]) -> list[str]:
@@ -72,7 +73,8 @@ def build_demo() -> dict:
     return {"generated_by": "tasks.py demo_snapshot", "selection_rule": DEMO_RULE,
             "note": "demo subset: 24 real days selected for illustration; the evaluation uses all days",
             "default_params": PlanRequest(day_id="-").model_dump(exclude={"day_id"}), "days": days,
-            "eval": {k: v for k, v in ev.items() if k != "days"},
+            "eval": {k: v for k, v in ev.items() if k != "days"}, "eval_w2": api_eval_w2(),
+            "start_sensitivity": api_start_sensitivity(),
             "plans": {i: _plan(PlanRequest(day_id=i)) for i in ids}}
 
 

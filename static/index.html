@@ -84,7 +84,13 @@ footer{color:var(--mute);font-size:12px;padding-bottom:24px}
     <h2>Backtest</h2>
     <p id="bt-banner" class="badge syn"></p>
     <div class="box"><h3>What this does and does not show</h3><ul id="bt-box"></ul></div>
+    <h2>WINDOW 1: summers 2022 to 2025 (preregistered)</h2>
     <div id="bt-groups"></div>
+    <h2>WINDOW 2: summers 2018 to 2021 (preregistered separately, never pooled)</h2>
+    <p id="bt2-banner" class="badge real"></p>
+    <div id="bt-w2"></div>
+    <h2>Start-time sensitivity (EXPLORATORY, POST-HOC: not preregistered)</h2>
+    <div id="bt-start"></div>
   </section>
 </main>
 <footer>Advisory planning aid. Station-level data, modeled exposure-hours only. Not a compliance tool and not a health prediction.</footer>
@@ -126,6 +132,8 @@ async function api(path, opts) {
   const s = await loadSnapshot();
   if (path === '/api/days') return {ok: true, body: s.days};
   if (path === '/api/eval') return {ok: true, body: s.eval};
+  if (path === '/api/eval_w2') return {ok: true, body: s.eval_w2 || {available: false, reason: 'not in snapshot'}};
+  if (path === '/api/start_sensitivity') return {ok: true, body: s.start_sensitivity || {}};
   const p = s.plans[JSON.parse(opts.body).day_id];
   return p && !p.error ? {ok: true, body: p} : {ok: false, body: {detail: p ? p.error : 'Day not found in snapshot.'}};
 }
@@ -232,9 +240,12 @@ function claim(r) {
   const c = r.groups.real_cached.overall.comparisons, o = c.optimizer_vs_B2, orc = c.oracle_vs_B2, e = c.optimizer_vs_b3_early;
   const n = (v, d) => (v > 0 ? '+' : '') + v.toFixed(d);
   const f = (x, k, d = 2) => `${n(x.mean_diff[k], d)} h/day` + (x.ci95 ? ` (95% CI ${n(x.ci95[k][0], d)} to ${n(x.ci95[k][1], d)})` : '');
+  const below = (x, k) => x.ci95 && x.ci95[k][1] < 0;  // CI entirely below zero
+  const smokeB2 = below(o, 'hours_aqi_ge_101') ? `a small AQI≥101 reduction (${f(o, 'hours_aqi_ge_101', 3)})` : `no measurable smoke change (AQI≥101 ${f(o, 'hours_aqi_ge_101', 3)})`;
+  const smokeB3 = below(e, 'hours_aqi_ge_101') ? `a small AQI≥101 reduction vs heat-only planning (${f(e, 'hours_aqi_ge_101', 3)})` : `no smoke benefit vs heat-only planning (AQI≥101 ${f(e, 'hours_aqi_ge_101', 3)})`;
   return `Heat-first shift planner with smoke exposure shown. Real data (${o.n} region-days on ${o.n_dates} dates): vs the fixed early shift B2, ` +
-    `${f(o, 'hours_ge_95f')} at ≥95°F; no measurable smoke benefit (AQI≥101 ${f(o, 'hours_aqi_ge_101', 3)}). ` +
-    `It matches heat-only planning (ties b3_early on ${e.physical.tie} of ${e.n} days) and does not beat it on smoke. ` +
+    `${f(o, 'hours_ge_95f')} at ≥95°F and ${smokeB2}. ` +
+    `It nearly always matches heat-only planning (ties b3_early on ${e.physical.tie} of ${e.n} days) with ${smokeB3}. ` +
     `Even the oracle changes AQI≥101 hours vs B2 by only ${n(orc.mean_diff.hours_aqi_ge_101, 3)} h/day. Oracle diagnosis: ${r.oracle_diagnosis.real_cached.physical.sentence}`;
 }
 const ci = (c, k) => c.mean_diff[k] === undefined ? '–' : `${c.mean_diff[k] > 0 ? '+' : ''}${c.mean_diff[k]}` + (c.ci95 ? ` [${c.ci95[k].join(', ')}]` : '');
@@ -262,9 +273,38 @@ async function backtest() {
   g.replaceChildren(); box.replaceChildren();
   if (!r.available) { $('bt-banner').textContent = 'Backtest not available: ' + r.reason; return; }
   $('bt-banner').textContent = r.provenance_statement;
-  el(box, 'li', claim(r)).style.fontWeight = '600';
+  el(box, 'li', 'Window 1: ' + claim(r)).style.fontWeight = '600';
+  const r2 = (await api('/api/eval_w2')).body, st = (await api('/api/start_sensitivity')).body;
+  if (r2.available && r2.n_days.real_cached) el(box, 'li', 'Window 2 (separate, preregistered): ' + claim(r2)).style.fontWeight = '600';
+  if (st.window1) el(box, 'li', startClaim(st.window1));
   for (const s of r.summary_box) el(box, 'li', s);
+  renderEval(g, r);
+  const g2 = $('bt-w2'); g2.replaceChildren();
+  $('bt2-banner').textContent = r2.available ? (r2.window || 'WINDOW 2') + ' · ' + r2.provenance_statement : 'Window 2 not available: ' + r2.reason;
+  if (r2.available) renderEval(g2, r2);
+  startTable($('bt-start'), st);
+}
+const sgn = (v, d = 3) => (v > 0 ? '+' : '') + v.toFixed(d);
+const ciTxt = (c, k = 'hours_ge_95f') => c.mean_diff[k] == null ? '–' : sgn(c.mean_diff[k]) + (c.ci95 ? ` [${sgn(c.ci95[k][0])}, ${sgn(c.ci95[k][1])}]` : '');
+function startClaim(w) {
+  const s = w.settings, a = s['04:00'].groups.overall.optimizer_vs_B2, b = s['05:30'].groups.overall.optimizer_vs_B2, c = s.sunrise.groups.overall.optimizer_vs_B2;
+  return `EXPLORATORY, POST-HOC: the heat benefit rests on the 04:00 earliest start. Optimizer vs B2 at ≥95°F: 04:00 ${ciTxt(a)} h/day; ` +
+    `05:30 ${ciTxt(b)}; sunrise-minus-30-min rule ${ciTxt(c)}. Against a fixed shift at the same earliest start it ties on ` +
+    `${s['04:00'].groups.overall.optimizer_vs_B_sun.physical.tie} of ${a.n} days.`;
+}
+function startTable(parent, st) {
+  parent.replaceChildren();
+  for (const [w, r] of [['window1', st.window1], ['window2', st.window2]]) {
+    if (!r) { el(parent, 'p', `${w}: not computed.`).className = 'note'; continue; }
+    el(parent, 'h3', `${w === 'window1' ? 'Window 1' : 'Window 2'} (${r.n_days} region-days, ${r.n_dates} dates): hours ≥95°F, mean difference per day [95% CI]`);
+    table(parent, ['earliest start', 'optimizer vs B2', 'optimizer vs B_sun', 'oracle vs B2', '1 block vs B2', '2 blocks vs 1 block', 'two-block days', 'mean h ≥95°F B2 / B_sun'],
+      Object.entries(r.settings).map(([k, v]) => { const g = v.groups.overall; return [k, ciTxt(g.optimizer_vs_B2), ciTxt(g.optimizer_vs_B_sun), ciTxt(g.oracle_vs_B2), ciTxt(g.optimizer_1block_vs_B2), ciTxt(g.optimizer_vs_optimizer_1block), (100 * v.share_two_blocks).toFixed(1) + '%', `${v.mean_h95.B2} / ${v.mean_h95.B_sun}`]; }));
+  }
+  el(parent, 'p', 'B_sun = a fixed 8.5 h shift starting at that earliest start. The sunrise rule (sunrise − 30 min) uses approximate, unverified NOAA equations.').className = 'note';
+}
+function renderEval(g, r) {
   for (const prov of ['synthetic', 'real_cached']) {
+    if (!r.n_days[prov] && prov === 'synthetic' && r.window) continue;
     el(g, 'h2', `${prov}: ${r.group_labels[prov]} (n=${r.n_days[prov]})`);
     if (prov === 'real_cached' && r.real_status) el(g, 'p', 'Status: ' + r.real_status).className = 'note';
     if (!r.n_days[prov]) continue;
