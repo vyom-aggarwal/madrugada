@@ -383,6 +383,27 @@ details.acc>summary:hover h2{color:var(--accent-ink)}
   .view{animation:none}
   a{color:#000}
 }
+/* ============ Declutter pass ============ */
+#daybar{background:transparent;border:0;box-shadow:none;padding:2px 2px 0;margin:0 0 14px;gap:10px}
+@media (min-width:768px){#daybar{grid-template-columns:200px 240px 1fr;align-items:end}#daybar .badges{grid-column:auto;align-self:end;padding-bottom:4px}}
+#daybar select{background-color:var(--surface);box-shadow:var(--shadow-1);min-height:44px}
+#rule-note{flex-basis:100%;max-width:100%;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card:not(.hero){box-shadow:var(--shadow-1)}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 20px}
+.facts.skel{display:block}
+.fact{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);font-weight:650;font-size:15px;color:var(--on-navy)}
+.fact::before{content:"";width:9px;height:9px;border-radius:50%;background:#ffb36b;flex:none}
+.fact.smoke::before{background:#c3b5ff}.fact.ok::before{background:#7fd1b9}.fact.warm::before{background:#ffd8a0}
+.hero h2{font-size:clamp(30px,4vw,46px)}
+.tile-sub{font-size:13px}
+.legend{font-size:12px;gap:6px 14px}
+#warnings{color:var(--mute);font-size:12.5px}
+#more-plans .seg{margin:6px 0 12px}
+.sub-h{margin:22px 0 6px}
+details.more{margin-top:14px}
+details.more>summary{cursor:pointer;color:var(--accent-ink);font-weight:650;font-size:var(--fs-sm);list-style:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"+ "}details.more[open]>summary::before{content:"\2212  "}
 /* ============ Cinematic opening (always its own dark theme) ============ */
 body.cine-on{overflow:hidden}
 .cine{position:fixed;inset:0;z-index:200;background:#03050d;color:#f7f2ea;overflow:hidden;color-scheme:dark;font-family:var(--font);-webkit-tap-highlight-color:transparent;outline:none}
@@ -507,14 +528,14 @@ body.cine-landing #ribbon-card,body.cine-landing #today-tiles{animation:cine-up 
         <div class="hero-main">
           <p class="eyebrow" id="today-eyebrow">Day briefing</p>
           <h2 id="today-title" class="skel" tabindex="-1">Loading the day…</h2>
-          <p id="today-summary" class="skel">Reading the forecast for this day.</p>
+          <div id="today-summary" class="facts skel">Reading the forecast for this day.</div>
           <div class="hero-actions">
             <button id="make-sheet" class="btn cta" type="button">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               Make crew sheet</button>
             <span class="note" id="make-sheet-note"></span>
           </div>
-          <p class="note">Forecast-based estimate. The forecast is a simple proxy (yesterday plus the prior 7-day mean); numbers are modeled exposure-hours.</p>
+          <p class="note">Forecast-based estimate (yesterday plus the prior 7-day mean) · modeled exposure-hours</p>
         </div>
         <aside class="hero-aside" aria-label="First light and work plan">
           <svg class="sunmark" viewBox="0 0 200 90" aria-hidden="true"><defs><linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0a03c"/><stop offset="1" stop-color="#d9573e"/></linearGradient></defs><path d="M30 86a70 70 0 0 1 140 0z" fill="url(#dawn)" opacity=".9"/><path d="M100 4v12M38 26l9 9M162 26l-9 9M10 86h180" stroke="#f0a03c" stroke-width="4" stroke-linecap="round"/></svg>
@@ -534,7 +555,7 @@ body.cine-landing #ribbon-card,body.cine-landing #today-tiles{animation:cine-up 
     <div class="card" id="ribbon-card">
       <h3>The day at a glance</h3>
       <svg id="ribbon-svg" viewBox="0 0 480 290" role="img" aria-labelledby="ribbon-desc"></svg>
-      <p class="note" id="ribbon-desc">Temperature and air quality across the day.</p>
+      <p class="sr-only" id="ribbon-desc">Temperature and air quality across the day.</p>
       <ul class="legend" aria-hidden="true">
         <li><span class="key" style="color:var(--heat)"></span>Temperature</li>
         <li><span class="key" style="color:var(--smoke);border-top-width:3px;border-top-style:dotted"></span>Air quality (AQI)</li>
@@ -590,30 +611,28 @@ body.cine-landing #ribbon-card,body.cine-landing #today-tiles{animation:cine-up 
       <p id="unfix-text"></p>
       <p id="unfix-note" class="note"></p>
     </section>
-    <section class="card">
-      <div class="row"><h2 style="margin:0">Comparison</h2>
-        <fieldset class="seg"><legend class="sr-only">Show numbers</legend>
-          <label><input type="radio" name="view" id="view-planned" checked> planned (forecast)</label>
-          <label><input type="radio" name="view" id="view-observed"> observed (what happened)</label>
-        </fieldset>
-      </div>
+    <details class="card acc" id="more-plans">
+      <summary><h2>All plans and trade-offs</h2><span class="note">Every baseline, planned or observed, and the Pareto sweep</span></summary>
+      <fieldset class="seg"><legend class="sr-only">Show numbers</legend>
+        <label><input type="radio" name="view" id="view-planned" checked> planned (forecast)</label>
+        <label><input type="radio" name="view" id="view-observed"> observed (what happened)</label>
+      </fieldset>
       <div class="scroll"><table id="cmp-table" class="cards-on-mobile">
         <thead><tr><th>Plan</th><th>h ≥80°F</th><th>h ≥95°F</th><th>h AQI≥101</th><th>h AQI≥151</th><th>dual-hazard h</th><th>paid h</th><th>blocks</th></tr></thead>
         <tbody id="cmp-body"></tbody>
       </table></div>
-    </section>
-    <section class="card">
-      <h2>Trade-offs (Pareto, planned)</h2>
+      <h3 class="sub-h">Trade-offs (Pareto, planned)</h3>
       <svg id="pareto-svg" viewBox="0 0 520 300" style="max-width:620px" role="img" aria-label="Pareto scatter"></svg>
-    </section>
+    </details>
   </section>
 
   <section class="view" id="view-evidence" role="tabpanel" aria-labelledby="tab-evidence" hidden>
     <div class="card story"><p class="eyebrow">What we found</p>
       <h2 class="story-title">We tested whether shifting hours reduces heat exposure.</h2>
       <div class="findings" id="findings" aria-live="polite"></div>
-      <p class="sub" id="headline" aria-live="polite"><b>We tested whether shifting hours reduces heat exposure.</b> <span id="headline-detail">Loading the results…</span></p></div>
-    <details class="card acc" open>
+      <details class="more"><summary>Read the full sentence, with every interval</summary>
+      <p class="sub" id="headline" aria-live="polite"><b>We tested whether shifting hours reduces heat exposure.</b> <span id="headline-detail">Loading the results…</span></p></details></div>
+    <details class="card acc">
       <summary><h2>Headline finding</h2><span class="note">Both windows, start time, smoke</span></summary>
       <p id="bt-banner" class="badge syn"></p>
       <div class="box"><h3>What this does and does not show</h3><ul id="bt-box"></ul></div>
@@ -666,9 +685,9 @@ body.cine-landing #ribbon-card,body.cine-landing #today-tiles{animation:cine-up 
 </div>
 <script id="intro-core">
 // ---------- Pure functions (no DOM): the intro timeline and the CI-driven wording shared with the Evidence view ----------
-const CINE_SCENES = [{id: 'cold', dur: 5}, {id: 'problem', dur: 7}, {id: 'idea', dur: 6}, {id: 'test', dur: 8},
-  {id: 'honest', dur: 7}, {id: 'cantfix', dur: 5}, {id: 'limits', dur: 5}];
-const CINE_STATIC = [1, 2, 3, 4, 5, 6];  // reduced motion: six still slides (the cold-open line rides on the first)
+const CINE_SCENES = [{id: 'cold', dur: 4}, {id: 'problem', dur: 6}, {id: 'idea', dur: 5}, {id: 'test', dur: 8},
+  {id: 'cantfix', dur: 5}, {id: 'limits', dur: 4}];
+const CINE_STATIC = [1, 2, 3, 4, 5];  // reduced motion: five still slides (the cold-open line rides on the first)
 const CINE_SKIP_AT = 0.5;
 function cineTimeline(scenes) {
   const starts = []; let total = 0;
@@ -803,6 +822,7 @@ function badges() {
   $('replay-badge').hidden = !(d && (d.provenance === 'synthetic' || d.provenance === 'real_cached'));
   $('oracle-badge').hidden = !$('oracle').checked;
   $('rule-note').textContent = d && d.selected_by_rule ? d.selected_by_rule : '';
+  $('rule-note').title = $('rule-note').textContent;
 }
 let timer = null;
 function schedule() { sliderFill(); $('paid-val').textContent = $('paid').value; badges(); clearTimeout(timer); timer = setTimeout(plan, 250); }
@@ -834,8 +854,8 @@ async function unfixable() {
   }
   const b = u.body, h = b.hours_ge_95f;
   state.unfix = b; renderToday();
-  $('unfix-text').textContent = `Starting no earlier than first light (${b.first_light_start}; sunrise about ${b.sunrise_approx}), the best plan (${blocksText(b.blocks)}) ` +
-    `still has ${h.planned} modeled exposure-hours at or above ${t.heat_high_f}°F (forecast-based estimate; observed on this replayed day: ${h.observed} h). ${b.line}`;
+  $('unfix-text').textContent = `${h.planned} modeled exposure-hours at or above ${t.heat_high_f}°F remain in the best plan from first light ` +
+    `(${blocksText(b.blocks)}; first light ${b.first_light_start}). Forecast-based estimate; observed on this replayed day: ${h.observed} h. ${b.line}`;
   $('unfix-note').textContent = b.note;
 }
 // ---------- Today view (all numbers come from /api/plan and /api/unfixable) ----------
@@ -870,17 +890,16 @@ function renderToday() {
   $('today-eyebrow').textContent = `${day.date || ''} · ${placeOf(day)}` + (d.mode === 'ORACLE' ? ' · ORACLE' : '');
   $('today-title').textContent = c95 && c101 ? 'High heat and smoke today' : c95 ? 'High heat expected' : c101 ? 'Smoke today, heat below the high-heat level'
     : c80 ? 'Warm day, below the high-heat level' : 'Mild day';
-  const parts = [];
-  if (u && !u.error) parts.push(`First light about ${hhmm12(u.first_light_start)} (sunrise about ${hhmm12(u.sunrise_approx)}).`);
-  const first = (c, v, unit) => c.from === 0 ? `is already at or above ${v}${unit} at midnight` : `first reaches ${v}${unit} around ${clock12(c.from)}`;
-  parts.push(!c80 ? `The forecast stays below ${t.heat_shade_f}°F all day.` :
-    `The forecast ${first(c80, t.heat_shade_f, '°F')}` + (c95 ? ` and ${first(c95, t.heat_high_f, '°F').replace(/^is already/, 'is')}; it is at or above ${t.heat_high_f}°F at times between ${clock12(c95.from)} and ${clock12(c95.to)}.` : `, and stays below ${t.heat_high_f}°F.`));
-  parts.push(!c101 ? `Air quality stays below AQI ${t.aqi_sensitive} all day.` :
-    `Air quality is at or above AQI ${t.aqi_sensitive} at times between ${clock12(c101.from)} and ${clock12(c101.to)}` + (c151 ? `, and reaches AQI ${t.aqi_smoke_rule} around ${clock12(c151.from)}.` : `, and stays below AQI ${t.aqi_smoke_rule}.`));
-  $('today-summary').textContent = parts.join(' ');
-  $('tile-heat-label').textContent = `Forecast hours at or above ${t.heat_high_f}°F`;
+  // Two at-a-glance chips; the time ranges are the first and last forecast slot over each line ("between").
+  const facts = [c95 ? ['heat', `${t.heat_high_f}°F+ between ${clock12(c95.from)} and ${clock12(c95.to)}`]
+    : c80 ? ['warm', `${t.heat_shade_f}°F+ from ${c80.from ? clock12(c80.from) : 'midnight'}, below ${t.heat_high_f}°F`] : ['ok', `Below ${t.heat_shade_f}°F all day`],
+  c151 ? ['smoke', `AQI ${t.aqi_smoke_rule}+ from ${clock12(c151.from)}`] : c101 ? ['smoke', `AQI ${t.aqi_sensitive}+ between ${clock12(c101.from)} and ${clock12(c101.to)}`]
+    : ['ok', `AQI below ${t.aqi_sensitive} all day`]];
+  const fx = $('today-summary'); fx.replaceChildren(); fx.classList.remove('skel');
+  for (const [k, txt] of facts) el(fx, 'span', txt).className = 'fact ' + k;
+  $('tile-heat-label').textContent = `Hours at or above ${t.heat_high_f}°F`;
   $('tile-heat-num').textContent = hoursAtOrAbove(temp, t.heat_high_f) + ' h';
-  $('tile-smoke-label').textContent = `Forecast smoke hours (AQI ${t.aqi_sensitive} or higher)`;
+  $('tile-smoke-label').textContent = `Hours at AQI ${t.aqi_sensitive} or higher`;
   $('tile-smoke-num').textContent = hoursAtOrAbove(aqi, t.aqi_sensitive) + ' h';
   for (const id of ['today-hero', 'tile-heat', 'tile-smoke']) $(id).classList.remove('loading');
   $('today-hero').setAttribute('aria-busy', 'false');
@@ -888,7 +907,7 @@ function renderToday() {
     $('tile-unfix').classList.remove('loading');
     $('tile-unfix-num').textContent = u.error ? '–' : u.hours_ge_95f.planned + ' h';
     $('tile-unfix-sub').textContent = u.error ? 'Not available: ' + u.error :
-      `At or above ${t.heat_high_f}°F in the best plan from first light (${blocksText(u.blocks)}). ${u.line}`;
+      `At or above ${t.heat_high_f}°F in the best plan from first light. ${u.line}`;
   }
   $('hero-firstlight').textContent = u && !u.error ? hhmm12(u.first_light_start) : '–';
   $('hero-plan').textContent = !u ? '–' : u.error ? 'Not available' : u.blocks.map(b => `${hhmm12(b.start)} – ${hhmm12(b.end)}`).join(', ');
@@ -978,7 +997,7 @@ function panel(svg, vals, lines, color, title, axis) {
 function drawCharts() {
   const d = state.data, t = d.thresholds;
   const mode = d.mode === 'ORACLE' ? 'ORACLE (actual data, upper bound)' : 'forecast proxy (D-1 and prior 7 days)';
-  $('chart-note').textContent = state.shown.label + ': ' + blocksText(state.shown.blocks) + ' · curves: ' + mode;
+  $('chart-note').textContent = state.shown.label + ': ' + blocksText(state.shown.blocks) + (d.mode === 'ORACLE' ? ' · ' + mode : ' · forecast');
   panel($('temp-svg'), d.forecast.temp_f, [{v: t.heat_shade_f, label: t.heat_shade_f + '°F shade trigger'}, {v: t.heat_high_f, label: t.heat_high_f + '°F high-heat procedures'}], 'var(--heat)', 'Temperature °F', false);
   panel($('aqi-svg'), d.forecast.aqi, [{v: t.aqi_sensitive, label: 'AQI ' + t.aqi_sensitive + ' unhealthy (sensitive)'}, {v: t.aqi_smoke_rule, label: 'AQI ' + t.aqi_smoke_rule + ' smoke rule'}], 'var(--smoke)', 'AQI (PM2.5)', true);
 }
@@ -1286,6 +1305,7 @@ async function init() {
   $('today-retry').addEventListener('click', plan);
   $('view-planned').addEventListener('change', () => { state.view = 'planned'; drawTable(); });
   $('view-observed').addEventListener('change', () => { state.view = 'observed'; drawTable(); });
+  $('more-plans').addEventListener('toggle', () => { if ($('more-plans').open && state.data) drawPareto(); });
   $('print').addEventListener('click', () => window.open('/crew-sheet?' + new URLSearchParams(params()).toString(), '_blank'));
   plan();
 }
@@ -1519,7 +1539,7 @@ CINE.build.cold = box => {
   const ty = el(p, 'span'); ty.className = 'typed';
   const tx = el(ty, 'span'), caret = el(ty, 'span'); caret.className = 'caret';
   return {frame(local, still) {
-    const k = still ? 1 : clamp01((local - .5) / 3.3);
+    const k = still ? 1 : clamp01((local - .3) / 2.7);
     tx.textContent = cineType(CINE_COLD, k);
     caret.style.opacity = k < 1 || Math.floor(local * 2.2) % 2 ? 1 : 0;
   }};
@@ -1553,7 +1573,7 @@ CINE.build.problem = box => {
     sv(parts.aqi, 'text', {x: 14, y: aT + 4}, 'Air quality (AQI), forecast');
   }
   cineKin(box, 'h2', 'cine-h cine-h-sm', 'Heat and smoke rules trigger at thresholds.', .3);
-  cineKin(box, 'p', 'cine-sub', 'They don\u2019t help rebuild the shift.', 4.2);
+  cineKin(box, 'p', 'cine-sub', 'They don\u2019t help rebuild the shift.', 3.6);
   if (d && day) { const c = cineP(box, 'cine-chip', `${cineDayName(day)} · ${cineProv(day)}`, 1.2); c.style.display = 'inline-block'; }
   const rz = cineRise(box);
   return {partial: !d, frame(local, still) {
@@ -1577,12 +1597,12 @@ CINE.build.idea = box => {
   const [sky, sun, haze, rows] = ['.m-sky', '.m-sun', '.m-haze', '.m-rows'].map(c => m.querySelector(c));
   const word = el(box, 'h2'); word.className = 'cine-word'; word.setAttribute('aria-label', 'Madrugada');
   [...'Madrugada'].forEach((c, k) => { const sp = el(word, 'span', c); sp.className = 'w'; sp.dataset.at = (1 + k * .06).toFixed(2); sp.setAttribute('aria-hidden', 'true'); });
-  cineP(box, 'cine-sub', 'Same hours. Smarter dawn.', 1.9);
+  cineP(box, 'cine-sub', 'Same hours. Smarter dawn.', 1.6);
   const parts = {};
   if (d) {
     const B = d.plans.B1.blocks, O = d.plans.optimizer.blocks, all = [...B, ...O].flatMap(b => [cineMins(b.start), cineMins(b.end)]);
     const a0 = Math.floor(Math.min(...all) / 60 - 1) * 60, a1 = Math.ceil(Math.max(...all) / 60 + 1) * 60, pct = x => 100 * (x - a0) / (a1 - a0);
-    const wrap = el(box, 'div'); wrap.className = 'cine-shift'; wrap.dataset.at = 2.6;
+    const wrap = el(box, 'div'); wrap.className = 'cine-shift'; wrap.dataset.at = 2.1;
     const track = el(wrap, 'div'); track.className = 'cine-track';
     const axis = el(wrap, 'div'); axis.className = 'cine-axis';
     for (let h = a0 / 60; h <= a1 / 60; h += 2) { const sp = el(axis, 'span', hourLabel(h)); sp.style.left = pct(h * 60) + '%'; }
@@ -1605,7 +1625,7 @@ CINE.build.idea = box => {
     haze.style.opacity = f(.6, .5); rows.setAttribute('transform', `translate(0 42) scale(1 ${Math.max(.001, f(.5, .8)).toFixed(3)}) translate(0 -42)`);
     word.style.letterSpacing = (.06 + (1 - f(1, 1.2)) * .4).toFixed(3) + 'em';
     if (!d) return;
-    const k = still ? 1 : easeInOut((local - 3.3) / 1.6);
+    const k = still ? 1 : easeInOut((local - 2.6) / 1.5);
     for (const {b, from, to} of parts.blocks) {
       const x0 = from[0] + (to[0] - from[0]) * k, x1 = from[1] + (to[1] - from[1]) * k;
       b.style.left = parts.pct(x0) + '%'; b.style.width = Math.max(0, parts.pct(x1) - parts.pct(x0)) + '%';
@@ -1615,7 +1635,6 @@ CINE.build.idea = box => {
 };
 CINE.build.test = box => {
   const ev = state.ev, w1 = ev && ev.st && ev.st.window1, d = state.data, H95 = 'hours_ge_95f';
-  cineP(box, 'cine-eyebrow', 'The test', .1);
   cineKin(box, 'h2', 'cine-h cine-h-sm', 'Move the earliest start later. Watch the benefit.', .2, .05);
   if (!w1 || !ev.r1 || !ev.r1.available) { cineP(box, 'cine-sub', 'Real-data results are not available.', .8); return {partial: true, frame: cineRise(box)}; }
   const keys = Object.keys(w1.settings).filter(k => /^\d\d:\d\d$/.test(k)), C = keys.map(k => w1.settings[k].groups.overall.optimizer_vs_B2), n = keys.length;
@@ -1638,11 +1657,12 @@ CINE.build.test = box => {
   const ci = el(colB, 'div'); ci.className = 'cine-ci'; ci.dataset.at = 1;
   el(ci, 'i').className = 'axis'; const z = el(ci, 'i'); z.className = 'zero'; z.style.left = xp(0) + '%';
   const band = el(ci, 'i'); band.className = 'band'; const dot = el(ci, 'i'); dot.className = 'dot';
+  const b2 = d ? hhmm12(d.plans.B2.blocks[0].start) : 'early', hiF = cineHiF();
   const ciLab = cineP(colB, 'cine-note', '', 1);
-  const b2 = d ? hhmm12(d.plans.B2.blocks[0].start) : 'early';
-  cineP(colB, 'cine-note', `Change in hours at or above ${cineHiF()} per day, optimizer vs the fixed ${b2} shift · window 1 · exploratory, post-hoc`, 1.2);
   const verdict = cineP(colB, 'cine-sub', `Earliest start ${hhmm12(keys[n - 1])}: ${startVerdict(C[n - 1])}.`, 6.5);
   verdict.style.color = '#ffd27a';
+  const P = storyParts(ev.r1, ev.r2, ev.st);  // the Evidence view's CI-driven wording
+  if (P) cineP(colB, 'cine-note', `${P.replicated ? 'Replicated in both preregistered windows' : P.c2 ? 'Window 2 does not replicate it' : 'Only one window is available'} · smoke: ${P.vsB3}`, 7);
   const r2 = ev.r2 && ev.r2.available && ev.r2.n_days.real_cached ? ev.r2.n_days.real_cached : 0, fmt = v => v.toLocaleString('en-US');
   cineP(box, 'cine-chip', r2 ? `Real data. Two preregistered windows. ${fmt(ev.r1.n_days.real_cached)} and ${fmt(r2)} region-days.`
     : `Real data. One preregistered window. ${fmt(ev.r1.n_days.real_cached)} region-days.`, 1.4).style.display = 'inline-block';
@@ -1657,27 +1677,9 @@ CINE.build.test = box => {
       val.textContent = sgn(c.mean_diff[H95], 2) + ' ';
       startLab.textContent = `Earliest start ${hhmm12(keys[j])}`;
       band.style.left = xp(c.ci95[H95][0]) + '%'; band.style.width = (xp(c.ci95[H95][1]) - xp(c.ci95[H95][0])) + '%'; dot.style.left = xp(c.mean_diff[H95]) + '%';
-      ciLab.textContent = `95% CI ${sgn(c.ci95[H95][0], 3)} to ${sgn(c.ci95[H95][1], 3)} h/day (zero marked)`;
+      ciLab.textContent = `Hours a day at or above ${hiF} vs the fixed ${b2} shift (window 1, exploratory) · 95% CI ${sgn(c.ci95[H95][0], 3)} to ${sgn(c.ci95[H95][1], 3)}`;
       if (!still) { val.style.opacity = 0; val.style.transform = 'translateY(10px)'; requestAnimationFrame(() => { val.style.opacity = 1; val.style.transform = ''; }); }
     }
-  }};
-};
-CINE.build.honest = box => {
-  const ev = state.ev, P = ev && storyParts(ev.r1, ev.r2, ev.st), hi = cineHiF();
-  cineP(box, 'cine-eyebrow', 'The honest part · does shifting hours reduce heat exposure?', .1);
-  if (!P) { cineP(box, 'cine-sub', 'Real-data results are not available.', .6); return {partial: !ev, frame: cineRise(box)}; }
-  const b2 = state.data ? `the fixed ${hhmm12(state.data.plans.B2.blocks[0].start)} shift` : 'the fixed early shift';
-  const items = [
-    [P.heat + '.', `At or above ${hi}, vs ${b2}, window 1: ${P.w(P.c1.optimizer_vs_B2)}.`],
-    [P.replicated ? 'Replicated in both preregistered windows.' : P.c2 ? 'Window 2 does not replicate it.' : 'Window 2 is not available.',
-      P.c2 ? `Window 2: ${P.w(P.c2.optimizer_vs_B2)}. Each window keeps its own 95% CI; never pooled.` : ''],
-    [`Smoke: ${P.vsB3}.`, P.smokeW2.charAt(0).toUpperCase() + P.smokeW2.slice(1) + '.'],
-  ].map(([h, p], k) => { const b = el(box, 'div'); b.className = 'cine-beat'; b.dataset.at = (.4 + k * 2.2).toFixed(1); el(b, 'h3', h); if (p) el(b, 'p', p); return b; });
-  cineP(box, 'cine-note', 'Modeled exposure-hours. Earliest-start results are exploratory.', 6);
-  const rz = cineRise(box);
-  return {frame(local, still) {
-    rz(local, still);
-    items.forEach((b, k) => { if (!still && k < items.length - 1 && local > .4 + (k + 1) * 2.2) b.style.opacity = Math.min(+b.style.opacity, .62); });
   }};
 };
 CINE.build.cantfix = box => {
@@ -1699,9 +1701,9 @@ CINE.build.cantfix = box => {
 CINE.build.limits = box => {
   const m = sv(box, 'svg', {viewBox: '0 0 64 64', class: 'cine-mark', 'aria-hidden': 'true'}); sv(m, 'use', {href: '#mark'}); m.dataset.at = .1;
   cineP(box, 'cine-quiet', 'Modeled exposure-hours. Airport weather, nearby monitors, no worker input yet.', .3);
-  cineP(box, 'cine-quiet', 'Advisory aid; does not replace the written Cal/OSHA plan.', 1.2);
-  cineP(box, 'cine-note', 'Data: IEM ASOS airport weather and U.S. EPA AirData PM2.5.', 1.9);
-  const go = el(box, 'button', 'Enter Madrugada'); go.type = 'button'; go.className = 'cine-enter'; go.dataset.a = 'skip'; go.dataset.at = 3;
+  cineP(box, 'cine-quiet', 'Advisory aid; does not replace the written Cal/OSHA plan.', .9);
+  cineP(box, 'cine-note', 'Data: IEM ASOS airport weather and U.S. EPA AirData PM2.5.', 1.4);
+  const go = el(box, 'button', 'Enter Madrugada'); go.type = 'button'; go.className = 'cine-enter'; go.dataset.a = 'skip'; go.dataset.at = 2;
   return {frame: cineRise(box)};
 };
 // Hand-off: the sun swells into an iris that opens onto the already-rendered app; then the overlay leaves the DOM.

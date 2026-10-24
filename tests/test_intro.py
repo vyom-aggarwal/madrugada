@@ -23,14 +23,14 @@ const m = new Function(src + '; return {CINE_SCENES, cineTimeline, cineAdvance, 
 const T = m.cineTimeline(m.CINE_SCENES), P = m.storyParts(snap.eval, snap.eval_w2, snap.start_sensitivity), st = snap.start_sensitivity.window1.settings;
 console.log(JSON.stringify({
   total: T.total, starts: T.starts, at0: T.at(0), at5: T.at(5), atEnd: T.at(T.total + 9), atNeg: T.at(-3),
-  prevMid: T.prev(7.5), prevEarly: T.prev(5.4), prev0: T.prev(0.3), next0: T.next(0.2), nextLast: T.next(T.total - 1),
+  prevMid: T.prev(7.5), prevEarly: T.prev(4.5), prev0: T.prev(0.3), next0: T.next(0.2), nextLast: T.next(T.total - 1),
   adv: m.cineAdvance(1, 0.05, true, T.total), paused: m.cineAdvance(1, 0.05, false, T.total),
   stall: m.cineAdvance(1, 5, true, T.total), end: m.cineAdvance(T.total - 0.01, 0.05, true, T.total),
   modes: [['?intro=0', false], ['?intro=1', false], ['', false], ['', true], ['?intro=0', true], ['?intro=1', true]].map(a => m.cineMode(...a)),
   keys: ['Escape', 'Enter', ' ', 'ArrowLeft', 'ArrowRight', 'a'].map(k => m.cineKey(k)),
   pkeys: ['Escape', 'Enter', ' ', 'ArrowLeft', 'ArrowRight', 'PageDown', 'PageUp'].map(k => m.cineKey(k, true)),
-  present: ['?present=1', '?present=0', ''].map(m.cinePresent), holds: [0, 6, 42].map(t => m.cineHoldAt(T, m.CINE_SCENES, t)),
-  held: m.cineAdvance(4.5, 0.1, true, T.total, 4.55),
+  present: ['?present=1', '?present=0', ''].map(m.cinePresent), holds: [0, 6, 31].map(t => m.cineHoldAt(T, m.CINE_SCENES, t)),
+  held: m.cineAdvance(3.5, 0.1, true, T.total, 3.55),
   skip: [0, 0.49, 0.5].map(m.cineSkipVisible), type: [0, 0.5, 2].map(p => m.cineType('abcd', p)),
   P: P && {heat: P.heat, replicated: P.replicated, smokeW2: P.smokeW2, vsB3: P.vsB3},
   story: m.story(snap.eval, snap.eval_w2, snap.start_sensitivity), none: m.story(null, null, {}), noneP: m.storyParts(null, null, {}),
@@ -54,12 +54,12 @@ def out(tmp_path_factory):
 
 
 def test_timeline_seek(out):
-    assert out["total"] == 43 and out["starts"] == [0, 5, 12, 18, 26, 33, 38]
+    assert out["total"] == 32 and out["starts"] == [0, 4, 10, 15, 23, 28]
     assert out["at0"] == {"i": 0, "local": 0, "p": 0}
-    assert out["at5"]["i"] == 1 and out["at5"]["local"] == 0
-    assert out["atEnd"]["i"] == 6 and out["atEnd"]["p"] == 1 and out["atNeg"]["i"] == 0  # seeks clamp to the timeline
-    assert (out["prevMid"], out["prevEarly"], out["prev0"]) == (5, 0, 0)  # Back restarts a scene, or goes back one near its start
-    assert (out["next0"], out["nextLast"]) == (5, 43)
+    assert out["at5"]["i"] == 1 and out["at5"]["local"] == 1
+    assert out["atEnd"]["i"] == 5 and out["atEnd"]["p"] == 1 and out["atNeg"]["i"] == 0  # seeks clamp to the timeline
+    assert (out["prevMid"], out["prevEarly"], out["prev0"]) == (4, 0, 0)  # Back restarts a scene, or goes back one near its start
+    assert (out["next0"], out["nextLast"]) == (4, 32)
 
 
 def test_master_clock(out):
@@ -96,5 +96,5 @@ def test_intro_numbers_are_read_at_runtime():
 def test_presenter_mode_holds_each_scene(out):
     assert out["pkeys"] == ["skip", "next", "next", "prev", "next", "next", "prev"]  # a clicker never exits by accident
     assert out["present"] == [True, False, False]
-    assert out["holds"] == pytest.approx([4.55, 11.55, 42.99])  # just before each fade-out; the last on its prompt
-    assert out["held"]["t"] == pytest.approx(4.55) and out["held"]["held"] is True and not out["held"]["ended"]
+    assert out["holds"] == pytest.approx([3.55, 9.55, 31.99])  # just before each fade-out; the last on its prompt
+    assert out["held"]["t"] == pytest.approx(3.55) and out["held"]["held"] is True and not out["held"]["ended"]
