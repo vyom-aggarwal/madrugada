@@ -405,7 +405,8 @@ body.cine-on{overflow:hidden}
 .cine .cine-skip:hover{background:rgba(255,255,255,.16)}
 .cine .cine-skip.on{opacity:1;pointer-events:auto}
 .cine button:focus-visible,.cine-bar:focus-visible{outline:3px solid #f6b65c;outline-offset:3px}
-.cine.static [data-a="toggle"]{display:none}
+.cine.static [data-a="toggle"],.cine.present [data-a="toggle"]{display:none}
+.cine.present .cine-stage{cursor:pointer}
 .cine.static .cine-ui{opacity:1}
 .cine-h{font:600 clamp(26px,min(5.4vw,7vh),62px)/1.1 var(--font-display);letter-spacing:-.015em;margin:0 auto;max-width:20ch;text-shadow:0 2px 28px rgba(3,5,13,.7)}
 .cine .w{display:inline-block;will-change:transform,opacity}
@@ -683,15 +684,22 @@ function cineTimeline(scenes) {
   return {starts, total, clamp, at, prev, next};
 }
 // Master clock step: frame gaps are capped at 0.1 s so a stalled tab never jumps a scene.
-function cineAdvance(t, dt, playing, total) {
-  const n = playing ? Math.min(total, t + Math.max(0, Math.min(dt, 0.1))) : t;
-  return {t: n, ended: n >= total};
+// In presenter mode the clock also stops at holdAt (the end of the current scene) until the narrator moves on.
+function cineAdvance(t, dt, playing, total, holdAt = Infinity) {
+  const n = playing ? Math.min(total, holdAt, t + Math.max(0, Math.min(dt, 0.1))) : t;
+  return {t: n, ended: n >= total, held: n >= holdAt};
 }
 function cineMode(search, reduced) {
   if (new URLSearchParams(search).get('intro') === '0') return 'off';
   return reduced ? 'static' : 'motion';  // ?intro=1 or no parameter: shown on every load
 }
-const cineKey = k => ({Escape: 'skip', Enter: 'skip', ' ': 'toggle', Spacebar: 'toggle', ArrowLeft: 'prev', ArrowRight: 'next'})[k] || null;
+// Presenter mode (?present=1): a clicker's Space, Enter, arrows and Page keys step scenes; only Esc leaves for the app.
+const cinePresent = search => new URLSearchParams(search).get('present') === '1';
+const cineKey = (k, present) => (present
+  ? {Escape: 'skip', Enter: 'next', ' ': 'next', Spacebar: 'next', ArrowRight: 'next', PageDown: 'next', ArrowLeft: 'prev', PageUp: 'prev'}
+  : {Escape: 'skip', Enter: 'skip', ' ': 'toggle', Spacebar: 'toggle', ArrowLeft: 'prev', ArrowRight: 'next', PageUp: 'prev', PageDown: 'next'})[k] || null;
+// A scene holds just before its fade-out; the last one holds on its "Enter Madrugada" prompt.
+function cineHoldAt(T, scenes, t) { const {i} = T.at(t); return T.starts[i] + scenes[i].dur - (i === scenes.length - 1 ? .01 : .45); }
 const cineSkipVisible = t => t >= CINE_SKIP_AT;
 const clamp01 = v => Math.min(1, Math.max(0, v));
 const cineType = (text, p) => text.slice(0, Math.round(clamp01(p) * text.length));
@@ -1292,7 +1300,7 @@ const cineSvg = d => `<svg viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
 function cinePlaceholder(box) { el(box, 'h2', '').className = 'cine-h'; return {frame() {}}; }
 function startCinema(mode) {
   if (CINE.running || mode === 'off') return;
-  const still = mode === 'static', cleanup = [], inert = [];
+  const still = mode === 'static', present = !still && !!CINE.present, cleanup = [], inert = [];
   let root = null, S = {raf: 0, done: false};
   const on = (tg, ev, fn, o) => { tg.addEventListener(ev, fn, o); cleanup.push(() => tg.removeEventListener(ev, fn, o)); };
   function teardown() {
@@ -1306,14 +1314,14 @@ function startCinema(mode) {
   const guard = fn => (...a) => { try { return fn(...a); } catch (e) { teardown(); } };
   try {
     root = document.createElement('div');
-    root.className = 'cine' + (still ? ' static' : '');
+    root.className = 'cine' + (still ? ' static' : present ? ' present' : '');
     root.setAttribute('role', 'dialog'); root.setAttribute('aria-modal', 'true'); root.setAttribute('aria-label', 'Madrugada opening sequence');
     root.innerHTML = '<canvas class="cine-bg" aria-hidden="true"></canvas><div class="cine-stage" aria-live="polite"></div>' +
       '<div class="cine-ui"><div class="cine-bar" role="slider" tabindex="0" aria-label="Intro progress" aria-valuemin="0"><span class="cine-fill"></span></div>' +
       `<div class="cine-btns"><button type="button" class="cine-b" data-a="prev" aria-label="Previous scene">${cineSvg(CINE_ICON.prev)}</button>` +
       `<button type="button" class="cine-b" data-a="toggle" aria-label="Pause">${cineSvg(CINE_ICON.pause)}</button>` +
       `<button type="button" class="cine-b" data-a="next" aria-label="Next scene">${cineSvg(CINE_ICON.next)}</button>` +
-      '<span class="cine-count"></span><button type="button" class="cine-skip" data-a="skip">Skip intro</button></div></div>';
+      `<span class="cine-count"></span><button type="button" class="cine-skip" data-a="skip">${present ? 'Exit to app' : 'Skip intro'}</button></div></div>`;
     const q = c => root.querySelector(c), T = cineTimeline(CINE_SCENES), cv = q('.cine-bg'), ctx = cv.getContext('2d');
     const bar = q('.cine-bar'), fill = q('.cine-fill'), skip = q('.cine-skip'), tog = q('[data-a="toggle"]'), count = q('.cine-count');
     Object.assign(S, {t: 0, playing: false, last: 0, cur: -1, slide: 0, W: 0, H: 0, scenes: []});
@@ -1342,9 +1350,10 @@ function startCinema(mode) {
     };
     const finish = () => { if (S.done) return; S.done = true; cancelAnimationFrame(S.raf); try { CINE.leave(root, ctx, S, still, teardown); } catch (e) { teardown(); } };
     const loop = guard(now => {
-      const r = cineAdvance(S.t, S.last ? (now - S.last) / 1000 : 0, S.playing, T.total);
+      const r = cineAdvance(S.t, S.last ? (now - S.last) / 1000 : 0, S.playing, T.total, present ? cineHoldAt(T, CINE_SCENES, S.t) : Infinity);
       S.last = now; S.t = r.t; render();
       if (r.ended) return finish();
+      if (r.held) { S.playing = false; return; }  // presenter mode: wait for the narrator
       if (S.playing) S.raf = requestAnimationFrame(loop);
     });
     const play = v => {
@@ -1362,8 +1371,8 @@ function startCinema(mode) {
         return showSlide();
       }
       if (a === 'toggle') play(!S.playing);
-      if (a === 'prev') seek(T.prev(S.t));
-      if (a === 'next') { const n = T.next(S.t); if (n >= T.total) return finish(); seek(n); }
+      if (a === 'prev') { seek(present ? T.starts[Math.max(0, T.at(S.t).i - 1)] : T.prev(S.t)); if (present) play(true); }
+      if (a === 'next') { const n = T.next(S.t); if (n >= T.total) return finish(); seek(n); if (present) play(true); }
     });
     const size = guard(() => {
       const d = Math.min(2, window.devicePixelRatio || 1);
@@ -1374,12 +1383,12 @@ function startCinema(mode) {
     const wake = () => {
       if (!root) return;
       root.classList.remove('idle'); clearTimeout(S.idleT);
-      S.idleT = setTimeout(() => { if (root && !still && S.playing) root.classList.add('idle'); }, 2000);
+      S.idleT = setTimeout(() => { if (root && !still && (S.playing || present)) root.classList.add('idle'); }, 2000);
     };
-    on(root, 'click', e => { const b = e.target.closest('[data-a]'); if (b) act(b.dataset.a); });
+    on(root, 'click', e => { const b = e.target.closest('[data-a]'); if (b) act(b.dataset.a); else if (present && !e.target.closest('.cine-ui')) act('next'); });
     on(bar, 'pointerdown', guard(e => { if (still) return; const r = bar.getBoundingClientRect(); seek(T.total * clamp01((e.clientX - r.left) / r.width)); }));
     on(document, 'keydown', e => {
-      const a = cineKey(e.key), onBtn = e.target.closest && e.target.closest('.cine button');
+      const a = cineKey(e.key, present), onBtn = e.target.closest && e.target.closest('.cine button');
       if (!a || (onBtn && (e.key === 'Enter' || e.key === ' '))) return;
       e.preventDefault(); act(a);
     });
@@ -1401,6 +1410,7 @@ CINE.after = () => {
   try { ($('view-today').hidden ? document.querySelector('.tab[aria-selected="true"]') : $('today-title')).focus({preventScroll: true}); } catch (e) { /* ignore */ }
 };
 const cineReduced = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+CINE.present = (() => { try { return cinePresent(location.search); } catch (e) { return false; } })();
 CINE.mode = (() => { try { return cineMode(location.search, cineReduced()); } catch (e) { return 'off'; } })();
 $('replay-intro').addEventListener('click', () => startCinema(cineReduced() ? 'static' : 'motion'));
 $('about-replay').addEventListener('click', () => { const d = $('about'); if (d.close) d.close(); else d.removeAttribute('open'); startCinema(cineReduced() ? 'static' : 'motion'); });
@@ -1696,7 +1706,8 @@ CINE.build.limits = box => {
 };
 // Hand-off: the sun swells into an iris that opens onto the already-rendered app; then the overlay leaves the DOM.
 CINE.leave = (root, ctx, S, still, done) => {
-  if (still) return done();
+  if (still || document.hidden) return done();
+  setTimeout(done, 1500);  // never stall the hand-off if animation frames are throttled
   const ui = root.querySelector('.cine-ui'), stage = root.querySelector('.cine-stage'), far = Math.hypot(S.W, S.H), t0 = performance.now();
   let landed = false;
   const step = now => {

@@ -8,7 +8,7 @@ which is filled from the result files. Start-time numbers are EXPLORATORY, POST-
       comparison table, Evidence tab, the printed crew sheet, the About sheet ("Who it helps").
 - [ ] **Link**: the repository URL (the app runs offline with `python tasks.py demo`).
 - [ ] **Slides**: the Madrugada pitch deck (export as PDF or PPTX from the deck's Share menu).
-- [ ] **Demo video**: about 2 minutes, script below.
+- [ ] **Demo video**: the narrated script in `docs/PITCH_SCRIPT.md`.
 
 ## Devpost text
 
@@ -55,13 +55,6 @@ correction). Code written with help from Claude Code (AI coding assistant).
 It does not replace the employer's written Cal/OSHA Heat Illness Prevention Plan; water, shade and rest
 requirements still apply.
 
-## Demo video script (about 2 minutes)
-1. (15 s) Slide 1 and 2: "Madrugada helps the crew lead who picks tomorrow's start time tonight."
-2. (20 s) App, Today tab: point at the REAL and REPLAY badges, read first light and the best plan, hover the
-   ribbon, then point at the "Hours scheduling can't fix" tile.
-3. (20 s) Planner: drag paid hours; show the table vs the fixed 07:00 and 05:30 shifts and heat-only planning.
-4. (15 s) Make crew sheet: show the one-page English/Spanish sheet.
-5. (30 s) Slides 5 to 7: the two preregistered windows, the results table, "so the app leads with the hours
-   scheduling can't fix."
-6. (15 s) Slides 8 to 9: how it's built, honest limits.
-7. (10 s) Slide 10: next steps, credits, "Same hours. Smarter dawn."
+## Demo video
+Record the narrated walkthrough in `docs/PITCH_SCRIPT.md` (4 presenters, about 4 minutes). Open the app with
+`?present=1` so each intro scene waits for the narrator; use `?intro=0` for retakes that start in the app.

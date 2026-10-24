@@ -19,7 +19,7 @@ def block(script_id: str) -> str:
 HARNESS = r"""
 const fs = require('fs');
 const src = fs.readFileSync(process.argv[2], 'utf8'), snap = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
-const m = new Function(src + '; return {CINE_SCENES, cineTimeline, cineAdvance, cineMode, cineKey, cineSkipVisible, cineType, storyParts, story, startVerdict};')();
+const m = new Function(src + '; return {CINE_SCENES, cineTimeline, cineAdvance, cineMode, cineKey, cinePresent, cineHoldAt, cineSkipVisible, cineType, storyParts, story, startVerdict};')();
 const T = m.cineTimeline(m.CINE_SCENES), P = m.storyParts(snap.eval, snap.eval_w2, snap.start_sensitivity), st = snap.start_sensitivity.window1.settings;
 console.log(JSON.stringify({
   total: T.total, starts: T.starts, at0: T.at(0), at5: T.at(5), atEnd: T.at(T.total + 9), atNeg: T.at(-3),
@@ -27,7 +27,10 @@ console.log(JSON.stringify({
   adv: m.cineAdvance(1, 0.05, true, T.total), paused: m.cineAdvance(1, 0.05, false, T.total),
   stall: m.cineAdvance(1, 5, true, T.total), end: m.cineAdvance(T.total - 0.01, 0.05, true, T.total),
   modes: [['?intro=0', false], ['?intro=1', false], ['', false], ['', true], ['?intro=0', true], ['?intro=1', true]].map(a => m.cineMode(...a)),
-  keys: ['Escape', 'Enter', ' ', 'ArrowLeft', 'ArrowRight', 'a'].map(m.cineKey),
+  keys: ['Escape', 'Enter', ' ', 'ArrowLeft', 'ArrowRight', 'a'].map(k => m.cineKey(k)),
+  pkeys: ['Escape', 'Enter', ' ', 'ArrowLeft', 'ArrowRight', 'PageDown', 'PageUp'].map(k => m.cineKey(k, true)),
+  present: ['?present=1', '?present=0', ''].map(m.cinePresent), holds: [0, 6, 42].map(t => m.cineHoldAt(T, m.CINE_SCENES, t)),
+  held: m.cineAdvance(4.5, 0.1, true, T.total, 4.55),
   skip: [0, 0.49, 0.5].map(m.cineSkipVisible), type: [0, 0.5, 2].map(p => m.cineType('abcd', p)),
   P: P && {heat: P.heat, replicated: P.replicated, smokeW2: P.smokeW2, vsB3: P.vsB3},
   story: m.story(snap.eval, snap.eval_w2, snap.start_sensitivity), none: m.story(null, null, {}), noneP: m.storyParts(null, null, {}),
@@ -88,3 +91,10 @@ def test_intro_numbers_are_read_at_runtime():
     text = block("intro-cine")
     for lit in ["1,296", "1296", "768", "0.38", "0.377", "8.5", "3.5", "80°F", "95°F", "AQI 151", "05:30", "07:00"]:
         assert lit not in text, lit
+
+
+def test_presenter_mode_holds_each_scene(out):
+    assert out["pkeys"] == ["skip", "next", "next", "prev", "next", "next", "prev"]  # a clicker never exits by accident
+    assert out["present"] == [True, False, False]
+    assert out["holds"] == pytest.approx([4.55, 11.55, 42.99])  # just before each fade-out; the last on its prompt
+    assert out["held"]["t"] == pytest.approx(4.55) and out["held"]["held"] is True and not out["held"]["ended"]
