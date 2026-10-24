@@ -451,6 +451,13 @@ body.cine-on{overflow:hidden}
 .cine-chip{display:inline-block;margin:10px 0 0;padding:4px 10px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:12px;font-weight:700;letter-spacing:.04em;color:#ece6f5;background:rgba(3,5,13,.4)}
 @media (max-height:560px){.cine-stage{padding-top:10px;padding-bottom:84px}.cine svg.cine-dial{width:min(240px,50%)}.cine-num{font-size:44px}
   .cine svg.cine-mark{width:52px;margin-bottom:6px}.cine-chart{max-height:40vh}.cine-beat{margin-bottom:8px}.cine-sub{margin-top:6px}.cine-note{margin-top:6px}}
+/* Hand-off: the app settles in under the iris (opacity only on the bars, so the fixed phone tab bar never moves) */
+@keyframes cine-fade{from{opacity:0}}
+@keyframes cine-up{from{opacity:0;transform:translateY(14px)}}
+body.cine-landing .topbar,body.cine-landing .tabs{animation:cine-fade 460ms ease-out both}
+body.cine-landing #daybar{animation:cine-up 480ms 90ms cubic-bezier(.2,.7,.2,1) both}
+body.cine-landing #today-hero{animation:cine-up 520ms 170ms cubic-bezier(.2,.7,.2,1) both}
+body.cine-landing #ribbon-card,body.cine-landing #today-tiles{animation:cine-up 520ms 250ms cubic-bezier(.2,.7,.2,1) both}
 </style>
 </head>
 <body>
@@ -1290,7 +1297,7 @@ function startCinema(mode) {
     inert.forEach(n => { n.inert = false; });
     CINE.after();
   }
-  const safe = fn => (...a) => { try { return fn(...a); } catch (e) { teardown(); } };
+  const guard = fn => (...a) => { try { return fn(...a); } catch (e) { teardown(); } };
   try {
     root = document.createElement('div');
     root.className = 'cine' + (still ? ' static' : '');
@@ -1328,7 +1335,7 @@ function startCinema(mode) {
       skip.classList.toggle('on', still || cineSkipVisible(S.t));
     };
     const finish = () => { if (S.done) return; S.done = true; cancelAnimationFrame(S.raf); try { CINE.leave(root, ctx, S, still, teardown); } catch (e) { teardown(); } };
-    const loop = safe(now => {
+    const loop = guard(now => {
       const r = cineAdvance(S.t, S.last ? (now - S.last) / 1000 : 0, S.playing, T.total);
       S.last = now; S.t = r.t; render();
       if (r.ended) return finish();
@@ -1341,7 +1348,7 @@ function startCinema(mode) {
     };
     const seek = t => { S.t = T.clamp(t); S.last = 0; render(); };
     const showSlide = () => { const i = CINE_STATIC[S.slide]; S.t = T.starts[i] + CINE_SCENES[i].dur * .999; render(); };
-    const act = safe(a => {
+    const act = guard(a => {
       if (a === 'skip') return finish();
       if (still) {
         if (a === 'next' || a === 'toggle') { if (S.slide + 1 >= CINE_STATIC.length) return finish(); S.slide++; }
@@ -1352,7 +1359,7 @@ function startCinema(mode) {
       if (a === 'prev') seek(T.prev(S.t));
       if (a === 'next') { const n = T.next(S.t); if (n >= T.total) return finish(); seek(n); }
     });
-    const size = safe(() => {
+    const size = guard(() => {
       const d = Math.min(2, window.devicePixelRatio || 1);
       S.W = root.clientWidth; S.H = root.clientHeight;
       cv.width = Math.round(S.W * d); cv.height = Math.round(S.H * d); ctx.setTransform(d, 0, 0, d, 0, 0);
@@ -1364,7 +1371,7 @@ function startCinema(mode) {
       S.idleT = setTimeout(() => { if (root && !still && S.playing) root.classList.add('idle'); }, 2000);
     };
     on(root, 'click', e => { const b = e.target.closest('[data-a]'); if (b) act(b.dataset.a); });
-    on(bar, 'pointerdown', safe(e => { if (still) return; const r = bar.getBoundingClientRect(); seek(T.total * clamp01((e.clientX - r.left) / r.width)); }));
+    on(bar, 'pointerdown', guard(e => { if (still) return; const r = bar.getBoundingClientRect(); seek(T.total * clamp01((e.clientX - r.left) / r.width)); }));
     on(document, 'keydown', e => {
       const a = cineKey(e.key), onBtn = e.target.closest && e.target.closest('.cine button');
       if (!a || (onBtn && (e.key === 'Enter' || e.key === ' '))) return;
@@ -1383,7 +1390,6 @@ function startCinema(mode) {
   } catch (e) { teardown(); }
 }
 CINE.bg = (ctx, W, H) => { ctx.fillStyle = '#0b1027'; ctx.fillRect(0, 0, W, H); };
-CINE.leave = (root, ctx, S, still, done) => done();
 // After the hand-off the app's main heading takes focus.
 CINE.after = () => {
   try { ($('view-today').hidden ? document.querySelector('.tab[aria-selected="true"]') : $('today-title')).focus({preventScroll: true}); } catch (e) { /* ignore */ }
@@ -1642,17 +1648,17 @@ CINE.build.honest = box => {
   cineP(box, 'cine-eyebrow', 'The honest part · does shifting hours reduce heat exposure?', .1);
   if (!P) { cineP(box, 'cine-sub', 'Real-data results are not available.', .6); return {partial: !ev, frame: cineRise(box)}; }
   const b2 = state.data ? `the fixed ${hhmm12(state.data.plans.B2.blocks[0].start)} shift` : 'the fixed early shift';
-  const beats = [
+  const items = [
     [P.heat + '.', `At or above ${hi}, vs ${b2}, window 1: ${P.w(P.c1.optimizer_vs_B2)}.`],
     [P.replicated ? 'Replicated in both preregistered windows.' : P.c2 ? 'Window 2 does not replicate it.' : 'Window 2 is not available.',
       P.c2 ? `Window 2: ${P.w(P.c2.optimizer_vs_B2)}. Each window keeps its own 95% CI; never pooled.` : ''],
-    [`Smoke: ${P.vsB3}.`, `Window 2 shows a ${P.smokeW2.replace(/ vs the early fixed shift in window 2/, ' vs the early fixed shift')}.`.replace('shows a no clear', 'shows no clear')],
+    [`Smoke: ${P.vsB3}.`, P.smokeW2.charAt(0).toUpperCase() + P.smokeW2.slice(1) + '.'],
   ].map(([h, p], k) => { const b = el(box, 'div'); b.className = 'cine-beat'; b.dataset.at = (.4 + k * 2.2).toFixed(1); el(b, 'h3', h); if (p) el(b, 'p', p); return b; });
   cineP(box, 'cine-note', 'Modeled exposure-hours. Earliest-start results are exploratory.', 6);
   const rz = cineRise(box);
   return {frame(local, still) {
     rz(local, still);
-    beats.forEach((b, k) => { if (!still && k < beats.length - 1 && local > .4 + (k + 1) * 2.2) b.style.opacity = Math.min(+b.style.opacity, .62); });
+    items.forEach((b, k) => { if (!still && k < items.length - 1 && local > .4 + (k + 1) * 2.2) b.style.opacity = Math.min(+b.style.opacity, .62); });
   }};
 };
 CINE.build.cantfix = box => {
@@ -1679,7 +1685,25 @@ CINE.build.limits = box => {
   const go = el(box, 'button', 'Enter Madrugada'); go.type = 'button'; go.className = 'cine-enter'; go.dataset.a = 'skip'; go.dataset.at = 3;
   return {frame: cineRise(box)};
 };
-// @leave
+// Hand-off: the sun swells into an iris that opens onto the already-rendered app; then the overlay leaves the DOM.
+CINE.leave = (root, ctx, S, still, done) => {
+  if (still) return done();
+  const ui = root.querySelector('.cine-ui'), stage = root.querySelector('.cine-stage'), far = Math.hypot(S.W, S.H), t0 = performance.now();
+  let landed = false;
+  const step = now => {
+    try {
+      const k = clamp01((now - t0) / 760), e = easeInOut(k);
+      S.iris = easeOut(k / .35);
+      CINE.bg(ctx, S.W, S.H, S.t, S);
+      stage.style.opacity = ui.style.opacity = 1 - clamp01(k / .3);
+      const r = Math.max(0, (e - .12) / .88) * far * 1.05;
+      root.style.webkitMaskImage = root.style.maskImage = `radial-gradient(circle at ${S.sun.x.toFixed(1)}px ${S.sun.y.toFixed(1)}px, transparent ${r.toFixed(1)}px, #000 ${(r + 1.5).toFixed(1)}px)`;
+      if (!landed && k > .3) { landed = true; document.body.classList.add('cine-landing'); setTimeout(() => document.body.classList.remove('cine-landing'), 1000); }
+      if (k < 1) S.raf = requestAnimationFrame(step); else done();
+    } catch (err) { done(); }
+  };
+  S.raf = requestAnimationFrame(step);
+};
 startCinema(CINE.mode);
 </script>
 </body>
