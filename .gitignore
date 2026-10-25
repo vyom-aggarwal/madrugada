@@ -9,3 +9,4 @@ data/cache/*
 !data/cache/real-*.json
 static/snapshot.json
 data/cache_w2/
+submission/*.zip
