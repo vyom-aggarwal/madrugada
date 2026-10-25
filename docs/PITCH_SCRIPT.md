@@ -3,7 +3,7 @@
 Replace **A–D** with your names. Every number is one the app shows on screen.
 
 **Setup:** run `python tasks.py demo`, open `http://127.0.0.1:8000/static/index.html?present=1`, press F11.
-Each intro scene waits for you. **Next:** click, Space, → or a clicker. **Back:** ←. **Esc:** straight into the app.
+A start screen waits until you press **Begin** (or Space). Each intro scene then waits for you. **Next:** click, Space, → or a clicker. **Back:** ←. **Esc:** straight into the app.
 If anything breaks, open `?intro=0` and keep going.
 
 | Who | Scenes | Time |
