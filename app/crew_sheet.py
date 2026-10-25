@@ -85,6 +85,7 @@ def render(plan: dict, unfix: dict | None = None) -> str:
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crew sheet · Hoja de turno</title>
+<link rel="icon" href="/static/favicon.ico" sizes="32x32"><link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <style>
 :root{{--ink:#141a2b;--mute:#4f5668;--line:#d9cfbf;--cream:#fbf5ea;--navy:#16213e;--amber:#f0a03c}}
 *{{box-sizing:border-box}}

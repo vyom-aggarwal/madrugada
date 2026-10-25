@@ -11,7 +11,8 @@
   "rewrites": [
     {"source": "/api/:path*", "destination": "/api/index"},
     {"source": "/crew-sheet", "destination": "/api/index"},
-    {"source": "/health", "destination": "/api/index"}
+    {"source": "/health", "destination": "/api/index"},
+    {"source": "/favicon.ico", "destination": "/static/favicon.ico"}
   ],
   "headers": [
     {
