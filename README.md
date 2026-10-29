@@ -1,6 +1,6 @@
 # Madrugada
 
-**We tested whether shifting work hours reduces heat exposure for Central Valley farm crews.** It does only if
+**Our submission to Sierra Hacks 2026.** We tested whether shifting work hours reduces heat exposure for Central Valley farm crews. It does only if
 crews can start before dawn (04:00). At 05:30 or a sunrise-aligned start the benefit disappears. Smoke: a small
 reduction vs the early fixed shift in window 2, none vs heat-only planning. So the tool's main output is the
 **"Hours scheduling can't fix"** readout: the high-heat hours that remain in the best plan starting no earlier
